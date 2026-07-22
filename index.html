@@ -242,7 +242,7 @@
 
 <script>
     // ✅ YOUR GOOGLE APPS SCRIPT URL
-    const GAS_URL = 'https://script.google.com/macros/s/AKfycbyqxpwWLUdKjOPKBK3ZFpHYlgmJAmYbRv7yCulD6n6cwYqIaZWc71MLiFAUQGmqIZJy/exec';
+    const GAS_URL = 'https://script.google.com/macros/s/AKfycbz-lxxMnLYNuQfkun8jdwPy7VidVMGU0cqiorfW0P3aowDkEzKLoeA_PKB7KcnUfJ5j/exec';
 
     const form = document.getElementById('classForm');
     const msgDiv = document.getElementById('message');
@@ -274,49 +274,19 @@
             return;
         }
 
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Submitting...';
-
-        // Build URL params (GET approach avoids CORS preflight issues with GAS)
-        const params = new URLSearchParams({
-            name, rollNo, email, phone, section,
-            q1, q2, q3, quiz1, quiz2, quiz3, quiz4
+        // Fire and forget — no-cors means we can't read response but data goes through
+        const fields = { name, rollNo, email, phone, section, q1, q2, q3, quiz1, quiz2, quiz3, quiz4 };
+        fetch(GAS_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            body: JSON.stringify(fields)
         });
 
-        // Use a hidden iframe trick so no CORS error blocks us
-        const iframe = document.createElement('iframe');
-        iframe.name = 'hidden_iframe';
-        iframe.style.display = 'none';
-        document.body.appendChild(iframe);
-
-        const tempForm = document.createElement('form');
-        tempForm.method = 'POST';
-        tempForm.action = GAS_URL;
-        tempForm.target = 'hidden_iframe';
-
-        // Add all fields as hidden inputs
-        const fields = { name, rollNo, email, phone, section, q1, q2, q3, quiz1, quiz2, quiz3, quiz4 };
-        for (const [key, val] of Object.entries(fields)) {
-            const inp = document.createElement('input');
-            inp.type = 'hidden';
-            inp.name = key;
-            inp.value = val;
-            tempForm.appendChild(inp);
-        }
-
-        document.body.appendChild(tempForm);
-        tempForm.submit();
-
-        // Since we can't read iframe response due to cross-origin, assume success after 2s
-        setTimeout(() => {
-            showMsg('✅ Thank you! Your response has been recorded. Welcome to the AI/ML course!', 'success');
-            form.reset();
-            submitBtn.disabled = false;
-            submitBtn.textContent = 'Submit Response';
-            // cleanup
-            document.body.removeChild(iframe);
-            document.body.removeChild(tempForm);
-        }, 2000);
+        // Show success immediately — don't wait for response
+        showMsg('✅ Thank you! Your response has been recorded. Welcome to the AI/ML course!', 'success');
+        form.reset();
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Submit Response';
     });
 
     function showMsg(text, type) {
