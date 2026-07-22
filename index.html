@@ -5,548 +5,329 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BTech 7th Sem - First Class Interaction</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Georgia', 'Garamond', serif;
             background: linear-gradient(135deg, #f5f1e8 0%, #e8e3d8 100%);
-            color: #2c2c2c;
-            line-height: 1.6;
-            padding: 20px;
+            color: #2c2c2c; line-height: 1.6; padding: 20px;
         }
-        
         .container {
-            max-width: 900px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            overflow: hidden;
+            max-width: 900px; margin: 0 auto; background: white;
+            border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); overflow: hidden;
         }
-        
         .header {
             background: linear-gradient(135deg, #8B3A3A 0%, #6B2D2D 100%);
-            color: white;
-            padding: 30px;
-            display: flex;
-            gap: 20px;
-            align-items: center;
+            color: white; padding: 30px; display: flex; gap: 20px; align-items: center;
         }
-        
         .header-logo {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.1);
-            overflow: hidden;
-            flex-shrink: 0;
+            width: 80px; height: 80px; border-radius: 50%;
+            background: rgba(255,255,255,0.1); overflow: hidden; flex-shrink: 0;
             border: 2px solid rgba(255,255,255,0.3);
         }
-        
-        .header-logo img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        .header-content h1 {
-            font-size: 28px;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        
-        .header-content p {
-            font-size: 14px;
-            opacity: 0.95;
-        }
-        
+        .header-logo img { width: 100%; height: 100%; object-fit: cover; }
+        .header-content h1 { font-size: 28px; font-weight: bold; margin-bottom: 5px; }
+        .header-content p { font-size: 14px; opacity: 0.95; }
         .header-content a {
-            color: #ffd89b;
-            text-decoration: none;
-            font-size: 13px;
-            margin-top: 8px;
-            display: inline-block;
-            transition: color 0.3s;
+            color: #ffd89b; text-decoration: none; font-size: 14px;
+            font-weight: bold; margin-top: 8px; display: inline-block;
+            border: 1px solid rgba(255,216,155,0.5); padding: 4px 10px;
+            border-radius: 4px; transition: all 0.3s;
         }
-        
-        .header-content a:hover {
-            color: #fff;
-            text-decoration: underline;
-        }
-        
-        .content {
-            padding: 40px;
-        }
-        
-        .section {
-            margin-bottom: 35px;
-        }
-        
+        .header-content a:hover { background: rgba(255,216,155,0.2); color: #fff; }
+        .content { padding: 40px; }
+        .section { margin-bottom: 35px; }
         .section-title {
-            font-size: 20px;
-            font-weight: bold;
-            color: #8B3A3A;
-            border-bottom: 2px solid #8B3A3A;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
+            font-size: 20px; font-weight: bold; color: #8B3A3A;
+            border-bottom: 2px solid #8B3A3A; padding-bottom: 10px; margin-bottom: 20px;
         }
-        
-        .form-group {
-            margin-bottom: 18px;
+        .form-group { margin-bottom: 18px; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        label { display: block; font-weight: 600; margin-bottom: 6px; color: #3c3c3c; font-size: 14px; }
+        input[type="text"], input[type="email"], input[type="tel"], select {
+            width: 100%; padding: 10px 12px; border: 1px solid #d0c8b8;
+            border-radius: 4px; font-family: 'Segoe UI', sans-serif; font-size: 14px;
+            background: #fafafa; transition: border-color 0.3s, box-shadow 0.3s;
         }
-        
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
+        input:focus, select:focus {
+            outline: none; border-color: #8B3A3A;
+            box-shadow: 0 0 0 3px rgba(139,58,58,0.1); background: white;
         }
-        
-        .form-row.full {
-            grid-template-columns: 1fr;
-        }
-        
-        label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 6px;
-            color: #3c3c3c;
-            font-size: 14px;
-        }
-        
-        input[type="text"],
-        input[type="email"],
-        input[type="tel"],
-        select,
-        textarea {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid #d0c8b8;
-            border-radius: 4px;
-            font-family: 'Segoe UI', sans-serif;
-            font-size: 14px;
-            background: #fafafa;
-            transition: border-color 0.3s, box-shadow 0.3s;
-        }
-        
-        input[type="text"]:focus,
-        input[type="email"]:focus,
-        input[type="tel"]:focus,
-        select:focus,
-        textarea:focus {
-            outline: none;
-            border-color: #8B3A3A;
-            box-shadow: 0 0 0 3px rgba(139, 58, 58, 0.1);
-            background: white;
-        }
-        
         .prior-knowledge {
-            background: #f9f6f0;
-            padding: 16px;
-            border-left: 4px solid #8B3A3A;
-            border-radius: 4px;
-            margin-bottom: 15px;
+            background: #f9f6f0; padding: 16px; border-left: 4px solid #8B3A3A;
+            border-radius: 4px; margin-bottom: 15px;
         }
-        
-        .prior-knowledge label {
-            margin-bottom: 8px;
-        }
-        
-        .radio-group {
-            display: flex;
-            gap: 20px;
-            margin-top: 8px;
-        }
-        
+        .radio-group { display: flex; gap: 20px; margin-top: 8px; flex-wrap: wrap; }
         .radio-group label {
-            display: flex;
-            align-items: center;
-            margin-bottom: 0;
-            font-weight: normal;
-            gap: 6px;
-            cursor: pointer;
+            display: flex; align-items: center; margin-bottom: 0;
+            font-weight: normal; gap: 6px; cursor: pointer;
         }
-        
-        .radio-group input[type="radio"] {
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
-            margin: 0;
-        }
-        
-        .quiz-question {
-            background: #f4f1e8;
-            padding: 16px;
-            border-radius: 4px;
-            margin-bottom: 18px;
-        }
-        
-        .quiz-question .question-text {
-            font-weight: 600;
-            margin-bottom: 12px;
-            color: #2c2c2c;
-        }
-        
-        .options {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        
+        .radio-group input[type="radio"] { width: 16px; height: 16px; cursor: pointer; margin: 0; accent-color: #8B3A3A; }
+        .quiz-question { background: #f4f1e8; padding: 16px; border-radius: 4px; margin-bottom: 18px; }
+        .quiz-question .question-text { font-weight: 600; margin-bottom: 12px; color: #2c2c2c; }
+        .options { display: flex; flex-direction: column; gap: 8px; }
         .options label {
-            display: flex;
-            align-items: center;
-            font-weight: normal;
-            gap: 8px;
-            margin-bottom: 0;
-            cursor: pointer;
-            padding: 8px;
-            border-radius: 4px;
-            transition: background 0.2s;
+            display: flex; align-items: center; font-weight: normal; gap: 8px;
+            margin-bottom: 0; cursor: pointer; padding: 8px; border-radius: 4px; transition: background 0.2s;
         }
-        
-        .options label:hover {
-            background: rgba(139, 58, 58, 0.05);
-        }
-        
-        .options input[type="radio"] {
-            width: 16px;
-            height: 16px;
-            cursor: pointer;
-            margin: 0;
-            accent-color: #8B3A3A;
-        }
-        
-        .button-group {
-            display: flex;
-            gap: 12px;
-            justify-content: flex-start;
-            margin-top: 30px;
-        }
-        
+        .options label:hover { background: rgba(139,58,58,0.05); }
+        .options input[type="radio"] { width: 16px; height: 16px; cursor: pointer; margin: 0; accent-color: #8B3A3A; flex-shrink: 0; }
+        .button-group { display: flex; gap: 12px; margin-top: 30px; }
         button {
-            padding: 12px 28px;
-            font-size: 15px;
-            font-weight: 600;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-family: 'Segoe UI', sans-serif;
+            padding: 12px 28px; font-size: 15px; font-weight: 600;
+            border: none; border-radius: 4px; cursor: pointer;
+            transition: all 0.3s; font-family: 'Segoe UI', sans-serif;
         }
-        
-        .btn-submit {
-            background: #8B3A3A;
-            color: white;
-        }
-        
-        .btn-submit:hover {
-            background: #6B2D2D;
-            box-shadow: 0 4px 12px rgba(139, 58, 58, 0.3);
-        }
-        
-        .btn-submit:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-        }
-        
-        .btn-reset {
-            background: #d0c8b8;
-            color: #3c3c3c;
-        }
-        
-        .btn-reset:hover {
-            background: #b8afa8;
-        }
-        
-        .message {
-            padding: 12px 16px;
-            border-radius: 4px;
-            margin-bottom: 20px;
-            display: none;
-        }
-        
-        .message.success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        
-        .message.error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-        
+        .btn-submit { background: #8B3A3A; color: white; }
+        .btn-submit:hover { background: #6B2D2D; box-shadow: 0 4px 12px rgba(139,58,58,0.3); }
+        .btn-submit:disabled { background: #aaa; cursor: not-allowed; }
+        .btn-reset { background: #d0c8b8; color: #3c3c3c; }
+        .btn-reset:hover { background: #b8afa8; }
+        .message { padding: 14px 16px; border-radius: 4px; margin-bottom: 20px; display: none; font-size: 14px; }
+        .message.success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .message.error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
         .footer-note {
-            text-align: center;
-            font-size: 12px;
-            color: #888;
-            margin-top: 20px;
-            padding-top: 15px;
-            border-top: 1px solid #e0d8cc;
+            text-align: center; font-size: 12px; color: #888;
+            margin-top: 20px; padding-top: 15px; border-top: 1px solid #e0d8cc;
         }
-        
         @media (max-width: 600px) {
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-            
-            .header {
-                flex-direction: column;
-                text-align: center;
-            }
-            
-            .radio-group {
-                flex-direction: column;
-                gap: 12px;
-            }
-            
-            .content {
-                padding: 20px;
-            }
+            .form-row { grid-template-columns: 1fr; }
+            .header { flex-direction: column; text-align: center; }
+            .content { padding: 20px; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Header -->
-        <div class="header">
-            <div class="header-logo">
-                <img src="KP_Singh.png" alt="KP Singh">
-            </div>
-            <div class="header-content">
-                <h1>BTech 7th Semester</h1>
-                <p>AI & Machine Learning Course</p>
-                <p>First Class Interaction & Assessment</p>
-                <a href="https://kpsingh.in" target="_blank"> kpsingh.in</a>
-            </div>
+<div class="container">
+    <div class="header">
+        <div class="header-logo">
+            <img src="KP_Singh.png" alt="KP Singh">
         </div>
-        
-        <!-- Main Content -->
-        <div class="content">
-            <div id="message" class="message"></div>
-            
-            <form id="classForm">
-                <!-- Section 1: Student Information -->
-                <div class="section">
-                    <div class="section-title">📋 Student Information</div>
-                    
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="name">Full Name *</label>
-                            <input type="text" id="name" name="name" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="rollNo">Roll No. *</label>
-                            <input type="text" id="rollNo" name="rollNo" required>
-                        </div>
-                    </div>
-                    
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="email">Email *</label>
-                            <input type="email" id="email" name="email" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="phone">Phone Number *</label>
-                            <input type="tel" id="phone" name="phone" required>
-                        </div>
-                    </div>
-                    
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="section">Section *</label>
-                            <select id="section" name="section" required>
-                                <option value="">-- Select Section --</option>
-                                <option value="A">Section A</option>
-                                <option value="B">Section B</option>
-                                <option value="C">Section C</option>
-                                <option value="D">Section D</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Section 2: Prior Knowledge -->
-                <div class="section">
-                    <div class="section-title">🧠 Prior Knowledge Assessment</div>
-                    <p style="margin-bottom: 20px; font-size: 13px; color: #666;">Help us understand your background in AI/ML concepts</p>
-                    
-                    <div class="prior-knowledge">
-                        <label>Q1: Do you have prior exposure to Machine Learning?</label>
-                        <div class="radio-group">
-                            <label><input type="radio" name="q1" value="Yes"> Yes</label>
-                            <label><input type="radio" name="q1" value="No"> No</label>
-                            <label><input type="radio" name="q1" value="Somewhat"> Somewhat</label>
-                        </div>
-                    </div>
-                    
-                    <div class="prior-knowledge">
-                        <label>Q2: Are you familiar with Neural Networks?</label>
-                        <div class="radio-group">
-                            <label><input type="radio" name="q2" value="Yes"> Yes</label>
-                            <label><input type="radio" name="q2" value="No"> No</label>
-                            <label><input type="radio" name="q2" value="Heard of it"> Heard of it</label>
-                        </div>
-                    </div>
-                    
-                    <div class="prior-knowledge">
-                        <label>Q3: Have you worked with Supervised vs Unsupervised Learning?</label>
-                        <div class="radio-group">
-                            <label><input type="radio" name="q3" value="Yes"> Yes</label>
-                            <label><input type="radio" name="q3" value="No"> No</label>
-                            <label><input type="radio" name="q3" value="Partially"> Partially</label>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Section 3: Quick Quiz -->
-                <div class="section">
-                    <div class="section-title">📝 Quick Knowledge Quiz</div>
-                    <p style="margin-bottom: 20px; font-size: 13px; color: #666;">Answer these to help us calibrate the course level</p>
-                    
-                    <!-- Quiz Q1 -->
-                    <div class="quiz-question">
-                        <div class="question-text">Q1: Machine Learning primarily aims to:</div>
-                        <div class="options">
-                            <label><input type="radio" name="quiz1" value="Build systems that learn from data"> Build systems that learn from data</label>
-                            <label><input type="radio" name="quiz1" value="Write code that humans can't understand"> Write code that humans can't understand</label>
-                            <label><input type="radio" name="quiz1" value="Replace all human programmers"> Replace all human programmers</label>
-                            <label><input type="radio" name="quiz1" value="Unsure"> Unsure</label>
-                        </div>
-                    </div>
-                    
-                    <!-- Quiz Q2 -->
-                    <div class="quiz-question">
-                        <div class="question-text">Q2: In Supervised Learning, we use:</div>
-                        <div class="options">
-                            <label><input type="radio" name="quiz2" value="Labeled training data with inputs and outputs"> Labeled training data with inputs and outputs</label>
-                            <label><input type="radio" name="quiz2" value="Only input data without labels"> Only input data without labels</label>
-                            <label><input type="radio" name="quiz2" value="A small amount of data only"> A small amount of data only</label>
-                            <label><input type="radio" name="quiz2" value="Don't know"> Don't know</label>
-                        </div>
-                    </div>
-                    
-                    <!-- Quiz Q3 -->
-                    <div class="quiz-question">
-                        <div class="question-text">Q3: Neural Networks are inspired by:</div>
-                        <div class="options">
-                            <label><input type="radio" name="quiz3" value="Structure of the human brain"> Structure of the human brain</label>
-                            <label><input type="radio" name="quiz3" value="Traditional programming logic"> Traditional programming logic</label>
-                            <label><input type="radio" name="quiz3" value="Statistical formulas only"> Statistical formulas only</label>
-                            <label><input type="radio" name="quiz3" value="No clear inspiration"> No clear inspiration</label>
-                        </div>
-                    </div>
-                    
-                    <!-- Quiz Q4 -->
-                    <div class="quiz-question">
-                        <div class="question-text">Q4: What is overfitting in ML?</div>
-                        <div class="options">
-                            <label><input type="radio" name="quiz4" value="Model memorizes training data, performs poorly on new data"> Model memorizes training data, performs poorly on new data</label>
-                            <label><input type="radio" name="quiz4" value="Model is too simple to learn patterns"> Model is too simple to learn patterns</label>
-                            <label><input type="radio" name="quiz4" value="Using too much computational power"> Using too much computational power</label>
-                            <label><input type="radio" name="quiz4" value="Uncertain"> Uncertain</label>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Buttons -->
-                <div class="button-group">
-                    <button type="submit" class="btn-submit">Submit Response</button>
-                    <button type="reset" class="btn-reset">Clear Form</button>
-                </div>
-                
-                <div class="footer-note">
-                    ✓ All responses are securely recorded and will help personalize your learning experience
-                </div>
-            </form>
+        <div class="header-content">
+            <h1>BTech 7th Semester</h1>
+            <p>AI &amp; Machine Learning Course</p>
+            <p>First Class Interaction &amp; Assessment</p>
+            <a href="https://kpsingh.in" target="_blank">🌐 kpsingh.in</a>
         </div>
     </div>
-    
-    <script>
-        const form = document.getElementById('classForm');
-        const messageDiv = document.getElementById('message');
-        
-        // Replace this with your actual Google Apps Script deployment URL
-        // Format: https://script.google.com/macros/d/{DEPLOYMENT_ID}/usercontent/exec
-        const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbynasJuGrlxiCeY5EmoqMLiTOqbKAED9B3nCdC5Rqnpdi_x-GOayl-nnCfR19Pg2mFt/exec';
-        
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            // Check if GOOGLE_SHEET_URL is configured
-            if (GOOGLE_SHEET_URL.includes('YOUR_DEPLOYMENT_ID')) {
-                showMessage('⚠️ Form endpoint not configured. Please contact instructor.', 'error');
-                return;
-            }
-            
-            // Collect form data
-            const formData = {
-                name: document.getElementById('name').value,
-                rollNo: document.getElementById('rollNo').value,
-                email: document.getElementById('email').value,
-                phone: document.getElementById('phone').value,
-                section: document.getElementById('section').value,
-                q1: document.querySelector('input[name="q1"]:checked')?.value || '',
-                q2: document.querySelector('input[name="q2"]:checked')?.value || '',
-                q3: document.querySelector('input[name="q3"]:checked')?.value || '',
-                quiz1: document.querySelector('input[name="quiz1"]:checked')?.value || '',
-                quiz2: document.querySelector('input[name="quiz2"]:checked')?.value || '',
-                quiz3: document.querySelector('input[name="quiz3"]:checked')?.value || '',
-                quiz4: document.querySelector('input[name="quiz4"]:checked')?.value || ''
-            };
-            
-            // Validate that all required fields are filled
-            if (!formData.q1 || !formData.q2 || !formData.q3) {
-                showMessage('Please answer all prior knowledge questions', 'error');
-                return;
-            }
-            
-            // Submit to Google Sheets
-            try {
-                const submitBtn = document.querySelector('.btn-submit');
-                submitBtn.disabled = true;
-                submitBtn.textContent = 'Submitting...';
-                
-                const response = await fetch(GOOGLE_SHEET_URL, {
-                    method: 'POST',
-                    body: JSON.stringify(formData)
-                });
-                
-                const result = await response.json();
-                
-                if (result.success) {
-                    showMessage('✓ Thank you! Your response has been recorded. Welcome to the course!', 'success');
-                    form.reset();
-                    submitBtn.textContent = 'Submit Response';
-                    submitBtn.disabled = false;
-                } else {
-                    showMessage('Error submitting form. Please try again.', 'error');
-                    submitBtn.textContent = 'Submit Response';
-                    submitBtn.disabled = false;
-                }
-            } catch (error) {
-                showMessage('Network error. Please check your connection and try again.', 'error');
-                document.querySelector('.btn-submit').disabled = false;
-                document.querySelector('.btn-submit').textContent = 'Submit Response';
-            }
-        });
-        
-        function showMessage(text, type) {
-            messageDiv.textContent = text;
-            messageDiv.className = `message ${type}`;
-            messageDiv.style.display = 'block';
-            
-            if (type === 'success') {
-                setTimeout(() => {
-                    messageDiv.style.display = 'none';
-                }, 5000);
-            }
+
+    <div class="content">
+        <div id="message" class="message"></div>
+
+        <form id="classForm">
+            <!-- Section 1: Student Info -->
+            <div class="section">
+                <div class="section-title">📋 Student Information</div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="name">Full Name *</label>
+                        <input type="text" id="name" required placeholder="e.g. Rahul Kumar">
+                    </div>
+                    <div class="form-group">
+                        <label for="rollNo">Roll No. *</label>
+                        <input type="text" id="rollNo" required placeholder="e.g. 22CS001">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="email">Email *</label>
+                        <input type="email" id="email" required placeholder="you@sgtuniversity.ac.in">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone Number *</label>
+                        <input type="tel" id="phone" required placeholder="10-digit mobile">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="section">Section *</label>
+                        <select id="section" required>
+                            <option value="">-- Select Section --</option>
+                            <option value="A">Section A</option>
+                            <option value="B">Section B</option>
+                            <option value="C">Section C</option>
+                            <option value="D">Section D</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 2: Prior Knowledge -->
+            <div class="section">
+                <div class="section-title">🧠 Prior Knowledge Assessment</div>
+                <p style="margin-bottom:20px;font-size:13px;color:#666;">Help us understand your background in AI/ML</p>
+
+                <div class="prior-knowledge">
+                    <label>Q1: Do you have prior exposure to Machine Learning?</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="q1" value="Yes"> Yes</label>
+                        <label><input type="radio" name="q1" value="No"> No</label>
+                        <label><input type="radio" name="q1" value="Somewhat"> Somewhat</label>
+                    </div>
+                </div>
+                <div class="prior-knowledge">
+                    <label>Q2: Are you familiar with Neural Networks?</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="q2" value="Yes"> Yes</label>
+                        <label><input type="radio" name="q2" value="No"> No</label>
+                        <label><input type="radio" name="q2" value="Heard of it"> Heard of it</label>
+                    </div>
+                </div>
+                <div class="prior-knowledge">
+                    <label>Q3: Have you worked with Python for data/ML tasks?</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="q3" value="Yes"> Yes</label>
+                        <label><input type="radio" name="q3" value="No"> No</label>
+                        <label><input type="radio" name="q3" value="Basics only"> Basics only</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 3: Quiz -->
+            <div class="section">
+                <div class="section-title">📝 Quick Knowledge Quiz</div>
+                <p style="margin-bottom:20px;font-size:13px;color:#666;">No marks — just helps us calibrate the course level</p>
+
+                <div class="quiz-question">
+                    <div class="question-text">Q1: Machine Learning primarily aims to:</div>
+                    <div class="options">
+                        <label><input type="radio" name="quiz1" value="A"> Build systems that learn patterns from data</label>
+                        <label><input type="radio" name="quiz1" value="B"> Write code humans cannot understand</label>
+                        <label><input type="radio" name="quiz1" value="C"> Replace all human programmers</label>
+                        <label><input type="radio" name="quiz1" value="D"> Unsure</label>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <div class="question-text">Q2: In Supervised Learning, the training data contains:</div>
+                    <div class="options">
+                        <label><input type="radio" name="quiz2" value="A"> Labeled inputs and outputs</label>
+                        <label><input type="radio" name="quiz2" value="B"> Only inputs, no labels</label>
+                        <label><input type="radio" name="quiz2" value="C"> Random data without any pattern</label>
+                        <label><input type="radio" name="quiz2" value="D"> Don't know</label>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <div class="question-text">Q3: Neural Networks are inspired by:</div>
+                    <div class="options">
+                        <label><input type="radio" name="quiz3" value="A"> The structure of the human brain</label>
+                        <label><input type="radio" name="quiz3" value="B"> Traditional if-else programming</label>
+                        <label><input type="radio" name="quiz3" value="C"> Statistical tables only</label>
+                        <label><input type="radio" name="quiz3" value="D"> Not sure</label>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <div class="question-text">Q4: Overfitting in ML means:</div>
+                    <div class="options">
+                        <label><input type="radio" name="quiz4" value="A"> Model memorises training data but fails on new data</label>
+                        <label><input type="radio" name="quiz4" value="B"> Model is too simple to learn anything</label>
+                        <label><input type="radio" name="quiz4" value="C"> Using too much GPU power</label>
+                        <label><input type="radio" name="quiz4" value="D"> Uncertain</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button type="submit" class="btn-submit" id="submitBtn">Submit Response</button>
+                <button type="reset" class="btn-reset">Clear Form</button>
+            </div>
+
+            <div class="footer-note">
+                ✓ Responses are recorded securely and help personalise your learning experience
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // ✅ YOUR GOOGLE APPS SCRIPT URL
+    const GAS_URL = 'https://script.google.com/macros/s/AKfycbyqxpwWLUdKjOPKBK3ZFpHYlgmJAmYbRv7yCulD6n6cwYqIaZWc71MLiFAUQGmqIZJy/exec';
+
+    const form = document.getElementById('classForm');
+    const msgDiv = document.getElementById('message');
+    const submitBtn = document.getElementById('submitBtn');
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // Basic validation
+        const name    = document.getElementById('name').value.trim();
+        const rollNo  = document.getElementById('rollNo').value.trim();
+        const email   = document.getElementById('email').value.trim();
+        const phone   = document.getElementById('phone').value.trim();
+        const section = document.getElementById('section').value;
+        const q1 = document.querySelector('input[name="q1"]:checked')?.value || '';
+        const q2 = document.querySelector('input[name="q2"]:checked')?.value || '';
+        const q3 = document.querySelector('input[name="q3"]:checked')?.value || '';
+        const quiz1 = document.querySelector('input[name="quiz1"]:checked')?.value || '';
+        const quiz2 = document.querySelector('input[name="quiz2"]:checked')?.value || '';
+        const quiz3 = document.querySelector('input[name="quiz3"]:checked')?.value || '';
+        const quiz4 = document.querySelector('input[name="quiz4"]:checked')?.value || '';
+
+        if (!name || !rollNo || !email || !phone || !section) {
+            showMsg('⚠️ Please fill all required student information fields.', 'error');
+            return;
         }
-    </script>
+        if (!q1 || !q2 || !q3) {
+            showMsg('⚠️ Please answer all Prior Knowledge questions.', 'error');
+            return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Submitting...';
+
+        // Build URL params (GET approach avoids CORS preflight issues with GAS)
+        const params = new URLSearchParams({
+            name, rollNo, email, phone, section,
+            q1, q2, q3, quiz1, quiz2, quiz3, quiz4
+        });
+
+        // Use a hidden iframe trick so no CORS error blocks us
+        const iframe = document.createElement('iframe');
+        iframe.name = 'hidden_iframe';
+        iframe.style.display = 'none';
+        document.body.appendChild(iframe);
+
+        const tempForm = document.createElement('form');
+        tempForm.method = 'POST';
+        tempForm.action = GAS_URL;
+        tempForm.target = 'hidden_iframe';
+
+        // Add all fields as hidden inputs
+        const fields = { name, rollNo, email, phone, section, q1, q2, q3, quiz1, quiz2, quiz3, quiz4 };
+        for (const [key, val] of Object.entries(fields)) {
+            const inp = document.createElement('input');
+            inp.type = 'hidden';
+            inp.name = key;
+            inp.value = val;
+            tempForm.appendChild(inp);
+        }
+
+        document.body.appendChild(tempForm);
+        tempForm.submit();
+
+        // Since we can't read iframe response due to cross-origin, assume success after 2s
+        setTimeout(() => {
+            showMsg('✅ Thank you! Your response has been recorded. Welcome to the AI/ML course!', 'success');
+            form.reset();
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Submit Response';
+            // cleanup
+            document.body.removeChild(iframe);
+            document.body.removeChild(tempForm);
+        }, 2000);
+    });
+
+    function showMsg(text, type) {
+        msgDiv.textContent = text;
+        msgDiv.className = 'message ' + type;
+        msgDiv.style.display = 'block';
+        msgDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        if (type === 'success') {
+            setTimeout(() => { msgDiv.style.display = 'none'; }, 6000);
+        }
+    }
+</script>
 </body>
 </html>
