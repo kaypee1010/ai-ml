@@ -30,197 +30,263 @@ body{font-family:'Georgia',serif;background:linear-gradient(135deg,#f5f1e8,#e8e3
 .timer-bar-bg{background:#ddd;border-radius:6px;height:12px;overflow:hidden}
 .timer-bar-fill{height:100%;background:#8B3A3A;transition:width 1s linear;border-radius:6px}
 .timer-text{font-size:16px;font-weight:bold;color:#8B3A3A;margin-top:6px}
-.live-count{display:inline-block;background:#8B3A3A;color:#fff;font-size:28px;font-weight:900;padding:10px 28px;border-radius:8px;margin:12px 0}
+.live-count{display:inline-block;background:#8B3A3A;color:#fff;font-size:32px;font-weight:900;padding:12px 32px;border-radius:8px;margin:12px 0;min-width:110px}
 .live-count-label{font-size:12px;color:#888;margin-top:2px}
+.auto-refresh-note{font-size:11px;color:#aaa;margin-top:4px}
 .btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}
 .btn{padding:11px 22px;border:none;border-radius:5px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s}
 .btn-start{background:#8B3A3A;color:#fff}.btn-start:hover{background:#6B2D2D}
 .btn-start:disabled{background:#bbb;cursor:not-allowed}
 .btn-close{background:#c0392b;color:#fff}.btn-close:hover{background:#96281b}
 .btn-refresh{background:#d0c8b8;color:#444}.btn-refresh:hover{background:#b8afa8}
-.table-wrap{overflow-x:auto;max-height:340px;overflow-y:auto;border:1px solid #e0d8cc;border-radius:6px;display:none}
-table{width:100%;border-collapse:collapse;font-size:13px}
-th{background:#8B3A3A;color:#fff;padding:9px 12px;text-align:left;position:sticky;top:0;font-size:12px}
-td{padding:8px 12px;border-bottom:1px solid #eee}
-tr:hover td{background:#fdf9f0}
-.gps-ok{color:#155724;font-weight:600}.gps-warn{color:#856404;font-weight:600}
+.btn-refresh:disabled{background:#eee;color:#aaa;cursor:not-allowed}
 .msg{padding:12px 16px;border-radius:5px;margin-bottom:16px;font-size:14px;display:none}
 .msg.success{background:#d4edda;color:#155724;border:1px solid #c3e6cb}
 .msg.error{background:#f8d7da;color:#721c24;border:1px solid #f5c6cb}
 .msg.info{background:#d1ecf1;color:#0c5460;border:1px solid #bee5eb}
-.no-data{text-align:center;padding:30px;color:#aaa;font-size:13px}
-@media(max-width:560px){.course-cards{grid-template-columns:1fr}}
+@media(max-width:560px){.course-cards{grid-template-columns:1fr}.otp-code{font-size:42px;letter-spacing:8px}}
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="header">
-    <div class="logo"><img src="KP_Singh.png" alt="KP Singh"></div>
+    <div class="logo"><img src="KP_Singh.png" alt="KP Singh" onerror="this.style.display='none'"></div>
     <div class="hinfo">
       <h1>Attendance Dashboard</h1>
       <p>Dr. Kamalpreet Singh · SGT University, Gurugram</p>
-      <a href="https://kpsingh.in" target="_blank">🌐 kpsingh.in</a>
+      <a href="https://kpsingh.in" target="_blank" rel="noopener">kpsingh.in</a>
     </div>
   </div>
   <div class="body">
-    <div id="msg" class="msg"></div>
+    <div id="msg" class="msg" role="alert"></div>
+
     <div class="sec-title">Step 1 — Select Course</div>
     <div class="course-cards">
       <div class="course-card" id="card_aiml" onclick="selectCourse('AI_ML')">
         <h3>AI &amp; ML</h3><p>BTech 7th Semester</p><p>Sections A + B + C + D</p>
-        <span class="badge">Merged • Same OTP all sections</span>
+        <span class="badge">Merged &middot; Same OTP all sections</span>
       </div>
       <div class="course-card" id="card_matlab" onclick="selectCourse('MATLAB')">
         <h3>MATLAB</h3><p>BTech 5th Semester</p><p>Section C</p>
         <span class="badge">Single Section</span>
       </div>
     </div>
+
     <div class="sec-title">Step 2 — Start Session</div>
     <div class="btn-row">
-      <button class="btn btn-start" id="startBtn" onclick="generateOTP()" disabled>🔑 Generate OTP &amp; Start</button>
-      <button class="btn btn-close" id="closeBtn" onclick="closeSession()" style="display:none">⛔ Close Session</button>
-      <button class="btn btn-refresh" onclick="refreshCount()">🔄 Refresh Count</button>
+      <button class="btn btn-start" id="startBtn" onclick="generateOTP()" disabled>Generate OTP &amp; Start</button>
+      <button class="btn btn-close" id="closeBtn" onclick="closeSession()" style="display:none">Close Session</button>
+      <button class="btn btn-refresh" id="refreshBtn" onclick="refreshCount(true)">Refresh Count</button>
     </div>
+
     <div class="otp-box" id="otpBox">
-      <div style="font-size:13px;color:#8B3A3A;font-weight:bold;margin-bottom:8px">📺 SHOW ON PROJECTOR</div>
-      <div class="otp-code" id="otpCode">——————</div>
+      <div style="font-size:13px;color:#8B3A3A;font-weight:bold;margin-bottom:8px">SHOW ON PROJECTOR</div>
+      <div class="otp-code" id="otpCode">&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;</div>
       <div class="otp-label" id="otpLabel"></div>
       <div class="timer-wrap">
         <div class="timer-bar-bg"><div class="timer-bar-fill" id="timerFill" style="width:100%"></div></div>
-        <div class="timer-text">⏱ <span id="timerText">7:00</span> remaining</div>
+        <div class="timer-text"><span id="timerText">7:00</span> remaining</div>
       </div>
       <div style="margin-top:14px">
         <div class="live-count" id="liveCount">0</div>
         <div class="live-count-label">students marked present</div>
+        <div class="auto-refresh-note">auto-refreshes every 20 seconds</div>
       </div>
     </div>
-    <div class="sec-title" id="logTitle" style="display:none">📋 Submissions This Session</div>
-    <div class="table-wrap" id="tableWrap">
-      <table>
-        <thead><tr><th>#</th><th>Reg No</th><th>Name</th><th>Sec</th><th>Time</th><th>GPS</th></tr></thead>
-        <tbody id="logBody"></tbody>
-      </table>
-    </div>
-    <div class="no-data" id="noData" style="display:none">No submissions yet.</div>
   </div>
 </div>
 
 <script>
-// ── YOUR LIVE GAS URL ─────────────────────────────────────────
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbzpC77gDR-hZBNnojx9h4lEfwR_Q67Bz9ZWIIRe0CCdhKLS9Rj75IgtqnBD_-GEUl80/exec';
-const OTP_DURATION = 7 * 60;
+'use strict';
 
-let selectedCourse = null, currentOTP = null, sessionActive = false;
-let timerInterval = null, secondsLeft = OTP_DURATION;
-let presentCount = 0, sessionDate = '';
+// ══════════ CONFIG ══════════
+var GAS_URL = 'https://script.google.com/macros/s/AKfycbx_Urq36kY2Dt2XVw61hwHgRVqaFsMRhai2GPZGs6iCNoKt_iPJAAeeTPtc-wQsDt3gog/exec';
+var OTP_DURATION = 7 * 60;          // seconds
+var AUTO_REFRESH_MS = 20000;        // 20s
+var FETCH_TIMEOUT_MS = 15000;
 
-function selectCourse(course) {
-  selectedCourse = course;
-  document.getElementById('card_aiml').classList.toggle('selected', course === 'AI_ML');
-  document.getElementById('card_matlab').classList.toggle('selected', course === 'MATLAB');
-  if (!sessionActive) document.getElementById('startBtn').disabled = false;
-  showMsg(course === 'AI_ML'
-    ? '✅ AI & ML selected — one OTP works for all sections A, B, C, D'
-    : '✅ MATLAB selected — BTech Sem 5 Sec C', 'info');
+// ══════════ STATE ══════════
+var selectedCourse = null, currentOTP = null, sessionActive = false;
+var timerInterval = null, autoRefreshInterval = null;
+var secondsLeft = OTP_DURATION, presentCount = 0, sessionDate = '';
+var refreshing = false;
+
+function $(id){ return document.getElementById(id); }
+
+function todayStr() {
+  var d = new Date();
+  return d.getFullYear() + '-' +
+         String(d.getMonth() + 1).padStart(2, '0') + '-' +
+         String(d.getDate()).padStart(2, '0');
 }
 
-async function generateOTP() {
-  if (!selectedCourse) { showMsg('Please select a course first.', 'error'); return; }
+function fetchWithTimeout(url, opts) {
+  var controller = new AbortController();
+  var timer = setTimeout(function(){ controller.abort(); }, FETCH_TIMEOUT_MS);
+  opts = opts || {};
+  opts.signal = controller.signal;
+  return fetch(url, opts).finally(function(){ clearTimeout(timer); });
+}
+
+function showMsg(text, type) {
+  var el = $('msg');
+  el.textContent = text;
+  el.className = 'msg ' + type;
+  el.style.display = 'block';
+  if (type !== 'error') setTimeout(function(){ el.style.display = 'none'; }, 5000);
+}
+
+function sectionsFor(course) {
+  return course === 'AI_ML' ? ['A','B','C','D'] : ['C'];
+}
+
+// ══════════ COURSE SELECT ══════════
+function selectCourse(course) {
+  if (sessionActive) { showMsg('Close the current session before switching course.', 'info'); return; }
+  selectedCourse = course;
+  $('card_aiml').classList.toggle('selected', course === 'AI_ML');
+  $('card_matlab').classList.toggle('selected', course === 'MATLAB');
+  $('startBtn').disabled = false;
+  showMsg(course === 'AI_ML'
+    ? 'AI & ML selected — one OTP covers Sections A, B, C, D'
+    : 'MATLAB selected — BTech Sem 5 Sec C', 'info');
+}
+
+// ══════════ SESSION START ══════════
+function generateOTP() {
+  if (!selectedCourse) { showMsg('Select a course first.', 'error'); return; }
   if (sessionActive)   { showMsg('Close the current session first.', 'error'); return; }
 
-  currentOTP = Math.floor(100000 + Math.random() * 900000).toString();
-  sessionDate = new Date().toLocaleDateString('en-IN', {day:'2-digit', month:'short', year:'numeric'});
+  currentOTP = String(Math.floor(100000 + Math.random() * 900000));
+  sessionDate = todayStr();
   presentCount = 0;
   secondsLeft = OTP_DURATION;
 
-  const sections = selectedCourse === 'AI_ML' ? ['A','B','C','D'] : ['C'];
+  // Show OTP immediately — never block on network
+  $('otpCode').textContent = currentOTP;
+  $('otpLabel').textContent =
+    (selectedCourse === 'AI_ML' ? 'AI & ML — Sections A+B+C+D' : 'MATLAB — Sem 5 Sec C') +
+    ' \u00B7 ' + sessionDate;
+  $('liveCount').textContent = '0';
+  $('timerFill').style.width = '100%';
+  $('timerFill').style.background = '#8B3A3A';
+  $('otpBox').style.display = 'block';
+  $('closeBtn').style.display = 'inline-block';
+  $('startBtn').disabled = true;
+  sessionActive = true;
 
-  // Fire session_start to GAS — don't await, don't block OTP display
-  // If GAS is slow/unreachable, OTP still shows immediately
-  sections.forEach(sec => {
-    fetch(GAS_URL, {
+  // Register session on GAS for every section — parallel, fire-and-track
+  var sections = sectionsFor(selectedCourse);
+  var registrations = sections.map(function(sec) {
+    return fetchWithTimeout(GAS_URL, {
       method: 'POST',
       redirect: 'follow',
       headers: {'Content-Type': 'text/plain'},
       body: JSON.stringify({type:'session_start', subject:selectedCourse, section:sec, otp:currentOTP, date:sessionDate})
-    }).catch(e => console.warn('session_start error', sec, e));
+    }).then(function(r){ return r.json(); })
+      .then(function(d){ return d && d.success; })
+      .catch(function(){ return false; });
   });
 
-  // Mark active AFTER firing requests, not before
-  sessionActive = true;
-
-  document.getElementById('otpCode').textContent = currentOTP;
-  document.getElementById('otpLabel').textContent =
-    (selectedCourse === 'AI_ML' ? 'AI & ML — All Sections A+B+C+D' : 'MATLAB — Sem 5 Sec C') + ' · ' + sessionDate;
-  document.getElementById('liveCount').textContent = '0';
-  document.getElementById('otpBox').style.display = 'block';
-  document.getElementById('closeBtn').style.display = 'inline-block';
-  document.getElementById('startBtn').disabled = true;
-  document.getElementById('logTitle').style.display = 'block';
-  document.getElementById('tableWrap').style.display = 'block';
-  document.getElementById('noData').style.display = 'block';
-  document.getElementById('logBody').innerHTML = '';
+  Promise.all(registrations).then(function(results) {
+    var ok = results.filter(Boolean).length;
+    if (ok === sections.length) {
+      showMsg('Session live — OTP ' + currentOTP + ' active for 7 minutes', 'success');
+    } else if (ok > 0) {
+      showMsg('Session partially registered (' + ok + '/' + sections.length + '). Students may see errors — close and regenerate if needed.', 'error');
+    } else {
+      showMsg('Could not register session with server — students will get "no session" errors. Check internet, close and regenerate.', 'error');
+    }
+  });
 
   startTimer();
-  showMsg('✅ OTP ' + currentOTP + ' generated — session open for 7 minutes', 'success');
+  startAutoRefresh();
 }
 
+// ══════════ TIMER ══════════
 function startTimer() {
   clearInterval(timerInterval);
-  timerInterval = setInterval(() => {
+  timerInterval = setInterval(function() {
     secondsLeft--;
-    const pct = (secondsLeft / OTP_DURATION) * 100;
-    document.getElementById('timerFill').style.width = pct + '%';
-    if (pct < 30) document.getElementById('timerFill').style.background = '#c0392b';
-    const m = Math.floor(secondsLeft/60), s = secondsLeft % 60;
-    document.getElementById('timerText').textContent = m + ':' + String(s).padStart(2,'0');
+    var pct = (secondsLeft / OTP_DURATION) * 100;
+    $('timerFill').style.width = pct + '%';
+    if (pct < 30) $('timerFill').style.background = '#c0392b';
+    var m = Math.floor(secondsLeft / 60), s = secondsLeft % 60;
+    $('timerText').textContent = m + ':' + String(s).padStart(2, '0');
     if (secondsLeft <= 0) closeSession();
   }, 1000);
 }
 
+// ══════════ AUTO REFRESH ══════════
+function startAutoRefresh() {
+  clearInterval(autoRefreshInterval);
+  // First refresh after 15s (give students time to submit)
+  setTimeout(function(){ refreshCount(false); }, 15000);
+  autoRefreshInterval = setInterval(function(){ refreshCount(false); }, AUTO_REFRESH_MS);
+}
+
+function refreshCount(manual) {
+  if (!selectedCourse || !sessionDate) {
+    if (manual) showMsg('Start a session first.', 'info');
+    return;
+  }
+  if (refreshing) return;
+  refreshing = true;
+  if (manual) { $('refreshBtn').disabled = true; $('refreshBtn').textContent = 'Refreshing...'; }
+
+  var sections = sectionsFor(selectedCourse);
+  var fetches = sections.map(function(sec) {
+    var url = GAS_URL + '?type=get_count&subject=' + selectedCourse +
+              '&section=' + sec + '&date=' + encodeURIComponent(sessionDate);
+    return fetchWithTimeout(url)
+      .then(function(r){ return r.json(); })
+      .then(function(d){ return (d && d.count) ? d.count : 0; })
+      .catch(function(){ return 0; });
+  });
+
+  Promise.all(fetches).then(function(counts) {
+    var total = counts.reduce(function(a, b){ return a + b; }, 0);
+    presentCount = total;
+    $('liveCount').textContent = total;
+    if (manual) showMsg(total + ' students marked present', 'success');
+  }).finally(function() {
+    refreshing = false;
+    $('refreshBtn').disabled = false;
+    $('refreshBtn').textContent = 'Refresh Count';
+  });
+}
+
+// ══════════ SESSION CLOSE ══════════
 function closeSession() {
+  if (!sessionActive) return;
   sessionActive = false;
   clearInterval(timerInterval);
-  const sections = selectedCourse === 'AI_ML' ? ['A','B','C','D'] : ['C'];
-  sections.forEach(sec => {
-    fetch(GAS_URL, {
+  clearInterval(autoRefreshInterval);
+
+  var sections = sectionsFor(selectedCourse);
+  sections.forEach(function(sec) {
+    fetchWithTimeout(GAS_URL, {
       method: 'POST',
       redirect: 'follow',
       headers: {'Content-Type': 'text/plain'},
       body: JSON.stringify({type:'session_close', subject:selectedCourse, section:sec, date:sessionDate})
-    }).catch(e => console.warn('session_close error', e));
+    }).catch(function(){ /* OTP expires server-side in 7 min anyway */ });
   });
-  document.getElementById('otpBox').style.display = 'none';
-  document.getElementById('closeBtn').style.display = 'none';
-  document.getElementById('startBtn').disabled = false;
+
+  // One final count so faculty sees the closing number
+  refreshCount(false);
+
+  $('otpBox').style.display = 'none';
+  $('closeBtn').style.display = 'none';
+  $('startBtn').disabled = false;
   currentOTP = null;
-  showMsg('Session closed — OTP no longer valid. ' + presentCount + ' students marked present.', 'success');
+  showMsg('Session closed — OTP invalid. Final count: ' + presentCount + ' present.', 'success');
 }
 
-async function refreshCount() {
-  if (!selectedCourse || !sessionDate) { showMsg('No active session to refresh.', 'info'); return; }
-  try {
-    const sections = selectedCourse === 'AI_ML' ? ['A','B','C','D'] : ['C'];
-    let total = 0;
-    for (const sec of sections) {
-      const url = GAS_URL + '?type=get_count&subject=' + selectedCourse + '&section=' + sec + '&date=' + encodeURIComponent(sessionDate);
-      const res = await fetch(url);
-      const data = await res.json();
-      if (data.count) total += data.count;
-    }
-    presentCount = total;
-    document.getElementById('liveCount').textContent = total;
-    showMsg('✅ Count refreshed — ' + total + ' students present', 'success');
-  } catch(e) {
-    showMsg('Could not refresh — check connection.', 'error');
-  }
-}
-
-function showMsg(text, type) {
-  const el = document.getElementById('msg');
-  el.textContent = text; el.className = 'msg ' + type; el.style.display = 'block';
-  if (type !== 'error') setTimeout(() => el.style.display='none', 5000);
-}
+// Warn faculty before accidentally closing the tab mid-session
+window.addEventListener('beforeunload', function(e) {
+  if (sessionActive) { e.preventDefault(); e.returnValue = ''; }
+});
 </script>
 </body>
 </html>
