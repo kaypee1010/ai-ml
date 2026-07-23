@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Speaker Notes — Lecture 1: Introduction to AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&family=Inconsolata:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --accent:#8B3A3A; --accent-pale:#f5ede8; --accent-mid:rgba(139,58,58,.15);
+  --ink:#2a2420; --paper:#faf6f0; --cream:#fff; --slate:#6b6258; --slate-light:#a8a095;
+  --border:#e5dccf; --border-strong:#d0c2ae;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);line-height:1.7;padding-bottom:60px}
+
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;
+  padding:12px 28px;background:rgba(250,246,240,.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+.nav-brand{display:flex;align-items:center;gap:10px}
+.nav-logo{width:38px;height:38px;border-radius:50%;object-fit:cover;border:1.5px solid var(--accent)}
+.nav-name{font-family:'DM Serif Display',serif;font-size:15px;color:var(--ink)}
+.nav-sub{font-family:'Inconsolata',monospace;font-size:11px;color:var(--slate)}
+.nav-cta{background:var(--accent);color:#fff;padding:8px 16px;border-radius:20px;text-decoration:none;font-size:13px;font-weight:600}
+
+.topbar{margin-top:66px;padding:20px 28px 0}
+.title-block{max-width:920px;margin:0 auto 20px}
+.title-block h1{font-family:'DM Serif Display',serif;font-size:32px;color:var(--accent);margin-bottom:6px}
+.title-block .meta{font-family:'Inconsolata',monospace;font-size:13px;color:var(--slate)}
+
+/* Jump nav */
+.jumpnav{max-width:920px;margin:0 auto 30px;display:flex;flex-wrap:wrap;gap:8px}
+.jumpnav a{background:var(--accent-pale);color:var(--accent);border:1px solid var(--border-strong);
+  padding:6px 12px;border-radius:16px;text-decoration:none;font-size:12.5px;font-weight:600;font-family:'Inconsolata',monospace}
+.jumpnav a:hover{background:var(--accent);color:#fff}
+
+.wrap{max-width:920px;margin:0 auto;padding:0 28px}
+
+.segment{background:var(--cream);border:1px solid var(--border);border-radius:14px;padding:28px 32px;margin-bottom:24px;
+  box-shadow:0 2px 10px rgba(139,58,58,.05);scroll-margin-top:90px}
+.segment-head{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+.segnum{background:var(--accent);color:#fff;font-family:'DM Serif Display',serif;font-size:20px;
+  width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.segment h2{font-family:'DM Serif Display',serif;font-size:24px;color:var(--ink)}
+.segtime{font-family:'Inconsolata',monospace;font-size:12px;background:var(--accent-mid);color:var(--accent);
+  padding:2px 10px;border-radius:10px;margin-left:auto;font-weight:700;white-space:nowrap}
+
+.say{background:var(--accent-pale);border-left:5px solid var(--accent);border-radius:0 10px 10px 0;
+  padding:18px 22px;margin:16px 0;font-size:19px;line-height:1.75;color:var(--ink)}
+.say .tag{display:block;font-family:'Inconsolata',monospace;font-size:11px;font-weight:700;color:var(--accent);
+  text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+
+.board{background:#242e24;color:#dcecd8;padding:18px 22px;border-radius:10px;margin:16px 0;
+  font-family:'Inconsolata',monospace;font-size:16px;line-height:1.6;white-space:pre-wrap}
+.board .tag{display:block;color:#8fd08a;font-size:11px;letter-spacing:2px;margin-bottom:10px;font-weight:700}
+
+.callout{border-radius:10px;padding:14px 18px;margin:14px 0;font-size:16px;line-height:1.6}
+.callout .tag{display:block;font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.ask{background:#eaf1f8;border:1px solid #b8cfe0}
+.ask .tag{color:#2c5c8a}
+.tip{background:#fdf6e3;border:1px solid #e8d28a}
+.tip .tag{color:#96780f}
+.pitfall{background:#fbeaea;border:1px solid #e0aaaa}
+.pitfall .tag{color:var(--accent)}
+.exam{background:#f2e9f5;border:1px solid #cbadd8}
+.exam .tag{color:#6b3a8a}
+
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:15px}
+th{background:var(--accent);color:#fff;padding:10px 14px;text-align:left;font-weight:600}
+td{padding:9px 14px;border-bottom:1px solid var(--border)}
+tr:nth-child(even) td{background:var(--accent-pale)}
+
+.takeaway{background:linear-gradient(135deg,var(--accent),#6B2D2D);color:#fff;border-radius:14px;
+  padding:26px 30px;text-align:center;margin:20px 0;font-family:'DM Serif Display',serif;font-size:22px;line-height:1.5}
+
+.checklist{list-style:none;margin:14px 0}
+.checklist li{padding:6px 0 6px 30px;position:relative;font-size:15px}
+.checklist li::before{content:"☐";position:absolute;left:0;color:var(--accent);font-size:18px}
+
+.print-btn{position:fixed;bottom:24px;right:24px;background:var(--accent);color:#fff;border:none;
+  padding:12px 20px;border-radius:24px;font-family:'DM Sans',sans-serif;font-weight:600;font-size:14px;
+  cursor:pointer;box-shadow:0 4px 14px rgba(139,58,58,.35);z-index:99}
+@media print{.nav,.jumpnav,.print-btn{display:none}.segment{break-inside:avoid;box-shadow:none}}
+@media(max-width:640px){.title-block h1{font-size:24px}.segment{padding:18px 18px}.say{font-size:16.5px}}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-brand">
+    <img class="nav-logo" src="KP_Singh.png" alt="K.P. Singh" onerror="this.style.display='none'"/>
+    <div>
+      <div class="nav-name">K.P. Singh</div>
+      <div class="nav-sub">SGT University · AI &amp; ML Lecture 1</div>
+    </div>
+  </div>
+  <a class="nav-cta" href="https://kpsingh.in" target="_blank">kpsingh.in ↗</a>
+</nav>
+
+<div class="topbar">
+  <div class="title-block">
+    <h1>Speaker Notes — Lecture 1</h1>
+    <div class="meta">AI &amp; ML · BTech CSE Sem 7 · Introduction to AI &amp; Intelligent Agents · ~60 min</div>
+  </div>
+  <div class="jumpnav">
+    <a href="#s1">① Hook: AI Today</a>
+    <a href="#s2">② Chashma Story</a>
+    <a href="#s3">③ What is Intelligence</a>
+    <a href="#s4">④ Define AI</a>
+    <a href="#s5">⑤ AI Around Us</a>
+    <a href="#s6">⑥ Intelligent Agent</a>
+    <a href="#s7">⑦ Agent or Not?</a>
+    <a href="#s8">⑧ Exam Vocabulary</a>
+    <a href="#s9">⑨ Wrap-Up</a>
+  </div>
+</div>
+
+<div class="wrap">
+
+<div class="segment" id="s1">
+  <div class="segment-head"><div class="segnum">1</div><h2>Opening Hook</h2><div class="segtime">5 min</div></div>
+  <div class="say"><span class="tag">Say this</span>
+  "Good morning everyone. Welcome to Artificial Intelligence and Machine Learning. Before we begin — how many AI systems do you think you've already used today? Take 10 seconds. No right or wrong answer."
+  </div>
+  <p style="font-size:15px;color:var(--slate);margin:10px 0">Take responses — expect ChatGPT, Google Maps, Instagram, Alexa.</p>
+  <div class="say"><span class="tag">Then ask</span>
+  "Did anyone use Gmail today? Google Search? YouTube? Amazon? Spotify?"
+  </div>
+  <div class="say"><span class="tag">Land it</span>
+  "Congratulations — whether you realised it or not, you've already interacted with AI several times today. By the end of this lecture, you'll begin seeing AI everywhere."
+  </div>
+</div>
+
+<div class="segment" id="s2">
+  <div class="segment-head"><div class="segnum">2</div><h2>Story — Finding the Spectacles</h2><div class="segtime">6 min</div></div>
+  <div class="say"><span class="tag">Say this</span>
+  "Let's imagine a situation. Your mother says — <em>'Beta, meri chashma bedroom mein kahin reh gayi hai. Zara dhoond ke laao.'</em> Now tell me honestly — would you immediately start opening every drawer? Would you check the kitchen first?"
+  </div>
+  <p style="font-size:15px;color:var(--slate)">(Class laughs — "of course not")</p>
+  <div class="say"><span class="tag">Continue</span>
+  "Most of us would check near the pillow, the bedside table, the study table, near the laptop. Why? Because from experience, these are the places glasses usually turn up. Notice — you didn't KNOW where they were, yet you followed a strategy. You searched intelligently. Today we begin teaching machines to solve problems the same way. That journey is called Artificial Intelligence."
+  </div>
+  <div class="tip"><span class="tag">Teaching tip</span>Let 2-3 students actually answer "where would you look first" before revealing the point — the debate makes the insight land harder than just telling them.</div>
+</div>
+
+<div class="segment" id="s3">
+  <div class="segment-head"><div class="segnum">3</div><h2>What Makes Someone Intelligent?</h2><div class="segtime">7 min</div></div>
+  <div class="say"><span class="tag">Say this</span>
+  "Before defining AI, let's understand something more basic — what IS intelligence? Who is the most intelligent student in your class? Now tell me WHY — not who, why."
+  </div>
+  <p style="font-size:15px;color:var(--slate)">Write responses on board as they come: learns quickly, solves problems, makes good decisions, thinks differently, learns from mistakes.</p>
+  <div class="board"><span class="tag">Build this mind-map live</span>              Intelligence
+           /     |      \
+    Learning  Reasoning  Decision-Making
+        \       |        /
+          Problem Solving
+               |
+          Adaptability</div>
+  <div class="say"><span class="tag">Land it</span>
+  "Notice something — nobody said 'because he has the biggest notebook' or 'because he memorises everything.' Knowledge and intelligence are not the same. A person is intelligent because of HOW they use knowledge, not how much they know."
+  </div>
+  <div class="ask"><span class="tag">Ask the class</span>Cold-call one student: "Name someone you think is intelligent, and tell me why in one sentence." Use their exact wording in the wrap-up line above — it lands better coming from a peer.</div>
+</div>
+
+<div class="segment" id="s4">
+  <div class="segment-head"><div class="segnum">4</div><h2>Defining Artificial Intelligence</h2><div class="segtime">8 min</div></div>
+  <div class="say"><span class="tag">Say this</span>
+  "Now we're ready. Artificial Intelligence simply means making machines capable of performing tasks that normally require human intelligence. Notice — the definition never mentions robots. Never says ChatGPT. Never says humanoids. AI is not a machine. AI is an ability."
+  </div>
+  <div class="board"><span class="tag">Write on board</span>Instead of memorising the definition, remember 5 abilities:
+  LEARN · REASON · DECIDE · SOLVE PROBLEMS · ADAPT</div>
+  <div class="ask"><span class="tag">Ask the class</span>
+  "So — can software be AI?" (Yes) "Can a mobile app be AI?" (Yes) "Can a robot exist WITHOUT AI?" (Yes) — "A robot without intelligence is just a machine."
+  </div>
+  <div class="exam"><span class="tag">Exam alert</span>"Define AI. What are the 4 approaches (thinking humanly / thinking rationally / acting humanly / acting rationally)?" is a classic 2-mark. This course focuses on <strong>acting rationally</strong> — best possible action given available information, not literal human-like thinking.</div>
+</div>
+
+<div class="segment" id="s5">
+  <div class="segment-head"><div class="segnum">5</div><h2>AI Around Us</h2><div class="segtime">6 min</div></div>
+  <div class="say"><span class="tag">Say this</span>
+  "Let's see if AI is really everywhere. Take Google Maps — does it randomly suggest routes? No — it studies traffic, road closures, travel time, then decides. Gmail — how does it know which email is spam? Netflix — why don't all of us get the same recommendations? Because it has learned OUR preferences."
+  </div>
+  <table>
+    <tr><th>Application</th><th>Intelligent Task</th></tr>
+    <tr><td>Google Maps</td><td>Best route</td></tr>
+    <tr><td>Gmail</td><td>Spam detection</td></tr>
+    <tr><td>Netflix</td><td>Movie recommendation</td></tr>
+    <tr><td>Amazon</td><td>Product recommendation</td></tr>
+    <tr><td>Face Unlock</td><td>Face recognition</td></tr>
+  </table>
+  <div class="say"><span class="tag">Land it</span>
+  "AI is not about displaying information. AI is about making intelligent decisions based on available information."
+  </div>
+</div>
+
+<div class="segment" id="s6">
+  <div class="segment-head"><div class="segnum">6</div><h2>The Intelligent Agent</h2><div class="segtime">10 min</div></div>
+  <div class="say"><span class="tag">Say this</span>
+  "Let's understand one of the most important concepts in AI — the Intelligent Agent. Imagine a Swiggy delivery partner. He receives an order. Checks the location. Observes traffic. Chooses a route. Delivers the food. Throughout, he's continuously observing, deciding, acting."
+  </div>
+  <div class="board"><span class="tag">Draw on board</span>Environment
+    ↓
+ Perceive
+    ↓
+Think / Decide
+    ↓
+Take Action</div>
+  <div class="say"><span class="tag">Formal definition</span>
+  "An Intelligent Agent is anything that perceives its environment, makes decisions, and performs actions to achieve a goal. An AI system behaves exactly like the Swiggy rider — gather information → process → decide → act. This perceive → decide → act cycle is the heart of AI."
+  </div>
+  <div class="pitfall"><span class="tag">Common confusion</span>Students think an agent must "look" intelligent or human-like. Emphasise next section immediately — a thermostat qualifies, a calculator doesn't.</div>
+</div>
+
+<div class="segment" id="s7">
+  <div class="segment-head"><div class="segnum">7</div><h2>Classroom Interaction — Agent or Not?</h2><div class="segtime">8 min</div></div>
+  <div class="say"><span class="tag">Say this</span>
+  "Let's test our understanding. I'll name something. You tell me — Intelligent Agent, yes or no?"
+  </div>
+  <table>
+    <tr><th>Item</th><th>Agent?</th><th>Why</th></tr>
+    <tr><td>Calculator</td><td>No</td><td>Doesn't make decisions — just computes what's typed</td></tr>
+    <tr><td>Google Maps</td><td>Yes</td><td>Continuously observes traffic, changes routes</td></tr>
+    <tr><td>Thermostat</td><td>Yes</td><td>Senses temperature, decides AC on/off</td></tr>
+    <tr><td>Chess AI</td><td>Yes</td><td>Perceives board state, decides best move</td></tr>
+    <tr><td>ChatGPT</td><td>Yes</td><td>Perceives your prompt, decides a response</td></tr>
+    <tr><td>Robot Vacuum</td><td>Yes</td><td>Senses obstacles, decides path, acts</td></tr>
+  </table>
+  <div class="say"><span class="tag">Land it</span>
+  "This is an important point — an Intelligent Agent does NOT have to look like a human."
+  </div>
+</div>
+
+<div class="segment" id="s8">
+  <div class="segment-head"><div class="segnum">8</div><h2>Exam-Ready Vocabulary</h2><div class="segtime">4 min</div></div>
+  <div class="say"><span class="tag">Say this</span>
+  "These are the concepts that frequently appear in university exams. Don't memorise lengthy definitions — understand the concept first. If you understand how Google Maps or Gmail works, you'll explain AI naturally in the exam."
+  </div>
+  <ul class="checklist">
+    <li>Artificial Intelligence — the ability, not a machine</li>
+    <li>Intelligence vs Knowledge — using info vs having info</li>
+    <li>Intelligent Agent — perceive → decide → act</li>
+    <li>Perceive, Decision, Action — the 3-word cycle</li>
+  </ul>
+  <div class="exam"><span class="tag">Likely questions</span>Define AI · Define Intelligent Agent · Give examples of Intelligent Agents · Explain AI with real-life applications</div>
+</div>
+
+<div class="segment" id="s9">
+  <div class="segment-head"><div class="segnum">9</div><h2>Wrap-Up &amp; Transition</h2><div class="segtime">6 min</div></div>
+  <div class="takeaway">"An Intelligent Agent perceives, decides, and acts —<br>and AI is simply that ability, wherever it shows up."</div>
+  <div class="say"><span class="tag">Say this</span>
+  "Today answered: What is Artificial Intelligence? Next class answers something more interesting — suppose Google Maps has hundreds of possible roads. How does it choose the best one? Suppose a chess computer has 30 possible moves. Does it guess, or follow a strategy? That takes us into one of the most fundamental topics in AI — <strong>Search</strong>."
+  </div>
+  <div class="tip"><span class="tag">Teaching tip</span>End 2 minutes early — run the attendance OTP, remind students the notes are on kpsingh.in with the same examples used in class.</div>
+</div>
+
+</div>
+
+<button class="print-btn" onclick="window.print()">🖨 Print / Save as PDF</button>
+
+</body>
+</html>
