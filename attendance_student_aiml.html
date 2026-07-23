@@ -116,7 +116,7 @@ const ROSTER = {
 };
 
 // ── YOUR LIVE GAS URL ─────────────────────────────────────────
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbyBlq_-jB_U1-109p4NnD2NWI3lUCQEKih6q8ZtMhJzN8a1W56ACEvw-REwOQt2tBhRWQ/exec';
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbzpC77gDR-hZBNnojx9h4lEfwR_Q67Bz9ZWIIRe0CCdhKLS9Rj75IgtqnBD_-GEUl80/exec';
 
 const SGT_LAT = 28.482876235405023, SGT_LNG = 76.90686746329484, RADIUS_M = 400;
 let resolvedName = '', gpsLat = null, gpsLng = null, gpsAccuracy = null;
@@ -222,6 +222,8 @@ async function submitAttendance() {
   try {
     const response = await fetch(GAS_URL, {
       method: 'POST',
+      redirect: 'follow',
+      headers: {'Content-Type': 'text/plain'},
       body: JSON.stringify(payload)
     });
     const result = await response.json();
