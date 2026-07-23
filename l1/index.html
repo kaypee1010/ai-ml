@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Notes — Lecture 1: Introduction to AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&family=Inconsolata:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --accent:#8B3A3A; --accent-pale:#f5ede8; --accent-mid:rgba(139,58,58,.13);
+  --ink:#2a2420; --paper:#faf6f0; --cream:#fff; --slate:#6b6258; --slate-light:#a8a095;
+  --border:#e5dccf; --border-strong:#d0c2ae; --teal:#2e7d6b; --teal-pale:#e3f2ef;
+  --gold:#b8860b; --gold-pale:#fbf3df;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);line-height:1.7}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.025;z-index:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9'/%3E%3C/filter%3E%3Crect width='60' height='60' filter='url(%23n)'/%3E%3C/svg%3E")}
+body::after{content:"";position:fixed;top:0;right:0;width:280px;height:280px;pointer-events:none;z-index:0;
+  background:repeating-linear-gradient(45deg,var(--accent) 0,var(--accent) 1px,transparent 1px,transparent 14px);opacity:.04}
+
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;
+  padding:12px 28px;background:rgba(250,246,240,.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+.nav-brand{display:flex;align-items:center;gap:10px}
+.nav-logo{width:38px;height:38px;border-radius:50%;object-fit:cover;border:1.5px solid var(--accent)}
+.nav-name{font-family:'DM Serif Display',serif;font-size:15px}
+.nav-sub{font-family:'Inconsolata',monospace;font-size:11px;color:var(--slate)}
+.nav-cta{background:var(--accent);color:#fff;padding:8px 16px;border-radius:20px;text-decoration:none;font-size:13px;font-weight:600}
+
+.hero{margin-top:66px;padding:36px 24px 20px;text-align:center;position:relative;z-index:1}
+.hero .eyebrow{font-family:'Inconsolata',monospace;font-size:12px;color:var(--accent);letter-spacing:2px;text-transform:uppercase}
+.hero h1{font-family:'DM Serif Display',serif;font-size:36px;margin:8px 0}
+.hero h1 em{color:var(--accent);font-style:italic}
+.hero p{color:var(--slate);font-size:14px}
+
+.progress-wrap{max-width:760px;margin:20px auto;padding:0 24px}
+.progress-track{height:8px;background:var(--border);border-radius:6px;overflow:hidden}
+.progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),#c25b5b);border-radius:6px;transition:width .3s}
+.progress-label{font-family:'Inconsolata',monospace;font-size:11px;color:var(--slate);text-align:right;margin-top:4px}
+
+.tabs{max-width:760px;margin:0 auto 20px;padding:0 24px;display:flex;gap:8px;flex-wrap:wrap;justify-content:center;position:relative;z-index:1}
+.tab{background:var(--cream);border:1px solid var(--border-strong);color:var(--ink);padding:8px 16px;border-radius:18px;
+  font-size:12.5px;font-weight:600;cursor:pointer;font-family:'Inconsolata',monospace;transition:all .2s}
+.tab.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.tab .done{color:var(--teal);margin-right:4px}
+
+.wrap{max-width:760px;margin:0 auto;padding:0 24px 60px;position:relative;z-index:1}
+
+.card{background:var(--cream);border:1px solid var(--border);border-radius:16px;padding:30px 32px;margin-bottom:24px;
+  box-shadow:0 3px 14px rgba(139,58,58,.06);border-top:5px solid var(--accent);display:none;scroll-margin-top:90px}
+.card.active{display:block;animation:fadein .3s ease}
+@keyframes fadein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.card h2{font-family:'DM Serif Display',serif;font-size:24px;color:var(--ink);margin-bottom:6px}
+.card .subtitle{font-family:'Inconsolata',monospace;font-size:12px;color:var(--accent);margin-bottom:18px}
+
+.handwrite{font-family:'Caveat',cursive;font-weight:700;color:var(--accent);font-size:1.3em}
+.story-box{background:var(--gold-pale);border:1.5px dashed var(--gold);border-radius:12px;padding:18px 22px;margin:16px 0}
+.story-box .icon{font-size:22px}
+.story-box p{font-size:15.5px}
+
+.def-card{background:var(--accent-pale);border-left:5px solid var(--accent);border-radius:0 12px 12px 0;padding:18px 22px;margin:16px 0}
+.def-card .label{font-family:'Inconsolata',monospace;font-size:11px;color:var(--accent);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:6px}
+.def-card p{font-size:16px}
+
+.flow{display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;margin:20px 0}
+.flow-step{background:var(--accent);color:#fff;padding:10px 18px;border-radius:24px;font-weight:600;font-size:14px;
+  font-family:'Inconsolata',monospace}
+.flow-arrow{color:var(--accent);font-size:20px}
+
+.mindmap{background:var(--teal-pale);border-radius:14px;padding:24px;text-align:center;margin:18px 0}
+.mindmap .center{background:var(--teal);color:#fff;display:inline-block;padding:10px 20px;border-radius:20px;font-weight:700;margin-bottom:14px}
+.mindmap .branches{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.mindmap .branch{background:#fff;border:1.5px solid var(--teal);color:var(--teal);padding:6px 14px;border-radius:16px;font-size:13px;font-weight:600}
+
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:14.5px}
+th{background:var(--accent);color:#fff;padding:10px 14px;text-align:left}
+td{padding:9px 14px;border-bottom:1px solid var(--border)}
+tr:nth-child(even) td{background:var(--accent-pale)}
+
+.interactive-quiz{background:var(--paper);border:2px solid var(--border-strong);border-radius:14px;padding:20px 24px;margin:20px 0}
+.interactive-quiz h3{font-family:'DM Serif Display',serif;font-size:17px;margin-bottom:12px;color:var(--accent)}
+.iq-item{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:#fff;
+  border:1px solid var(--border);border-radius:10px;margin-bottom:8px;font-size:14.5px}
+.iq-btns{display:flex;gap:6px}
+.iq-btn{border:1.5px solid var(--border-strong);background:#fff;border-radius:8px;padding:5px 12px;font-size:12px;
+  cursor:pointer;font-weight:600;font-family:'DM Sans',sans-serif}
+.iq-btn.correct-picked{background:var(--teal);color:#fff;border-color:var(--teal)}
+.iq-btn.wrong-picked{background:#c0392b;color:#fff;border-color:#c0392b}
+.iq-explain{font-size:12.5px;color:var(--slate);margin-top:6px;display:none;font-style:italic}
+
+.exam-box{background:#f2e9f5;border:1px solid #cbadd8;border-radius:12px;padding:18px 22px;margin:18px 0}
+.exam-box h4{font-family:'DM Serif Display',serif;color:#6b3a8a;font-size:15px;margin-bottom:10px}
+.exam-box .marks-row{display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.marks-tag{background:#6b3a8a;color:#fff;font-size:10.5px;padding:2px 8px;border-radius:8px;font-weight:700;font-family:'Inconsolata',monospace}
+.exam-box ul{margin-left:18px;font-size:14px}
+.exam-box li{margin:4px 0}
+
+.flashcard{background:#fff;border:1.5px solid var(--border-strong);border-radius:12px;padding:16px 20px;margin:12px 0;
+  cursor:pointer;transition:all .2s;position:relative}
+.flashcard:hover{border-color:var(--accent);box-shadow:0 2px 10px rgba(139,58,58,.1)}
+.flashcard .term{font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center}
+.flashcard .flip-hint{font-size:11px;color:var(--slate-light);font-family:'Inconsolata',monospace}
+.flashcard .answer{display:none;margin-top:10px;padding-top:10px;border-top:1px dashed var(--border-strong);font-size:14px;color:var(--slate)}
+.flashcard.flipped .answer{display:block}
+
+.nav-buttons{display:flex;justify-content:space-between;margin-top:20px}
+.nav-btn{background:var(--accent);color:#fff;border:none;padding:10px 22px;border-radius:20px;font-weight:600;
+  cursor:pointer;font-size:14px;font-family:'DM Sans',sans-serif}
+.nav-btn:disabled{background:var(--border-strong);cursor:not-allowed}
+.nav-btn.secondary{background:var(--accent-pale);color:var(--accent)}
+
+.oneliner{background:linear-gradient(135deg,var(--accent),#6B2D2D);color:#fff;border-radius:14px;padding:22px 26px;
+  text-align:center;font-family:'DM Serif Display',serif;font-size:19px;line-height:1.5;margin:18px 0}
+
+.footer{text-align:center;font-size:12px;color:var(--slate-light);padding:20px;font-family:'Inconsolata',monospace}
+@media(max-width:600px){.hero h1{font-size:26px}.card{padding:20px 20px}.flow{flex-direction:column}.flow-arrow{transform:rotate(90deg)}}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-brand">
+    <img class="nav-logo" src="KP_Singh.png" alt="K.P. Singh" onerror="this.style.display='none'"/>
+    <div>
+      <div class="nav-name">K.P. Singh</div>
+      <div class="nav-sub">SGT University · AI &amp; ML</div>
+    </div>
+  </div>
+  <a class="nav-cta" href="https://kpsingh.in" target="_blank">kpsingh.in ↗</a>
+</nav>
+
+<div class="hero">
+  <div class="eyebrow">Unit 1 · BTech CSE 7th Sem</div>
+  <h1>Introduction to <em>Artificial Intelligence</em></h1>
+  <p>Lecture 1 Notes · Intelligent Agents · Exam-ready, interactive, and (hopefully) fun</p>
+</div>
+
+<div class="progress-wrap">
+  <div class="progress-track"><div class="progress-fill" id="progFill"></div></div>
+  <div class="progress-label" id="progLabel">Section 1 of 6</div>
+</div>
+
+<div class="tabs" id="tabBar">
+  <div class="tab active" data-i="0">1 · Story</div>
+  <div class="tab" data-i="1">2 · What is AI?</div>
+  <div class="tab" data-i="2">3 · AI Around Us</div>
+  <div class="tab" data-i="3">4 · Intelligent Agent</div>
+  <div class="tab" data-i="4">5 · Practice</div>
+  <div class="tab" data-i="5">6 · Exam Prep</div>
+</div>
+
+<div class="wrap">
+
+<!-- CARD 0 -->
+<div class="card active" data-i="0">
+  <div class="subtitle">Before the definition — a story</div>
+  <h2>The Chashma That Started It All 👓</h2>
+  <div class="story-box">
+    <p><span class="icon">🗣️</span> <em>"Beta, meri chashma bedroom mein kahin reh gayi hai. Zara dhoond ke laao."</em></p>
+  </div>
+  <p>You didn't randomly open every drawer. You didn't check the kitchen. You went straight for the pillow, the bedside table, the study table — because <span class="handwrite">experience told you where to look.</span></p>
+  <p style="margin-top:12px">That's it. That's the seed of Artificial Intelligence — <strong>searching intelligently</strong>, using what you know, instead of guessing randomly. Machines that do this are what we spend this whole course building.</p>
+
+  <div class="def-card">
+    <div class="label">Key insight</div>
+    <p>You didn't <em>know</em> where the glasses were — yet you followed a <em>strategy</em>. Intelligence is about the strategy, not certainty.</p>
+  </div>
+
+  <div class="mindmap">
+    <div class="center">Intelligence</div>
+    <div class="branches">
+      <div class="branch">Learning</div>
+      <div class="branch">Reasoning</div>
+      <div class="branch">Decision-Making</div>
+      <div class="branch">Problem Solving</div>
+      <div class="branch">Adaptability</div>
+    </div>
+  </div>
+  <p style="font-size:14px;color:var(--slate);text-align:center;margin-top:6px">Nobody is intelligent because of a "big notebook." It's about <strong>how</strong> you use what you know — not how much you know.</p>
+</div>
+
+<!-- CARD 1 -->
+<div class="card" data-i="1">
+  <div class="subtitle">The formal definition (finally)</div>
+  <h2>What is Artificial Intelligence?</h2>
+  <div class="def-card">
+    <div class="label">Definition</div>
+    <p><strong>Artificial Intelligence</strong> is the branch of computer science that enables machines to perform tasks requiring human intelligence — learning, reasoning, decision-making, problem-solving, and adaptation.</p>
+  </div>
+  <p>Notice what's <strong>missing</strong> from that definition: no robots, no ChatGPT, no humanoids. <span class="handwrite">AI is not a machine — AI is an ability.</span></p>
+
+  <h3 style="font-family:'DM Serif Display',serif;font-size:16px;margin:18px 0 8px;color:var(--accent)">5 Abilities to Remember </h3>
+  <div class="flow">
+    <div class="flow-step">Learn</div><div class="flow-arrow">·</div>
+    <div class="flow-step">Reason</div><div class="flow-arrow">·</div>
+    <div class="flow-step">Decide</div><div class="flow-arrow">·</div>
+    <div class="flow-step">Solve</div><div class="flow-arrow">·</div>
+    <div class="flow-step">Adapt</div>
+  </div>
+
+  <table>
+    <tr><th>Knowledge</th><th>Intelligence</th></tr>
+    <tr><td>Information possessed</td><td>Ability to use information effectively</td></tr>
+    <tr><td>Can be memorised</td><td>Requires reasoning</td></tr>
+    <tr><td>Static</td><td>Dynamic</td></tr>
+    <tr><td>e.g. Remembering formulas</td><td>e.g. Choosing the <em>correct</em> formula for the problem</td></tr>
+  </table>
+
+  <div class="story-box">
+    <p><strong>Quick self-check:</strong> Can software be AI? <span class="handwrite">Yes.</span> Can a mobile app be AI? <span class="handwrite">Yes.</span> Can a robot exist without AI? <span class="handwrite">Yes — it's just a machine then.</span></p>
+  </div>
+</div>
+
+<!-- CARD 2 -->
+<div class="card" data-i="2">
+  <div class="subtitle">Spotting AI in daily life</div>
+  <h2>AI Around Us — Can You Spot It?</h2>
+  <p>AI isn't about <em>showing</em> you information — it's about <strong>deciding</strong> what to show you, based on data.</p>
+  <table>
+    <tr><th>Application</th><th>What's actually "intelligent" about it</th></tr>
+    <tr><td>Google Maps</td><td>Studies traffic + closures + travel time → picks best route</td></tr>
+    <tr><td>Gmail</td><td>Learns spam patterns → filters automatically</td></tr>
+    <tr><td>Netflix</td><td>Learns YOUR preferences → different recs for everyone</td></tr>
+    <tr><td>Amazon</td><td>Predicts what you'll likely buy next</td></tr>
+    <tr><td>Face Unlock</td><td>Recognises your face among millions of possible faces</td></tr>
+  </table>
+  <div class="oneliner">"AI is not about displaying information —<br>it's about deciding intelligently from it."</div>
+</div>
+
+<!-- CARD 3 -->
+<div class="card" data-i="3">
+  <div class="subtitle">The single most important concept in this unit</div>
+  <h2>The Intelligent Agent</h2>
+  <div class="def-card">
+    <div class="label">Definition</div>
+    <p>An <strong>Intelligent Agent</strong> is anything that <em>perceives</em> its environment, <em>makes decisions</em>, and <em>performs actions</em> to achieve a goal.</p>
+  </div>
+
+  <div class="flow">
+    <div class="flow-step">Environment</div><div class="flow-arrow">↓</div>
+    <div class="flow-step">Perceive</div><div class="flow-arrow">↓</div>
+    <div class="flow-step">Decide</div><div class="flow-arrow">↓</div>
+    <div class="flow-step">Act</div>
+  </div>
+
+  <p>Think of a <strong>Swiggy delivery partner</strong>: receives the order → checks location → observes traffic → picks a route → delivers. This <span class="handwrite">Perceive → Decide → Act</span> loop is the heartbeat of every AI system.</p>
+
+  <h3 style="font-family:'DM Serif Display',serif;font-size:16px;margin:18px 0 4px;color:var(--accent)">Flashcards — tap to reveal</h3>
+  <div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="term">Perceive <span class="flip-hint">tap to flip</span></div>
+    <div class="answer">The agent gathering information from its environment through sensors — e.g. a thermostat sensing room temperature.</div>
+  </div>
+  <div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="term">Decide <span class="flip-hint">tap to flip</span></div>
+    <div class="answer">Choosing the best action based on what was perceived — e.g. thermostat decides AC should switch ON.</div>
+  </div>
+  <div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="term">Act <span class="flip-hint">tap to flip</span></div>
+    <div class="answer">Executing the decision through actuators — e.g. thermostat actually switches the AC relay.</div>
+  </div>
+  <div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="term">Goal <span class="flip-hint">tap to flip</span></div>
+    <div class="answer">What the agent is trying to achieve — e.g. keep the room at 24°C, or deliver food as fast as possible.</div>
+  </div>
+</div>
+
+<!-- CARD 4 -->
+<div class="card" data-i="4">
+  <div class="subtitle">Interactive self-check</div>
+  <h2>Agent or Not? — Click Your Guess</h2>
+  <p style="margin-bottom:14px">Click <strong>YES</strong> or <strong>NO</strong> for each — see if you're right, then check the explanation.</p>
+  <div class="interactive-quiz">
+    <div id="agentQuiz"></div>
+  </div>
+</div>
+
+<!-- CARD 5 -->
+<div class="card" data-i="5">
+  <div class="subtitle">What the examiner is actually looking for</div>
+  <h2>Exam Prep — Lecture 1</h2>
+
+  <div class="exam-box">
+    <h4>2-Mark Questions</h4>
+    <ul>
+      <li>Define Artificial Intelligence.</li>
+      <li>Define an Intelligent Agent.</li>
+      <li>Give any two examples of Intelligent Agents.</li>
+    </ul>
+  </div>
+  <div class="exam-box">
+    <h4>5-Mark Questions</h4>
+    <ul>
+      <li>Explain the characteristics of Artificial Intelligence.</li>
+      <li>Explain Intelligent Agents with suitable examples.</li>
+    </ul>
+  </div>
+  <div class="exam-box">
+    <h4>10-Mark Questions</h4>
+    <ul>
+      <li>Define Artificial Intelligence and discuss its applications.</li>
+      <li>Explain the concept of Intelligent Agents with real-life examples, including the Perceive-Decide-Act cycle.</li>
+    </ul>
+  </div>
+
+  <div class="oneliner">
+    "Artificial Intelligence is the science of making machines<br>capable of perceiving, reasoning, learning, deciding, and acting<br>intelligently to solve problems.<br><br>
+    An Intelligent Agent is any system that observes its environment,<br>makes decisions, and performs actions to achieve a goal."
+  </div>
+
+  <p style="text-align:center;margin-top:16px;color:var(--slate);font-size:13.5px">✍️ Write both one-liners in your own words once, from memory. That's the fastest way to make them exam-proof.</p>
+</div>
+
+<div class="nav-buttons">
+  <button class="nav-btn secondary" id="prevBtn" onclick="go(-1)" disabled>← Previous</button>
+  <button class="nav-btn" id="nextBtn" onclick="go(1)">Next →</button>
+</div>
+
+</div>
+
+<div class="footer">K.P Singh · AI &amp; ML · BTech CSE Sem 7 · kpsingh.in</div>
+
+<script>
+var cards = document.querySelectorAll('.card');
+var tabs = document.querySelectorAll('.tab');
+var current = 0;
+var total = cards.length;
+
+function render() {
+  cards.forEach(function(c){ c.classList.toggle('active', +c.dataset.i === current); });
+  tabs.forEach(function(t){ t.classList.toggle('active', +t.dataset.i === current); });
+  document.getElementById('progFill').style.width = ((current+1)/total*100) + '%';
+  document.getElementById('progLabel').textContent = 'Section ' + (current+1) + ' of ' + total;
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').textContent = current === total-1 ? 'Done ✓' : 'Next →';
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+function go(delta) {
+  var next = current + delta;
+  if (next < 0 || next >= total) return;
+  current = next;
+  render();
+}
+tabs.forEach(function(t){
+  t.addEventListener('click', function(){ current = +this.dataset.i; render(); });
+});
+
+// ── Interactive Agent-or-Not quiz ──
+var items = [
+  {name:'Calculator', ans:'NO', why:"Doesn't perceive an environment or make decisions — it just computes exactly what you type."},
+  {name:'Google Maps', ans:'YES', why:'Continuously observes traffic and changes the suggested route.'},
+  {name:'Thermostat', ans:'YES', why:'Senses temperature and decides whether to switch the AC on or off.'},
+  {name:'Chess AI', ans:'YES', why:'Perceives the board state and decides the best move to play.'},
+  {name:'ChatGPT', ans:'YES', why:'Perceives your prompt (environment) and decides a response (action).'},
+  {name:'Robot Vacuum Cleaner', ans:'YES', why:'Senses obstacles and dirt, decides a path, and acts by cleaning.'}
+];
+var quizDiv = document.getElementById('agentQuiz');
+items.forEach(function(item, idx){
+  var row = document.createElement('div');
+  row.className = 'iq-item';
+  row.innerHTML =
+    '<span>' + item.name + '</span>' +
+    '<div class="iq-btns">' +
+      '<button class="iq-btn" data-idx="'+idx+'" data-val="YES">YES</button>' +
+      '<button class="iq-btn" data-idx="'+idx+'" data-val="NO">NO</button>' +
+    '</div>';
+  quizDiv.appendChild(row);
+  var explain = document.createElement('div');
+  explain.className = 'iq-explain';
+  explain.id = 'explain-' + idx;
+  explain.textContent = item.why;
+  quizDiv.appendChild(explain);
+});
+quizDiv.addEventListener('click', function(e){
+  if (!e.target.classList.contains('iq-btn')) return;
+  var idx = e.target.dataset.idx, val = e.target.dataset.val;
+  var correct = items[idx].ans;
+  var btns = quizDiv.querySelectorAll('[data-idx="'+idx+'"]');
+  btns.forEach(function(b){ b.classList.remove('correct-picked','wrong-picked'); });
+  e.target.classList.add(val === correct ? 'correct-picked' : 'wrong-picked');
+  document.getElementById('explain-'+idx).style.display = 'block';
+});
+
+render();
+</script>
+
+</body>
+</html>
