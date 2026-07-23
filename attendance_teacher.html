@@ -130,23 +130,24 @@ async function generateOTP() {
 
   currentOTP = Math.floor(100000 + Math.random() * 900000).toString();
   sessionDate = new Date().toLocaleDateString('en-IN', {day:'2-digit', month:'short', year:'numeric'});
-  sessionActive = true;
   presentCount = 0;
   secondsLeft = OTP_DURATION;
 
   const sections = selectedCourse === 'AI_ML' ? ['A','B','C','D'] : ['C'];
 
-  // Start sessions on GAS — properly awaited
-  for (const sec of sections) {
-    try {
-      await fetch(GAS_URL, {
-        method: 'POST',
-        redirect: 'follow',
-        headers: {'Content-Type': 'text/plain'},
-        body: JSON.stringify({type:'session_start', subject:selectedCourse, section:sec, otp:currentOTP, date:sessionDate})
-      });
-    } catch(e) { console.warn('session_start error', sec, e); }
-  }
+  // Fire session_start to GAS — don't await, don't block OTP display
+  // If GAS is slow/unreachable, OTP still shows immediately
+  sections.forEach(sec => {
+    fetch(GAS_URL, {
+      method: 'POST',
+      redirect: 'follow',
+      headers: {'Content-Type': 'text/plain'},
+      body: JSON.stringify({type:'session_start', subject:selectedCourse, section:sec, otp:currentOTP, date:sessionDate})
+    }).catch(e => console.warn('session_start error', sec, e));
+  });
+
+  // Mark active AFTER firing requests, not before
+  sessionActive = true;
 
   document.getElementById('otpCode').textContent = currentOTP;
   document.getElementById('otpLabel').textContent =
@@ -177,20 +178,18 @@ function startTimer() {
   }, 1000);
 }
 
-async function closeSession() {
+function closeSession() {
   sessionActive = false;
   clearInterval(timerInterval);
   const sections = selectedCourse === 'AI_ML' ? ['A','B','C','D'] : ['C'];
-  for (const sec of sections) {
-    try {
-      await fetch(GAS_URL, {
-        method: 'POST',
-        redirect: 'follow',
-        headers: {'Content-Type': 'text/plain'},
-        body: JSON.stringify({type:'session_close', subject:selectedCourse, section:sec, date:sessionDate})
-      });
-    } catch(e) { console.warn('session_close error', e); }
-  }
+  sections.forEach(sec => {
+    fetch(GAS_URL, {
+      method: 'POST',
+      redirect: 'follow',
+      headers: {'Content-Type': 'text/plain'},
+      body: JSON.stringify({type:'session_close', subject:selectedCourse, section:sec, date:sessionDate})
+    }).catch(e => console.warn('session_close error', e));
+  });
   document.getElementById('otpBox').style.display = 'none';
   document.getElementById('closeBtn').style.display = 'none';
   document.getElementById('startBtn').disabled = false;
