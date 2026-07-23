@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI & ML Attendance — BTech Sem 7</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Georgia',serif;background:linear-gradient(135deg,#f5f1e8,#e8e3d8);min-height:100vh;padding:16px}
+.card{max-width:460px;margin:0 auto;background:#fff;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,.12);overflow:hidden}
+.header{background:linear-gradient(135deg,#8B3A3A,#6B2D2D);color:#fff;padding:20px 24px;display:flex;gap:14px;align-items:center}
+.logo{width:54px;height:54px;border-radius:50%;border:2px solid rgba(255,255,255,.3);overflow:hidden;flex-shrink:0}
+.logo img{width:100%;height:100%;object-fit:cover}
+.hinfo h1{font-size:18px;margin-bottom:2px}
+.hinfo p{font-size:12px;opacity:.9}
+.hinfo a{color:#ffd89b;font-size:12px;text-decoration:none;border:1px solid rgba(255,216,155,.4);padding:2px 7px;border-radius:3px;display:inline-block;margin-top:5px}
+.body{padding:24px}
+
+/* GPS Banner — shown prominently at top */
+.gps-banner{background:#fff8e1;border:2px solid #f9a825;border-radius:8px;padding:14px 16px;margin-bottom:20px;display:flex;gap:12px;align-items:flex-start}
+.gps-banner .icon{font-size:24px;flex-shrink:0;margin-top:2px}
+.gps-banner .text h3{font-size:14px;color:#e65100;margin-bottom:3px}
+.gps-banner .text p{font-size:12px;color:#555;line-height:1.5}
+.gps-banner .btn-gps{margin-top:8px;background:#f9a825;color:#fff;border:none;padding:7px 14px;border-radius:4px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit}
+.gps-banner .btn-gps:disabled{background:#ccc;cursor:not-allowed}
+
+.gps-result{padding:10px 14px;border-radius:6px;font-size:13px;margin-bottom:16px;display:none}
+.gps-ok{background:#d4edda;color:#155724;border:1px solid #c3e6cb}
+.gps-warn{background:#fff3cd;color:#856404;border:1px solid #ffeeba}
+
+.field{margin-bottom:16px}
+label{display:block;font-weight:600;font-size:13px;color:#444;margin-bottom:5px}
+select,input[type=text]{width:100%;padding:11px 13px;border:1px solid #d0c8b8;border-radius:5px;font-size:15px;background:#fafafa;font-family:inherit;transition:border-color .2s}
+select:focus,input:focus{outline:none;border-color:#8B3A3A;box-shadow:0 0 0 3px rgba(139,58,58,.1);background:#fff}
+.name-box{background:#f0ebe0;border:1px solid #c8b89a;border-radius:5px;padding:11px 13px;font-size:15px;font-weight:600;color:#5a3a1a;min-height:44px;display:flex;align-items:center}
+.name-ok{color:#1a5c2a !important}
+.name-err{color:#7c1c24 !important}
+
+.btn-submit{width:100%;padding:14px;background:#8B3A3A;color:#fff;border:none;border-radius:5px;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .2s;margin-top:4px}
+.btn-submit:hover{background:#6B2D2D}
+.btn-submit:disabled{background:#aaa;cursor:not-allowed}
+
+.msg{padding:14px;border-radius:6px;margin-bottom:16px;font-size:14px;display:none;text-align:center;line-height:1.5}
+.msg.success{background:#d4edda;color:#155724;border:1px solid #c3e6cb}
+.msg.error{background:#f8d7da;color:#721c24;border:1px solid #f5c6cb}
+
+.internship-block{background:#fff3cd;border:2px solid #f9a825;border-radius:8px;padding:16px;text-align:center;display:none}
+.internship-block h3{color:#856404;margin-bottom:6px}
+.internship-block p{font-size:13px;color:#555}
+
+.footer{text-align:center;font-size:11px;color:#aaa;margin-top:18px;padding-top:14px;border-top:1px solid #eee}
+.otp-input{letter-spacing:6px;font-size:22px;text-align:center;font-family:'Courier New',monospace}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="header">
+    <div class="logo"><img src="../KP_Singh.png" alt="KP Singh"></div>
+    <div class="hinfo">
+      <h1>AI &amp; ML — Sem 7</h1>
+      <p>SGT University, Gurugram · Attendance</p>
+      <a href="https://kpsingh.in" target="_blank">🌐 kpsingh.in</a>
+    </div>
+  </div>
+  <div class="body">
+    <div id="msg" class="msg"></div>
+
+    <!-- GPS Banner — prominent, shown before form -->
+    <div class="gps-banner" id="gpsBanner">
+      <div class="icon">📍</div>
+      <div class="text">
+        <h3>Location Access Required</h3>
+        <p>Your attendance is verified using GPS. Please enable location access before marking attendance. Tap the button below and allow when your browser asks.</p>
+        <button class="btn-gps" id="gpsBtn" onclick="requestGPS()">Enable Location Now</button>
+      </div>
+    </div>
+    <div id="gpsResult" class="gps-result"></div>
+
+    <!-- Internship block (shown if student is on internship) -->
+    <div class="internship-block" id="internshipBlock">
+      <h3>⚠️ Internship Exemption</h3>
+      <p>You are marked as on internship for this semester. Attendance is not applicable. Your record will show 0 as per SGT norms.<br><br>Contact Dr. Kamalpreet Singh if this is incorrect.</p>
+    </div>
+
+    <!-- Main form -->
+    <div id="mainForm">
+      <div class="field">
+        <label>Section *</label>
+        <select id="section">
+          <option value="">-- Select your section --</option>
+          <option value="A">Section A</option>
+          <option value="B">Section B</option>
+          <option value="C">Section C</option>
+          <option value="D">Section D</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Registration Number *</label>
+        <input type="text" id="reg" placeholder="e.g. 231302045" maxlength="12" inputmode="numeric">
+      </div>
+
+      <div class="field">
+        <label>Name (auto-filled)</label>
+        <div class="name-box" id="nameBox">—</div>
+      </div>
+
+      <div class="field">
+        <label>Today's OTP — shown on projector *</label>
+        <input type="text" id="otp" class="otp-input" placeholder="• • • • • •" maxlength="6" inputmode="numeric">
+      </div>
+
+      <button class="btn-submit" id="submitBtn" onclick="submitAttendance()">Mark My Attendance</button>
+    </div>
+
+    <div class="footer">
+      Dr. Kamalpreet Singh · AI &amp; ML · BTech Sem 7<br>
+      Attendance window: 7 minutes · OTP changes every class
+    </div>
+  </div>
+</div>
+
+<script>
+// ===================== INTERNSHIP LIST =====================
+// Add reg nos here when you share the list
+// These students are blocked from submitting; their rows show 0 in SGT sheet
+const INTERNSHIP_STUDENTS = [
+  // e.g. '231302045', '231302067'
+  // Will be populated when KP shares the list
+];
+
+// ===================== ROSTER — All 4 sections =====================
+const ROSTER = {
+  'A': [{reg:'231302002',name:'Tannu Tiwari'},{reg:'231302003',name:'Pranav Singh'},{reg:'231302006',name:'Tanish'},{reg:'231302007',name:'Prince Kumar'},{reg:'231302023',name:'Rahul Kumar'},{reg:'231302024',name:'Himanshu Singh'},{reg:'231302025',name:'Samyak Jain'},{reg:'231302026',name:'Anshul'},{reg:'231302028',name:'Vikash Srivastava'},{reg:'231302031',name:'Varun Yadav'},{reg:'231302033',name:'Aman'},{reg:'231302034',name:'Anurag'},{reg:'231302035',name:'Sahil Singh'},{reg:'231302037',name:'Lavisha'},{reg:'231302038',name:'Umesh'},{reg:'231302045',name:'Aakash'},{reg:'231302047',name:'Arshad Khan'},{reg:'231302049',name:'Deepesh'},{reg:'231302051',name:'Kunal'},{reg:'231302054',name:'Harsh Chauhan'},{reg:'231302055',name:'Lakshita'},{reg:'231302058',name:'Pratishtha'},{reg:'231302061',name:'Sarthak'},{reg:'231302062',name:'Hunny Gulia'},{reg:'231302065',name:'Dushyant Vasisht'},{reg:'231302066',name:'Mayank Goyal'},{reg:'231302072',name:'Shubham Dagar'},{reg:'231302073',name:'Mahesh Kumar'},{reg:'231302075',name:'Shubham'},{reg:'231302081',name:'Tanush Banduni'},{reg:'231302082',name:'Anjali'},{reg:'231302083',name:'Himanshu Soni'},{reg:'231302085',name:'Shashank Verma'},{reg:'231302086',name:'Harsh'},{reg:'231302097',name:'Megha Sharma'},{reg:'231302099',name:'Mayank Garg'},{reg:'231302101',name:'Punit'},{reg:'231302102',name:'Deepanshu'},{reg:'231302105',name:'Tarun Yadav'},{reg:'231302107',name:'Priya'},{reg:'231302110',name:'Arpit'},{reg:'231302111',name:'Rohan'},{reg:'231302113',name:'Rajat Yadav'},{reg:'231302118',name:'Vandana Kumari'},{reg:'231302121',name:'Abhimanyu Kandhal'},{reg:'231302128',name:'Raghav Kumar Jha'},{reg:'231302133',name:'Rahul Kumar'},{reg:'231302136',name:'Prashant Rohilla'},{reg:'231302140',name:'Vanshika Rathi'},{reg:'231302142',name:'Nikhil Narang'},{reg:'231302144',name:'Yuvraj Singh Yadav'},{reg:'231302149',name:'Yash'},{reg:'231302151',name:'Pushpender Yadav'},{reg:'231302152',name:'Devesh Dwivedi'},{reg:'231302156',name:'Angel Suri'},{reg:'231302157',name:'Vishal Kumar Upadhyay'},{reg:'231302163',name:'Shubham Bhardwaj'},{reg:'231302166',name:'Manish Rathi'},{reg:'231302175',name:'Pinki Badhana'},{reg:'231302186',name:'Deepak Kumar'},{reg:'231302192',name:'Saloni'},{reg:'231302194',name:'Robin'},{reg:'231302203',name:'Varsha'},{reg:'231302205',name:'Sneha'},{reg:'231302214',name:'Monu'},{reg:'231302216',name:'Arpit Gupta'},{reg:'231302221',name:'Nikshey Yadav'},{reg:'231302230',name:'Aditya Chauhan'},{reg:'231302232',name:'Diksha Sharma'},{reg:'231302244',name:'Naman Sharma'},{reg:'231302257',name:'Lakshay Rohilla'}],
+  'B': [{reg:'231302022',name:'Himanshu'},{reg:'231302032',name:'Aditya'},{reg:'231302043',name:'Deepak'},{reg:'231302050',name:'Savitender Singh'},{reg:'231302108',name:'Riya Yadav'},{reg:'231302123',name:'Yusuf Safi'},{reg:'231302148',name:'Pratik Dagar'},{reg:'231302160',name:'Piyush Kumar'},{reg:'231302171',name:'Harsh Yadav'},{reg:'231302173',name:'Depinder Kumar'},{reg:'231302178',name:'Jasmeet'},{reg:'231302188',name:'Aman Yadav'},{reg:'231302191',name:'Nitin Kumar'},{reg:'231302200',name:'Vinit Sheetal'},{reg:'231302201',name:'Anshu'},{reg:'231302204',name:'Samarth Ratwaya'},{reg:'231302209',name:'Ankit'},{reg:'231302215',name:'Vishal'},{reg:'231302218',name:'Vansh Rana'},{reg:'231302222',name:'Neeraj Lodhi'},{reg:'231302224',name:'Rudransh Bhardwaj'},{reg:'231302226',name:'Siddharth Sehwag'},{reg:'231302235',name:'Naman Kumar'},{reg:'231302237',name:'Nishant Choudhary'},{reg:'231302245',name:'Parikshit Gulia'},{reg:'231302253',name:'Trish Dalal'},{reg:'231302258',name:'Priyanshu'},{reg:'231302262',name:'Ashish Verma'},{reg:'231302263',name:'Ranu Raj'},{reg:'241302030',name:'Archi'},{reg:'241302267',name:'Jatin'},{reg:'241302279',name:'Vimarsh'},{reg:'221302122',name:'Mayank'},{reg:'231302001',name:'Yash Gupta'},{reg:'231302013',name:'Kishlay Kisu'},{reg:'231302018',name:'Abhishek Pal'},{reg:'231302080',name:'Aryan Sharma'},{reg:'231302094',name:'Rohit Kumar'},{reg:'231302127',name:'Shubranshu Sekher Sahoo'},{reg:'231302129',name:'Kunal Vashist'},{reg:'231302137',name:'Muskan'},{reg:'231302138',name:'Pooja'},{reg:'231302177',name:'Adarsh Kumar'},{reg:'231302190',name:'Lakshay Sharma'},{reg:'231302193',name:'Usha'},{reg:'231302211',name:'Aditya Tokas'},{reg:'231302213',name:'Priyanshu'},{reg:'231302217',name:'Mukul Punia'},{reg:'231302220',name:'Mishra Suyansh Naresh'},{reg:'231302233',name:'Ayush Gupta'},{reg:'231302252',name:'Rohan'},{reg:'241302251',name:'Rait Ranvirsingh Surinder Singh'},{reg:'241302050',name:'Rajan'}],
+  'C': [{reg:'231302009',name:'Himanshu'},{reg:'231302012',name:'Prince Kumar'},{reg:'231302014',name:'Harish'},{reg:'231302016',name:'Arpit Sharma'},{reg:'231302017',name:'Tushar Singh'},{reg:'231302019',name:'Arjun Singh Dogra'},{reg:'231302021',name:'Ankit'},{reg:'231302027',name:'Janvi'},{reg:'231302029',name:'Himani Gupta'},{reg:'231302030',name:'Mohammad Ali'},{reg:'231302036',name:'Ishan'},{reg:'231302039',name:'Aryan Kumar'},{reg:'231302040',name:'Vishal'},{reg:'231302041',name:'Karan Sharma'},{reg:'231302042',name:'Anshuman Singh'},{reg:'231302044',name:'Gaurav Yadav'},{reg:'231302046',name:'Aakash Bisht'},{reg:'231302048',name:'Anvi Goyal'},{reg:'231302052',name:'Vishal'},{reg:'231302056',name:'Devanshi Sharma'},{reg:'231302057',name:'Neha Sharma'},{reg:'231302059',name:'Lekit Yadav'},{reg:'231302060',name:'Rahul Bajaj'},{reg:'231302063',name:'Riya'},{reg:'231302067',name:'Varun Raghav'},{reg:'231302068',name:'Faiza'},{reg:'231302069',name:'Deepak Yadav'},{reg:'231302070',name:'Nirupam Sharma'},{reg:'231302071',name:'Deepanshu Jangra'},{reg:'231302078',name:'Manjeet'},{reg:'231302079',name:'Jasneet Kaur'},{reg:'231302088',name:'Deepanshu Rai'},{reg:'231302089',name:'Sidhanshu'},{reg:'231302093',name:'Vaibhav'},{reg:'231302095',name:'Ayush Parashar'},{reg:'231302100',name:'Ritika Sharma'},{reg:'231302103',name:'Akash Rana'},{reg:'231302104',name:'Pallavi Mudgal'},{reg:'231302106',name:'Chetan Sagar'},{reg:'231302109',name:'Arvind Kumar'},{reg:'231302112',name:'Daksh Yadav'},{reg:'231302114',name:'Guneet Dhaka'},{reg:'231302115',name:'Aaditya Kaushik'},{reg:'231302116',name:'Jatin Nagarwal'},{reg:'231302117',name:'Sneha Boora'},{reg:'231302120',name:'Kushagar Siwach'},{reg:'231302122',name:'Renu'},{reg:'231302125',name:'Manish Dahiya'},{reg:'231302130',name:'Tanuj Bhardwaj'},{reg:'231302131',name:'Karan Singh Aswal'},{reg:'231302135',name:'Aneek Raj'},{reg:'231302139',name:'Rahul'},{reg:'231302141',name:'Vivek'},{reg:'231302143',name:'Jai Anmol Arora'},{reg:'231302150',name:'Noama Syed'},{reg:'231302153',name:'Dhairya Singh'},{reg:'231302154',name:'Goutam Verma'},{reg:'231302155',name:'Vanshika'},{reg:'231302158',name:'Nishant'},{reg:'231302159',name:'Krrish Malhotra'},{reg:'231302161',name:'Tanya Singh'},{reg:'231302162',name:'Rohit Korpal'}],
+  'D': [{reg:'231302164',name:'Priyanshu'},{reg:'231302165',name:'Purav Tanwar'},{reg:'231302167',name:'Kislay Pandey'},{reg:'231302169',name:'Arpit Pandey'},{reg:'231302174',name:'Vishav Garg'},{reg:'231302176',name:'Sukhsham Sharma'},{reg:'231302181',name:'Devesh Yadav'},{reg:'231302182',name:'Aditya Vats'},{reg:'231302185',name:'Kunal Sharma'},{reg:'231302189',name:'Saurav'},{reg:'231302196',name:'Vrishank Sharma'},{reg:'231302199',name:'Parteek'},{reg:'231302206',name:'Dharam Singh'},{reg:'231302207',name:'Nikhil Kumar'},{reg:'231302208',name:'Punyam'},{reg:'231302210',name:'Pushpender Yadav'},{reg:'231302212',name:'Deepanshu'},{reg:'231302223',name:'Anurag'},{reg:'231302227',name:'Sandeep Singh'},{reg:'231302228',name:'Khushi Singhal'},{reg:'231302231',name:'Tanvir Singh Wasir'},{reg:'231302234',name:'Vanshika Bisht'},{reg:'231302239',name:'Aanchal'},{reg:'231302247',name:'Aakash Dagar'},{reg:'231302250',name:'Aakash'},{reg:'231302251',name:'Himanshu Aggarwal'},{reg:'231302255',name:'Anshika'},{reg:'231302256',name:'Tanishk'},{reg:'231302266',name:'Dhawan Sawant'},{reg:'241302032',name:'Arunava Chakraborty'},{reg:'231302004',name:'Vivek Singh'},{reg:'231302005',name:'Himanshi'},{reg:'231302008',name:'Aryan'},{reg:'231302010',name:'Hiten'},{reg:'231302011',name:'Muskan'},{reg:'231302015',name:'Devanshu Shekhar'},{reg:'231302084',name:'Nirmit'},{reg:'231302087',name:'Vikash Meena'},{reg:'231302091',name:'Muskan'},{reg:'231302092',name:'Yashika Janghu'},{reg:'231302124',name:'Harsh Vashisth'},{reg:'231302145',name:'Rajat Mallick'},{reg:'231302170',name:'Nikita Sengar'},{reg:'231302183',name:'Ayush Yadav'},{reg:'231302184',name:'Ayush Gulia'},{reg:'231302197',name:'Uday Pratap Singh'},{reg:'231302219',name:'Manish Kumar'},{reg:'231302229',name:'Prikshit'},{reg:'231302246',name:'Saket'},{reg:'231302248',name:'Sambhav'},{reg:'231302254',name:'Tushar Singh Tanwar'},{reg:'231302264',name:'Katrine Alice Daniel'}]
+};
+
+const SGT_LAT=28.4089, SGT_LNG=76.9957, RADIUS_M=400;
+const GAS_URL='https://script.google.com/macros/s/AKfycbynasJuGrlxiCeY5EmoqMLiTOqbKAED9B3nCdC5Rqnpdi_x-GOayl-nnCfR19Pg2mFt/exec';
+
+let resolvedName='', gpsLat=null, gpsLng=null, gpsAccuracy=null, gpsStatus='pending';
+let gpsRequested = false;
+
+// ── GPS ──────────────────────────────────────────────────────
+function requestGPS() {
+  const btn = document.getElementById('gpsBtn');
+  btn.textContent = 'Requesting...';
+  btn.disabled = true;
+
+  if (!navigator.geolocation) {
+    showGPSResult('warn', '⚠️ GPS not supported on this device. Your submission will be flagged.');
+    gpsStatus = 'unavailable';
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+      gpsLat = pos.coords.latitude;
+      gpsLng = pos.coords.longitude;
+      gpsAccuracy = Math.round(pos.coords.accuracy);
+      const dist = haversine(gpsLat, gpsLng, SGT_LAT, SGT_LNG);
+      gpsStatus = dist <= RADIUS_M ? 'on-campus' : 'off-campus';
+
+      if (gpsStatus === 'on-campus') {
+        showGPSResult('ok', `✅ Location verified — you are on SGT campus (accuracy ±${gpsAccuracy}m)`);
+        document.getElementById('gpsBanner').style.display = 'none';
+      } else {
+        showGPSResult('warn', `⚠️ You appear to be ${Math.round(dist)}m from campus. Your submission will be flagged for faculty review.`);
+        document.getElementById('gpsBanner').style.display = 'none';
+      }
+      gpsRequested = true;
+    },
+    err => {
+      gpsStatus = 'denied';
+      gpsRequested = true;
+      document.getElementById('gpsBanner').style.display = 'none';
+      showGPSResult('warn', '⚠️ Location access denied. Your submission will be marked GPS-unverified and reviewed by Dr. Singh.');
+    },
+    {enableHighAccuracy:true, timeout:12000, maximumAge:0}
+  );
+}
+
+function showGPSResult(type, text) {
+  const el = document.getElementById('gpsResult');
+  el.textContent = text;
+  el.className = 'gps-result ' + (type === 'ok' ? 'gps-ok' : 'gps-warn');
+  el.style.display = 'block';
+}
+
+function haversine(la1,lo1,la2,lo2){
+  const R=6371000,dL=(la2-la1)*Math.PI/180,dO=(lo2-lo1)*Math.PI/180;
+  const a=Math.sin(dL/2)**2+Math.cos(la1*Math.PI/180)*Math.cos(la2*Math.PI/180)*Math.sin(dO/2)**2;
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
+
+// ── Roster lookup ────────────────────────────────────────────
+document.getElementById('reg').addEventListener('input', checkStudent);
+document.getElementById('section').addEventListener('change', checkStudent);
+
+function checkStudent() {
+  const sec = document.getElementById('section').value;
+  const reg = document.getElementById('reg').value.trim();
+  const box = document.getElementById('nameBox');
+
+  // Reset
+  box.textContent = '—';
+  box.className = 'name-box';
+  resolvedName = '';
+  document.getElementById('internshipBlock').style.display = 'none';
+  document.getElementById('mainForm').querySelector('button').style.display = 'block';
+
+  if (!sec || reg.length < 9) return;
+
+  // Check internship first
+  if (INTERNSHIP_STUDENTS.includes(reg)) {
+    document.getElementById('internshipBlock').style.display = 'block';
+    document.getElementById('submitBtn').style.display = 'none';
+    box.textContent = 'On Internship';
+    box.className = 'name-box name-err';
+    return;
+  }
+
+  const found = (ROSTER[sec] || []).find(s => s.reg === reg);
+  if (found) {
+    box.textContent = found.name;
+    box.className = 'name-box name-ok';
+    resolvedName = found.name;
+  } else {
+    box.textContent = '❌ Not found in Section ' + sec + ' roster';
+    box.className = 'name-box name-err';
+  }
+}
+
+// ── Submit ───────────────────────────────────────────────────
+function submitAttendance() {
+  const sec  = document.getElementById('section').value;
+  const reg  = document.getElementById('reg').value.trim();
+  const otp  = document.getElementById('otp').value.trim();
+  const btn  = document.getElementById('submitBtn');
+
+  if (!gpsRequested) {
+    showMsg('Please enable location access first (tap "Enable Location Now" above).', 'error');
+    return;
+  }
+  if (!sec)          return showMsg('Please select your section.', 'error');
+  if (!reg)          return showMsg('Please enter your registration number.', 'error');
+  if (!resolvedName) return showMsg('Registration number not found in your section roster. Check section and number.', 'error');
+  if (!otp || otp.length !== 6) return showMsg('Please enter the 6-digit OTP shown on the projector.', 'error');
+
+  btn.disabled = true;
+  btn.textContent = 'Submitting...';
+
+  const today = new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
+  const time  = new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+
+  const payload = {
+    type:'attendance', subject:'AI_ML', section:sec,
+    reg, name:resolvedName, otp,
+    date:today, time,
+    gpsStatus,
+    gpsLat:gpsLat||'N/A', gpsLng:gpsLng||'N/A', gpsAccuracy:gpsAccuracy||'N/A'
+  };
+
+  fetch(GAS_URL, {method:'POST', mode:'no-cors', body:JSON.stringify(payload)});
+
+  setTimeout(() => {
+    showMsg(`✅ Attendance marked!\n${resolvedName} · Section ${sec} · ${today}`, 'success');
+    document.getElementById('reg').value = '';
+    document.getElementById('otp').value = '';
+    document.getElementById('nameBox').textContent = '—';
+    document.getElementById('nameBox').className = 'name-box';
+    resolvedName = '';
+    btn.disabled = false;
+    btn.textContent = 'Mark My Attendance';
+  }, 1500);
+}
+
+function showMsg(text, type) {
+  const el = document.getElementById('msg');
+  el.textContent = text; el.className = 'msg '+type; el.style.display = 'block';
+  el.scrollIntoView({behavior:'smooth', block:'nearest'});
+  if (type === 'success') setTimeout(() => el.style.display='none', 7000);
+}
+
+// Auto-start GPS on load silently in background (user still sees banner)
+window.addEventListener('load', () => {
+  // Try silent GPS first
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      pos => {
+        gpsLat=pos.coords.latitude; gpsLng=pos.coords.longitude;
+        gpsAccuracy=Math.round(pos.coords.accuracy);
+        const dist=haversine(gpsLat,gpsLng,SGT_LAT,SGT_LNG);
+        gpsStatus=dist<=RADIUS_M?'on-campus':'off-campus';
+        gpsRequested=true;
+        document.getElementById('gpsBanner').style.display='none';
+        showGPSResult(gpsStatus==='on-campus'?'ok':'warn',
+          gpsStatus==='on-campus'
+            ? `✅ Location verified — you are on SGT campus (±${gpsAccuracy}m)`
+            : `⚠️ You appear ${Math.round(dist)}m from campus. Submission will be flagged.`
+        );
+      },
+      () => { /* silently fail — banner stays visible for manual trigger */ },
+      {enableHighAccuracy:false, timeout:5000, maximumAge:60000}
+    );
+  }
+});
+</script>
+</body>
+</html>
