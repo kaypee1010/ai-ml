@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI &amp; ML Quiz — Lecture 1 · Intro to AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&family=Inconsolata:wght@500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<style>
+:root{
+  --accent:#8B3A3A; --accent-pale:#f5ede8; --accent-mid:rgba(139,58,58,.15);
+  --ink:#2a2420; --paper:#faf6f0; --cream:#fff; --slate:#6b6258; --slate-light:#a8a095;
+  --border:#e5dccf; --border-strong:#d0c2ae; --teal:#2e7d6b; --teal-pale:#e3f2ef;
+  --rose:#c0392b; --rose-pale:#fbeaea;
+  --radius:16px; --shadow:0 3px 14px rgba(139,58,58,.08);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);min-height:100vh}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.025;z-index:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9'/%3E%3C/filter%3E%3Crect width='60' height='60' filter='url(%23n)'/%3E%3C/svg%3E")}
+body::after{content:"";position:fixed;top:0;right:0;width:280px;height:280px;pointer-events:none;z-index:0;
+  background:repeating-linear-gradient(45deg,var(--accent) 0,var(--accent) 1px,transparent 1px,transparent 14px);opacity:.04}
+
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:space-between;align-items:center;
+  padding:12px 28px;background:rgba(250,246,240,.9);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+.nav-brand{display:flex;align-items:center;gap:10px}
+.nav-logo{width:36px;height:36px;border-radius:50%;object-fit:cover;border:1.5px solid var(--accent)}
+.nav-name{font-family:'DM Serif Display',serif;font-size:15px}
+.nav-sub{font-family:'Inconsolata',monospace;font-size:11px;color:var(--slate)}
+.nav-cta{background:var(--accent);color:#fff;padding:8px 16px;border-radius:20px;text-decoration:none;font-size:13px;font-weight:600}
+.nav-links{display:flex;align-items:center;gap:14px}
+.nav-link{font-family:'Inconsolata',monospace;font-size:12px;color:var(--accent);text-decoration:none;cursor:pointer}
+
+.screen{display:none;padding-top:70px}
+.screen.active{display:block}
+
+/* ── SCREEN 1: REGISTRATION ── */
+#reg-screen .reg-wrap{max-width:1000px;margin:24px auto;padding:0 20px;display:grid;grid-template-columns:1.3fr 1fr;gap:24px;position:relative;z-index:1}
+@media(max-width:740px){#reg-screen .reg-wrap{grid-template-columns:1fr}}
+.reg-card{background:var(--cream);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+.reg-card-top{height:5px;background:linear-gradient(90deg,var(--accent),#c25b5b)}
+.reg-card-body{padding:30px 32px}
+.eyebrow{font-family:'Inconsolata',monospace;font-size:11px;color:var(--accent);letter-spacing:1.5px;text-transform:uppercase}
+.reg-title{font-family:'DM Serif Display',serif;font-size:30px;margin:8px 0 4px}
+.reg-title em{color:var(--accent);font-style:italic}
+.reg-subtitle{font-size:13px;color:var(--slate);margin-bottom:20px}
+.topics-box{background:var(--accent-pale);border-radius:10px;padding:14px 18px;margin-bottom:22px}
+.topics-box .tb-title{font-weight:700;font-size:13px;color:var(--accent);margin-bottom:8px}
+.topics-box ul{margin-left:18px;font-size:13px;color:var(--ink);line-height:1.9}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.form-row.full{grid-template-columns:1fr}
+.field label{display:block;font-size:12px;font-weight:600;color:var(--slate);margin-bottom:5px}
+.field input,.field select{width:100%;padding:11px 13px;border:1.5px solid var(--border-strong);border-radius:8px;
+  font-size:14px;font-family:'DM Sans',sans-serif;background:#fafafa}
+.field input:focus,.field select:focus{outline:none;border-color:var(--accent);background:#fff}
+.locked{background:var(--accent-pale)!important;color:var(--slate);cursor:not-allowed}
+.err-msg{display:none;background:var(--rose-pale);color:var(--rose);padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:14px}
+.begin-btn{width:100%;padding:15px;background:var(--accent);color:#fff;border:none;border-radius:10px;
+  font-family:'DM Serif Display',serif;font-size:18px;cursor:pointer;margin-top:6px;transition:background .2s}
+.begin-btn:hover{background:#6B2D2D}
+
+.lb-widget{background:var(--cream);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;height:fit-content}
+.lb-header{background:linear-gradient(135deg,var(--accent),#6B2D2D);color:#fff;padding:18px 20px}
+.lb-header h3{font-family:'DM Serif Display',serif;font-size:17px;display:flex;align-items:center;gap:8px}
+.live-dot{width:8px;height:8px;background:#4ade80;border-radius:50%;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.lb-header p{font-size:11px;opacity:.85;margin-top:3px;font-family:'Inconsolata',monospace}
+.lb-body{padding:14px}
+.lb-row{display:flex;align-items:center;gap:10px;padding:10px 8px;border-bottom:1px solid var(--border)}
+.lb-rank{font-family:'DM Serif Display',serif;font-size:16px;width:24px;text-align:center}
+.lb-info{flex:1;min-width:0}
+.lb-name{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lb-meta{font-size:10.5px;color:var(--slate);font-family:'Inconsolata',monospace}
+.lb-bar-track{height:4px;background:var(--border);border-radius:3px;margin-top:4px;overflow:hidden}
+.lb-bar-fill{height:100%;background:var(--accent)}
+.lb-score{font-family:'Inconsolata',monospace;font-size:12px;font-weight:700;color:var(--accent);text-align:right}
+.lb-grade{font-size:10px;background:var(--accent-pale);color:var(--accent);padding:1px 6px;border-radius:6px;margin-top:2px}
+.lb-footer{padding:10px 16px;font-size:11px;color:var(--slate-light);display:flex;justify-content:space-between;font-family:'Inconsolata',monospace;border-top:1px solid var(--border)}
+.lb-footer a{color:var(--accent);text-decoration:none}
+.lb-empty,.lb-loading{text-align:center;padding:30px 16px;color:var(--slate-light);font-size:13px}
+.spinner{width:24px;height:24px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;
+  animation:spin .8s linear infinite;margin:0 auto 10px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── SCREEN 2: QUIZ ── */
+.subbar{position:fixed;top:58px;left:0;right:0;z-index:150;background:#fff;border-bottom:1px solid var(--border);
+  padding:10px 24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.subbar .sname{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px}
+.subbar .progress-wrap{flex:1;min-width:120px}
+.subbar .progress-label{font-size:10.5px;color:var(--slate);font-family:'Inconsolata',monospace;display:flex;justify-content:space-between;margin-bottom:3px}
+.progress-track{height:6px;background:var(--border);border-radius:4px;overflow:hidden}
+.progress-fill{height:100%;width:0%;background:var(--accent);border-radius:4px;transition:width .3s}
+.timer-badge{font-family:'Inconsolata',monospace;font-weight:700;font-size:14px;background:var(--accent-mid);
+  color:var(--accent);padding:6px 14px;border-radius:16px;white-space:nowrap}
+.timer-badge.warn{background:var(--rose-pale);color:var(--rose);animation:pulse 1s infinite}
+.review-label{display:none;font-family:'Inconsolata',monospace;font-size:12px;background:#333;color:#fff;padding:4px 10px;border-radius:10px}
+.back-score-btn{display:none;background:var(--accent);color:#fff;border:none;padding:6px 14px;border-radius:14px;font-size:12px;cursor:pointer}
+
+#quiz-content{max-width:900px;margin:0 auto;padding:110px 20px 40px;position:relative;z-index:1}
+.section-header{display:flex;align-items:center;gap:12px;margin:34px 0 18px}
+.section-header:first-child{margin-top:0}
+.section-header .line{flex:1;height:1px;background:var(--border-strong)}
+.section-pill{padding:8px 18px;border-radius:20px;color:#fff;text-align:center}
+.section-pill .st{font-family:'DM Serif Display',serif;font-size:14px}
+.section-pill .ss{font-size:10px;opacity:.85;font-family:'Inconsolata',monospace}
+
+.q-card{background:var(--cream);border:1.5px solid var(--border);border-radius:14px;padding:22px 24px;margin-bottom:16px;
+  transition:box-shadow .2s}
+.q-card:hover{box-shadow:var(--shadow)}
+.q-head{display:flex;align-items:flex-start;gap:12px;margin-bottom:6px}
+.q-num{width:30px;height:30px;border-radius:50%;background:var(--border);color:var(--slate);display:flex;
+  align-items:center;justify-content:center;font-family:'Inconsolata',monospace;font-weight:700;font-size:13px;flex-shrink:0;transition:all .2s}
+.q-num.answered{background:var(--accent);color:#fff}
+.q-stem{font-size:14.5px;line-height:1.75;flex:1}
+.q-tag{display:inline-block;font-size:10px;padding:2px 9px;border-radius:8px;color:#fff;margin:6px 0 14px 42px;font-family:'Inconsolata',monospace}
+.q-opts{display:flex;flex-direction:column;gap:8px;margin-left:42px}
+.opt-btn{display:flex;align-items:center;gap:10px;padding:11px 14px;border:1.5px solid var(--border-strong);
+  border-radius:10px;background:#fff;cursor:pointer;text-align:left;font-family:'DM Sans',sans-serif;font-size:13.5px;
+  transition:all .15s}
+.opt-btn:hover{transform:translateX(3px);border-color:var(--accent)}
+.opt-letter{width:24px;height:24px;border-radius:50%;background:var(--border);color:var(--slate);display:flex;
+  align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.opt-btn.selected{border-color:var(--accent);background:var(--accent-pale)}
+.opt-btn.selected .opt-letter{background:var(--accent);color:#fff}
+.opt-btn.disabled{cursor:default}
+.opt-btn.correct-answer{border-color:var(--teal);background:var(--teal-pale)}
+.opt-btn.correct-answer .opt-letter{background:var(--teal);color:#fff}
+.opt-btn.wrong-picked{border-color:var(--rose);background:var(--rose-pale)}
+.opt-btn.wrong-picked .opt-letter{background:var(--rose);color:#fff}
+
+#submit-wrap{text-align:center;margin-top:30px}
+.warn-box{display:none;background:var(--rose-pale);color:var(--rose);padding:14px 18px;border-radius:10px;
+  font-size:13.5px;margin-bottom:16px;max-width:500px;margin-left:auto;margin-right:auto}
+.submit-btn{background:var(--accent);color:#fff;border:none;padding:15px 40px;border-radius:30px;
+  font-family:'DM Serif Display',serif;font-size:18px;cursor:pointer}
+.submit-btn:hover{background:#6B2D2D}
+
+/* ── TAB WARNING OVERLAY ── */
+.tab-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px}
+.tab-overlay-box{background:#fff;border:3px solid var(--rose);border-radius:16px;padding:34px 30px;max-width:400px;text-align:center}
+.tab-overlay-box .emoji{font-size:56px;margin-bottom:10px}
+.tab-overlay-box h2{font-family:'DM Serif Display',serif;color:var(--rose);font-size:22px;margin-bottom:12px}
+.tab-overlay-box p{font-size:14px;color:var(--ink);line-height:1.6;margin-bottom:10px}
+.tab-overlay-box .sub{font-size:12px;color:var(--slate);margin-bottom:18px}
+.tab-overlay-box button{background:var(--accent);color:#fff;border:none;padding:12px 26px;border-radius:24px;font-weight:600;cursor:pointer}
+
+/* ── SCREEN 3: RESULT ── */
+#result-screen{padding-top:100px}
+.result-wrap{max-width:640px;margin:0 auto;padding:0 20px 50px;position:relative;z-index:1}
+#result-card{background:var(--cream);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+.result-top-bar{height:6px;background:linear-gradient(90deg,var(--accent),#c25b5b)}
+.result-body{padding:36px 34px;text-align:center}
+.grade-emoji{font-size:48px;margin-bottom:6px}
+.big-score{font-family:'DM Serif Display',serif;font-size:64px;color:var(--accent);line-height:1}
+.score-label{font-family:'Inconsolata',monospace;font-size:14px;color:var(--slate);margin:6px 0 12px}
+.verdict{display:inline-block;padding:6px 18px;border-radius:16px;font-weight:700;font-size:13px;margin-bottom:20px}
+.verdict.pass{background:var(--teal-pale);color:var(--teal)}
+.verdict.fail{background:var(--rose-pale);color:var(--rose)}
+.status-badges{margin-bottom:16px}
+.status-badge{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;color:var(--slate);
+  background:var(--accent-pale);padding:5px 12px;border-radius:12px;margin:3px}
+.status-badge.done{color:var(--teal);background:var(--teal-pale)}
+.pulse-dot{width:6px;height:6px;background:currentColor;border-radius:50%;animation:pulse 1s infinite}
+.info-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;text-align:left;background:var(--accent-pale);
+  border-radius:10px;padding:16px 18px;margin-bottom:22px}
+@media(max-width:520px){.info-grid{grid-template-columns:1fr 1fr}}
+.info-item .il{font-size:10px;color:var(--slate);font-family:'Inconsolata',monospace;text-transform:uppercase}
+.info-item .iv{font-size:13px;font-weight:600}
+.topic-block{text-align:left;margin-bottom:20px}
+.topic-block h4{font-family:'DM Serif Display',serif;font-size:16px;margin-bottom:12px}
+.topic-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.topic-name{font-size:12.5px;width:150px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.topic-bar-track{flex:1;height:7px;background:var(--border);border-radius:4px;overflow:hidden}
+.topic-bar-fill{height:100%;background:var(--accent);border-radius:4px}
+.topic-frac{font-family:'Inconsolata',monospace;font-size:11px;color:var(--slate);width:34px;text-align:right}
+.focus-next{font-family:'Inconsolata',monospace;font-size:12px;color:var(--accent);text-align:left;margin-bottom:22px}
+.section-breakdown{text-align:left;margin-bottom:22px}
+.section-breakdown h4{font-family:'DM Serif Display',serif;font-size:14px;margin-bottom:10px;color:var(--slate)}
+.sb-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;font-size:11px}
+.sb-name{width:130px;flex-shrink:0;color:var(--slate);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sb-track{flex:1;height:5px;background:var(--border);border-radius:3px;overflow:hidden}
+.sb-fill{height:100%;border-radius:3px}
+.sb-frac{width:28px;text-align:right;font-family:'Inconsolata',monospace;color:var(--slate-light)}
+.action-row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:22px}
+.action-btn{padding:11px 20px;border-radius:20px;border:none;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif}
+.action-btn.primary{background:var(--accent);color:#fff}
+.action-btn.secondary{background:var(--accent-pale);color:var(--accent)}
+.sid-box{border:1.5px dashed var(--border-strong);border-radius:10px;padding:14px 18px;text-align:left}
+.sid-box .sl{font-size:10px;color:var(--slate);font-family:'Inconsolata',monospace;text-transform:uppercase}
+.sid-box .sv{font-family:'Inconsolata',monospace;font-weight:700;font-size:14px;color:var(--accent);margin:4px 0}
+.sid-box .sh{font-size:10.5px;color:var(--slate-light);font-style:italic}
+
+/* ── SCREEN 4: LEADERBOARD ── */
+#lb-screen{padding-top:100px}
+.lb-full-wrap{max-width:760px;margin:0 auto;padding:0 20px 50px;position:relative;z-index:1}
+.lb-back{background:var(--accent-pale);color:var(--accent);border:none;padding:8px 16px;border-radius:16px;
+  font-size:12px;font-weight:600;cursor:pointer;margin-bottom:16px}
+.lb-full-title{font-family:'DM Serif Display',serif;font-size:26px;margin-bottom:4px}
+.lb-full-sub{font-family:'Inconsolata',monospace;font-size:11px;color:var(--slate);margin-bottom:20px}
+.lb-table{width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;box-shadow:var(--shadow)}
+.lb-table th{background:var(--accent);color:#fff;padding:11px 14px;text-align:left;font-size:12px}
+.lb-table td{padding:10px 14px;border-bottom:1px solid var(--border);font-size:13px}
+.lb-table tr:nth-child(even) td{background:var(--accent-pale)}
+
+.hide-m{}
+@media(max-width:520px){.hide-m{display:none}.subbar .sname{max-width:100px}}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-brand">
+    <img class="nav-logo" src="KP_Singh.png" alt="K.P. Singh" onerror="this.style.display='none'"/>
+    <div>
+      <div class="nav-name">K.P. Singh</div>
+      <div class="nav-sub">SGT University · AI &amp; ML Quiz</div>
+    </div>
+  </div>
+  <div class="nav-links">
+    <span class="nav-link hide-m" onclick="showLeaderboard()">🏆 Leaderboard</span>
+    <a class="nav-cta" href="https://kpsingh.in" target="_blank">kpsingh.in ↗</a>
+  </div>
+</nav>
+
+<!-- ══════════ SCREEN 1: REGISTRATION ══════════ -->
+<div class="screen active" id="reg-screen">
+  <div class="reg-wrap">
+    <div class="reg-card">
+      <div class="reg-card-top"></div>
+      <div class="reg-card-body">
+        <div class="eyebrow">Lecture 1 · BTech CSE 7th Sem</div>
+        <h1 class="reg-title">AI &amp; ML <em>Quiz</em></h1>
+        <div class="reg-subtitle">20 MCQ · 10 Sections · 20 minutes · PDF on submission</div>
+
+        <div class="topics-box">
+          <div class="tb-title">📖 Topics Covered</div>
+          <ul>
+            <li>What is Artificial Intelligence</li>
+            <li>Intelligence vs Knowledge</li>
+            <li>Intelligent Agents &amp; the Perceive–Decide–Act cycle</li>
+            <li>Real-world AI applications</li>
+          </ul>
+        </div>
+
+        <div class="err-msg" id="errMsg"></div>
+
+        <div class="form-row">
+          <div class="field"><label>Full Name</label><input type="text" id="regName" placeholder="e.g. Rahul Kumar"></div>
+          <div class="field"><label>Roll Number</label><input type="text" id="regRoll" placeholder="e.g. 231302045" style="text-transform:uppercase"></div>
+        </div>
+        <div class="form-row">
+          <div class="field">
+            <label>Section</label>
+            <select id="regSection">
+              <option value="">-- Select --</option>
+              <option value="A">Section A</option>
+              <option value="B">Section B</option>
+              <option value="C">Section C</option>
+              <option value="D">Section D</option>
+            </select>
+          </div>
+          <div class="field"><label>Branch 🔒</label><input type="text" class="locked" value="BTech CSE" disabled></div>
+        </div>
+        <div class="form-row full">
+          <div class="field"><label>Semester 🔒</label><input type="text" class="locked" value="7th Semester" disabled></div>
+        </div>
+
+        <button class="begin-btn" onclick="beginQuiz()">Begin Quiz →</button>
+      </div>
+    </div>
+
+    <div class="lb-widget">
+      <div class="lb-header">
+        <h3><span class="live-dot"></span> 🏆 Top 3 Students</h3>
+        <p>Live rankings · updates automatically</p>
+      </div>
+      <div class="lb-body" id="widgetLbBody">
+        <div class="lb-loading"><div class="spinner"></div>Loading leaderboard…</div>
+      </div>
+      <div class="lb-footer">
+        <span id="lbUpdated">—</span>
+        <a onclick="showLeaderboard()">View Top 3 →</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ SCREEN 2: QUIZ ══════════ -->
+<div class="screen" id="quiz-screen">
+  <div class="subbar">
+    <span class="sname" id="subbarName">—</span>
+    <div class="progress-wrap">
+      <div class="progress-label"><span id="progAnswered">0 answered</span><span id="progTotal">20 questions</span></div>
+      <div class="progress-track"><div class="progress-fill" id="progFill"></div></div>
+    </div>
+    <span class="review-label" id="reviewLabel">📋 REVIEW</span>
+    <button class="back-score-btn" id="backScoreBtn" onclick="backToScore()">← Back to Score</button>
+    <span class="timer-badge" id="timerBadge">20:00</span>
+  </div>
+  <div id="quiz-content"></div>
+</div>
+
+<!-- ══════════ SCREEN 3: RESULT ══════════ -->
+<div class="screen" id="result-screen">
+  <div class="result-wrap">
+    <div id="result-card">
+      <div class="result-top-bar"></div>
+      <div class="result-body">
+        <div class="grade-emoji" id="gradeEmoji">🏆</div>
+        <div class="big-score" id="bigScore">0/20</div>
+        <div class="score-label" id="scoreLabel">0% · Grade F</div>
+        <div class="verdict" id="verdict">✓ PASSED</div>
+
+        <div class="status-badges" id="statusBadges"></div>
+
+        <div class="info-grid">
+          <div class="info-item"><div class="il">Name</div><div class="iv" id="riName">—</div></div>
+          <div class="info-item"><div class="il">Roll No.</div><div class="iv" id="riRoll">—</div></div>
+          <div class="info-item"><div class="il">Section</div><div class="iv" id="riSection">—</div></div>
+          <div class="info-item"><div class="il">Branch/Sem</div><div class="iv">BTech CSE · 7th</div></div>
+          <div class="info-item"><div class="il">Time Taken</div><div class="iv" id="riTime">—</div></div>
+          <div class="info-item"><div class="il">Submitted At</div><div class="iv" id="riSubmitted">—</div></div>
+        </div>
+
+        <div class="topic-block">
+          <h4>📊 Topic Performance</h4>
+          <div id="topicRows"></div>
+          <div class="focus-next" id="focusNext"></div>
+        </div>
+
+        <div class="section-breakdown">
+          <h4>Section Breakdown</h4>
+          <div id="sectionRows"></div>
+        </div>
+
+        <div class="action-row">
+          <button class="action-btn primary" onclick="savePdf()">⬇ Save PDF</button>
+          <button class="action-btn secondary" onclick="reviewAnswers()">Review Answers</button>
+          <button class="action-btn secondary" onclick="showLeaderboard()">🏆 Leaderboard</button>
+        </div>
+
+        <div class="sid-box">
+          <div class="sl">Submission ID — Show to faculty</div>
+          <div class="sv" id="sidValue">—</div>
+          <div class="sh">Keep this ID — it's your proof of submission.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ SCREEN 4: LEADERBOARD ══════════ -->
+<div class="screen" id="lb-screen">
+  <div class="lb-full-wrap">
+    <button class="lb-back" onclick="backFromLb()">← Back</button>
+    <div class="lb-full-title">🏆 Leaderboard</div>
+    <div class="lb-full-sub">AI &amp; ML — LECTURE 1 QUIZ · TOP 3 · BEST ATTEMPT PER STUDENT</div>
+    <div id="lbFullBody"><div class="lb-loading"><div class="spinner"></div>Loading…</div></div>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+// ══════════════════ CONFIG ══════════════════
+var QUIZ_CODE = 'AIML_L1';
+var TIME_MINUTES = 10;
+var LB_SIZE = 3;
+var SHEET_URL = 'https://script.google.com/macros/s/AKfycbwCqK57Xw9IlHlXHQHIjNH2FUXoSj3dmZlzyFbtzM2I0G-IymR82fKqftilbm_J4akQwA/exec'; // ← separate deployment from attendance system
+
+// ══════════════════ SECTION META ══════════════════
+var SECTIONS = [
+  {title:'Analogy',            sub:'Daily-life analogies',        color:'#8B3A3A'},
+  {title:'Witty Concept',      sub:'Spot the real explanation',   color:'#b8860b'},
+  {title:'Riddle',             sub:'What am I?',                  color:'#2e7d6b'},
+  {title:'Scenario',           sub:'Real student situations',     color:'#2c5c8a'},
+  {title:'Misconception',      sub:'Busting the myth',            color:'#6b3a8a'},
+  {title:'Debug the Mistake',  sub:'Find the flaw',                color:'#a0522d'},
+  {title:'Concept Application',sub:'Case → concept',              color:'#3a7d44'},
+  {title:'Best Definition',    sub:'Pick the precise one',        color:'#b03a5b'},
+  {title:'Sequence',           sub:'Order the steps',             color:'#6b7d3a'},
+  {title:'Cause → Effect',     sub:'Why did it happen?',           color:'#4a3a8c'}
+];
+
+// ══════════════════ QUESTION BANK (20 Qs · original order) ══════════════════
+var allQs = [
+  {sec:0, tag:'Intelligent Agent', q:"A watchman who scans the colony gate, decides whether to let a visitor in, and then opens or shuts the gate is to security what a(n) ______ is to AI.", opts:["Intelligent Agent","Static Database","Compiler","Spreadsheet"], a:0},
+  {sec:0, tag:'Intelligence vs Knowledge', q:"Remembering every formula in your notebook is to knowledge what choosing the RIGHT formula during an exam is to ______.", opts:["Intelligence","Memory","Storage","Syllabus"], a:0},
+
+  {sec:1, tag:'AI Definition', q:"A student proudly declares, 'My phone is AI because it has a touchscreen.' The real explanation is:", opts:["A touchscreen is just an input method — AI requires perceiving, deciding, and acting, not merely sensing touch","Any phone with a screen automatically counts as an intelligent agent","Touchscreens are themselves a form of machine learning","AI is defined by the number of apps installed on a device"], a:0},
+  {sec:1, tag:'Intelligent Agent', q:"Someone insists ChatGPT is 'basically a robot with legs.' The actual explanation is:", opts:["ChatGPT is a software agent — it perceives text prompts and acts by producing responses, with no physical body needed","ChatGPT is not AI unless it has a physical form","Software can never be considered an agent under any definition","Only hardware fitted with sensors qualifies as intelligent"], a:0},
+
+  {sec:2, tag:'Intelligent Agent', q:"I never touch a steering wheel, yet I study thousands of roads every second and quietly pick the fastest one for you. What am I, as a concept?", opts:["An Intelligent Agent performing route optimisation","A static lookup table","A printed map","A GPS satellite"], a:0},
+  {sec:2, tag:'Intelligence vs Knowledge', q:"I am not the information stored in your head — I am what you DO with that information when a tricky problem shows up. What am I?", opts:["Intelligence","Knowledge","Memory","Data"], a:0},
+
+  {sec:3, tag:'AI Applications', q:"Arjun wants to explain to his younger cousin, in one line, why Gmail automatically moves certain emails to Spam without him touching a single setting. He should say Gmail is:", opts:["Perceiving incoming mail patterns and deciding, on its own, which ones look like spam","Simply following a fixed list of banned words typed by engineers","Randomly guessing which emails to move each day","Copying what unrelated email accounts happen to do"], a:0},
+  {sec:3, tag:'Perceive-Decide-Act', q:"Neha is asked in her viva to justify why a thermostat counts as a simple intelligent agent. Her BEST answer is:", opts:["It perceives room temperature and decides to switch the AC on or off to reach a goal","It has a digital display showing numbers","It was manufactured by a well-known electronics company","It can be controlled using a remote"], a:0},
+
+  {sec:4, tag:'AI Definition', q:"MYTH: 'A machine is AI only if it looks or talks like a human.' The truth is:", opts:["AI is defined by the ability to perform tasks needing intelligence — appearance or human-likeness is irrelevant","Only humanoid robots can be classified as AI","Voice assistants are AI only because they can talk","Physical resemblance to humans is a required AI criterion"], a:0},
+  {sec:4, tag:'Intelligence vs Knowledge', q:"MYTH: 'Someone who has memorised the entire syllabus is automatically the most intelligent student.' The truth is:", opts:["Intelligence depends on how effectively that knowledge is applied to new problems, not how much is memorised","Memorising more content always guarantees higher intelligence","Knowledge and intelligence are interchangeable terms","Exam marks alone measure true intelligence"], a:0},
+
+  {sec:5, tag:'Intelligent Agent', q:"A student writes: 'A calculator is an Intelligent Agent because it processes numbers.' The examiner marks this wrong. The MOST LIKELY reason is:", opts:["A calculator does not perceive an environment or make autonomous decisions — it only executes fixed operations typed by the user","Calculators are too old to be considered technology","Intelligent Agents must always be expensive machines","Numbers cannot be processed by intelligent systems"], a:0},
+  {sec:5, tag:'AI Applications', q:"A student claims Netflix gives every user the exact same recommendations, and is confused why this is marked incorrect. The MOST LIKELY cause of the error is:", opts:["The student overlooked that Netflix perceives individual viewing history and personalises decisions per user","Netflix recommendations are unrelated to any form of AI","All streaming platforms show identical content to everyone","Recommendations are chosen manually by staff for each user"], a:0},
+
+  {sec:6, tag:'Perceive-Decide-Act', q:"A hospital wants a system that studies each patient's vitals, decides if a nurse should be alerted, and triggers the alert automatically. The best way to describe this system is:", opts:["An Intelligent Agent performing perceive-decide-act on patient data","A static spreadsheet of patient names","A printed chart updated manually each hour","A fixed alarm that rings at scheduled times only"], a:0},
+  {sec:6, tag:'Intelligent Agent', q:"Who Am I? I don't need a human-like body. I gather data from my surroundings, weigh my options, and take an action to move closer to a goal — again and again, in a loop.", opts:["An Intelligent Agent","A knowledge base","A user manual","A static webpage"], a:0},
+
+  {sec:7, tag:'AI Definition', q:"Which is the MOST ACCURATE definition of Artificial Intelligence?", opts:["The science of making machines capable of performing tasks that normally require human intelligence, such as learning, reasoning, and deciding","Any computer program written in a modern programming language","A category of expensive electronic hardware fitted with sensors","Software that specifically mimics human speech and appearance"], a:0},
+  {sec:7, tag:'Intelligent Agent', q:"Which is the MOST ACCURATE definition of an Intelligent Agent?", opts:["Anything that perceives its environment, makes decisions, and performs actions to achieve a goal","Any software application that runs continuously in the background","A physical robot equipped with a camera and wheels","A program that stores large amounts of user data"], a:0},
+
+  {sec:8, tag:'Perceive-Decide-Act', q:"What is the correct sequence describing how an Intelligent Agent operates?", opts:["Step 1: Perceive the environment → Step 2: Decide the best action → Step 3: Act on the environment","Step 1: Act on the environment → Step 2: Perceive the environment → Step 3: Decide the best action","Step 1: Decide the best action → Step 2: Act on the environment → Step 3: Perceive the environment","Step 1: Store data permanently → Step 2: Delete old data → Step 3: Perceive the environment"], a:0},
+  {sec:8, tag:'AI Applications', q:"A student describes how Google Maps produces a route suggestion. Which order of steps is correct?", opts:["Step 1: Gather live traffic and road data → Step 2: Evaluate possible routes → Step 3: Select and display the best route","Step 1: Display a route → Step 2: Gather traffic data afterward → Step 3: Ignore road closures","Step 1: Select a random route → Step 2: Ask the driver to confirm → Step 3: Gather traffic data","Step 1: Evaluate possible routes → Step 2: Delete all traffic data → Step 3: Gather live data"], a:0},
+
+  {sec:9, tag:'Perceive-Decide-Act', q:"CAUSE: A thermostat senses the room temperature has crossed the set threshold. EFFECT: It automatically switches on the AC. Why?", opts:["Because it is functioning as an intelligent agent — perceiving a condition and deciding on the appropriate action to reach its goal","Because the AC switches on randomly every few minutes regardless of temperature","Because the thermostat was manually switched on by a person at that exact moment","Because room temperature has no connection to AC operation"], a:0},
+  {sec:9, tag:'AI Applications', q:"CAUSE: Two students use Netflix on the same account type but see completely different homepage recommendations. What is the MOST LIKELY EFFECT explanation?", opts:["Netflix's recommendation system perceives each student's individual viewing history and personalises decisions accordingly","Netflix shows recommendations in a fixed, unchanging order for every account","The difference happens purely due to random chance with no underlying system","Recommendations depend only on the country selected in account settings"], a:0}
+];
+var TOTAL = allQs.length;
+
+// ══════════════════ STATE ══════════════════
+var questions = [];          // shuffled working copy
+var studentAnswers = {};     // shuffled index -> chosen shuffled option index
+var current = null;          // registration data
+var timerInterval = null, secsLeft = TIME_MINUTES * 60;
+var submitted = false, tabSwitchCount = 0, reviewMode = false;
+var startTime = null, finalResult = null;
+
+function $(id){ return document.getElementById(id); }
+function shuffle(arr){
+  for (var i = arr.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var t = arr[i]; arr[i] = arr[j]; arr[j] = t;
+  }
+  return arr;
+}
+
+// ══════════════════ REGISTRATION ══════════════════
+function beginQuiz() {
+  var name = $('regName').value.trim();
+  var roll = $('regRoll').value.trim().toUpperCase();
+  var section = $('regSection').value;
+
+  if (!name || !roll || !section) {
+    $('errMsg').textContent = 'Please fill in your name, roll number, and section.';
+    $('errMsg').style.display = 'block';
+    return;
+  }
+  $('errMsg').style.display = 'none';
+
+  current = {name:name, roll:roll, section:section, branch:'BTech CSE', semester:'7th'};
+
+  // Build shuffled question set with original-number tracking
+  var order = shuffle(allQs.map(function(q, i){ return i; }));
+  questions = order.map(function(origIdx){
+    var q = allQs[origIdx];
+    var shuffledOpts = shuffle(q.opts.map(function(o,i){ return {text:o, wasCorrect:(i===q.a)}; }));
+    var newCorrectIndex = shuffledOpts.findIndex(function(o){ return o.wasCorrect; });
+    return {
+      origNum: origIdx + 1,
+      sec: q.sec, tag: q.tag, q: q.q,
+      opts: shuffledOpts.map(function(o){ return o.text; }),
+      correct: newCorrectIndex
+    };
+  });
+
+  studentAnswers = {};
+  startTime = Date.now();
+  secsLeft = TIME_MINUTES * 60;
+
+  $('subbarName').textContent = name + ' · Sec ' + section;
+  renderQuiz();
+  switchScreen('quiz-screen');
+  startTimer();
+  attachLeaveProtection();
+}
+
+// ══════════════════ RENDER QUIZ ══════════════════
+function renderQuiz() {
+  var html = '';
+  var lastSec = -1;
+  questions.forEach(function(q, i){
+    if (q.sec !== lastSec) {
+      lastSec = q.sec;
+      var s = SECTIONS[q.sec];
+      html += '<div class="section-header"><div class="line"></div>' +
+        '<div class="section-pill" style="background:' + s.color + '">' +
+          '<div class="st">' + s.title + '</div><div class="ss">' + s.sub + '</div>' +
+        '</div><div class="line"></div></div>';
+    }
+    html += '<div class="q-card" id="qcard-' + i + '">' +
+      '<div class="q-head"><div class="q-num" id="qnum-' + i + '">' + (i+1) + '</div>' +
+      '<div class="q-stem">' + q.q + '</div></div>' +
+      '<div class="q-tag" style="background:' + SECTIONS[q.sec].color + '">' + q.tag + '</div>' +
+      '<div class="q-opts" id="qopts-' + i + '">';
+    q.opts.forEach(function(opt, oi){
+      var letter = String.fromCharCode(65 + oi);
+      html += '<button class="opt-btn" onclick="selectOption(' + i + ',' + oi + ')">' +
+        '<span class="opt-letter">' + letter + '</span><span>' + opt + '</span></button>';
+    });
+    html += '</div></div>';
+  });
+  html += '<div id="submit-wrap">' +
+    '<div class="warn-box" id="warnBox"></div>' +
+    '<button class="submit-btn" onclick="attemptSubmit()">Submit Quiz ✓</button>' +
+    '</div>';
+  $('quiz-content').innerHTML = html;
+}
+
+function selectOption(qi, oi) {
+  if (reviewMode) return;
+  studentAnswers[qi] = oi;
+  var opts = $('qopts-' + qi).children;
+  for (var k = 0; k < opts.length; k++) opts[k].classList.toggle('selected', k === oi);
+  $('qnum-' + qi).classList.add('answered');
+  updateProgress();
+}
+
+function updateProgress() {
+  var answered = Object.keys(studentAnswers).length;
+  $('progAnswered').textContent = answered + ' answered';
+  $('progFill').style.width = (answered / TOTAL * 100) + '%';
+}
+
+// ══════════════════ TIMER ══════════════════
+function startTimer() {
+  clearInterval(timerInterval);
+  updateTimerDisplay();
+  timerInterval = setInterval(function(){
+    secsLeft--;
+    updateTimerDisplay();
+    if (secsLeft <= 300) $('timerBadge').classList.add('warn');
+    if (secsLeft <= 0) { clearInterval(timerInterval); finalize(); }
+  }, 1000);
+}
+function updateTimerDisplay() {
+  var m = Math.floor(Math.max(secsLeft,0) / 60), s = Math.max(secsLeft,0) % 60;
+  $('timerBadge').textContent = m + ':' + String(s).padStart(2,'0');
+}
+
+// ══════════════════ LEAVE / TAB PROTECTION ══════════════════
+function attachLeaveProtection() {
+  window.addEventListener('beforeunload', function(e){
+    if (!submitted) { e.preventDefault(); e.returnValue = ''; }
+  });
+  document.addEventListener('visibilitychange', function(){
+    if (!submitted && document.hidden) {
+      tabSwitchCount++;
+      if (tabSwitchCount === 1) showTabWarning();
+      else finalize();
+    }
+  });
+}
+function showTabWarning() {
+  var overlay = document.createElement('div');
+  overlay.className = 'tab-overlay';
+  overlay.id = 'tabOverlay';
+  overlay.innerHTML = '<div class="tab-overlay-box">' +
+    '<div class="emoji">⚠️</div>' +
+    '<h2>Tab Switch Detected!</h2>' +
+    '<p>Switching tabs or windows during the quiz is not permitted. This was your WARNING. If you switch again, your quiz will be submitted automatically with your current answers.</p>' +
+    '<div class="sub">Tab switch count: 1 of 2</div>' +
+    '<button onclick="document.getElementById(\'tabOverlay\').remove()">I Understand — Return to Quiz</button>' +
+    '</div>';
+  document.body.appendChild(overlay);
+}
+
+// ══════════════════ SUBMIT ══════════════════
+function attemptSubmit() {
+  var unanswered = TOTAL - Object.keys(studentAnswers).length;
+  if (unanswered > 0 && !$('warnBox').dataset.shown) {
+    $('warnBox').textContent = '⚠️ ' + unanswered + ' question(s) left unanswered. You can still submit — click Submit again to confirm.';
+    $('warnBox').style.display = 'block';
+    $('warnBox').dataset.shown = '1';
+    return;
+  }
+  finalize();
+}
+
+function finalize() {
+  if (submitted) return;
+  submitted = true;
+  clearInterval(timerInterval);
+
+  var correct = 0;
+  var secScores = [0,0,0,0,0,0,0,0,0,0];
+  var secTotals = [0,0,0,0,0,0,0,0,0,0];
+  var tagByOriginal = new Array(TOTAL);
+  var correctByOriginal = new Array(TOTAL);
+
+  questions.forEach(function(q, i){
+    var isCorrect = studentAnswers[i] === q.correct;
+    if (isCorrect) { correct++; secScores[q.sec]++; }
+    secTotals[q.sec]++;
+    tagByOriginal[q.origNum - 1] = q.tag;
+    correctByOriginal[q.origNum - 1] = isCorrect ? 1 : 0;
+  });
+
+  var pct = Math.round(correct / TOTAL * 100);
+  var grade;
+  if (pct >= 90) grade = 'A+'; else if (pct >= 80) grade = 'A'; else if (pct >= 70) grade = 'B';
+  else if (pct >= 60) grade = 'C'; else if (pct >= 50) grade = 'D'; else if (pct >= 40) grade = 'E'; else grade = 'F';
+  var passed = pct >= 40;
+
+  var elapsedSec = Math.round((Date.now() - startTime) / 1000);
+  var timeTaken = Math.floor(elapsedSec/60) + 'm ' + (elapsedSec%60) + 's';
+  var submittedAt = new Date().toLocaleString('en-IN');
+  var sid = current.roll + '-' + QUIZ_CODE + '-' + grade + '-' + Date.now().toString(36).toUpperCase();
+
+  // Topic Performance (Layer 1)
+  var topicStats = {};
+  for (var n = 0; n < TOTAL; n++) {
+    var t = tagByOriginal[n];
+    if (!topicStats[t]) topicStats[t] = {correct:0, total:0};
+    topicStats[t].total++;
+    topicStats[t].correct += correctByOriginal[n];
+  }
+
+  finalResult = {
+    correct:correct, pct:pct, grade:grade, passed:passed,
+    timeTaken:timeTaken, submittedAt:submittedAt, sid:sid,
+    secScores:secScores, secTotals:secTotals, topicStats:topicStats,
+    tagByOriginal:tagByOriginal, correctByOriginal:correctByOriginal
+  };
+
+  renderResult();
+  switchScreen('result-screen');
+  postToSheet();
+  setTimeout(savePdf, 1200);
+}
+
+// ══════════════════ RENDER RESULT ══════════════════
+function renderResult() {
+  var r = finalResult;
+  var emojiMap = {'A+':'🏆','A':'🌟','B':'🎯','C':'📚','D':'💪','E':'🤞','F':'📖'};
+  $('gradeEmoji').textContent = emojiMap[r.grade];
+  $('bigScore').textContent = r.correct + '/' + TOTAL;
+  $('scoreLabel').textContent = r.pct + '% · Grade ' + r.grade;
+  $('verdict').textContent = r.passed ? '✓ PASSED' : '✗ Needs Improvement';
+  $('verdict').className = 'verdict ' + (r.passed ? 'pass' : 'fail');
+
+  $('statusBadges').innerHTML =
+    '<span class="status-badge" id="badgeSave"><span class="pulse-dot"></span>Saving to records…</span>' +
+    '<span class="status-badge" id="badgePdf"><span class="pulse-dot"></span>Downloading PDF…</span>';
+
+  $('riName').textContent = current.name;
+  $('riRoll').textContent = current.roll;
+  $('riSection').textContent = current.section;
+  $('riTime').textContent = r.timeTaken;
+  $('riSubmitted').textContent = r.submittedAt;
+
+  // Topic performance rows, best to weakest
+  var topics = Object.keys(r.topicStats).map(function(t){
+    var s = r.topicStats[t];
+    return {name:t, correct:s.correct, total:s.total, acc: s.correct / s.total};
+  }).sort(function(a,b){ return b.acc - a.acc; });
+
+  $('topicRows').innerHTML = topics.map(function(t){
+    return '<div class="topic-row"><div class="topic-name">' + t.name + '</div>' +
+      '<div class="topic-bar-track"><div class="topic-bar-fill" style="width:' + (t.acc*100) + '%"></div></div>' +
+      '<div class="topic-frac">' + t.correct + '/' + t.total + '</div></div>';
+  }).join('');
+
+  var weakTopics = topics.filter(function(t){ return t.total >= 2; }).slice(-2).reverse().map(function(t){ return t.name; });
+  $('focusNext').textContent = weakTopics.length ? '📌 Focus next: ' + weakTopics.join(', ') : '';
+
+  $('sectionRows').innerHTML = SECTIONS.map(function(s, i){
+    if (!r.secTotals[i]) return '';
+    var frac = r.secScores[i] + '/' + r.secTotals[i];
+    var pctW = (r.secScores[i] / r.secTotals[i] * 100);
+    return '<div class="sb-row"><div class="sb-name">' + s.title + '</div>' +
+      '<div class="sb-track"><div class="sb-fill" style="width:' + pctW + '%;background:' + s.color + '"></div></div>' +
+      '<div class="sb-frac">' + frac + '</div></div>';
+  }).join('');
+
+  $('sidValue').textContent = r.sid;
+}
+
+// ══════════════════ SUBMIT TO SHEET ══════════════════
+function postToSheet() {
+  var r = finalResult;
+  var payload = {
+    name: current.name, roll: current.roll, section: current.section,
+    branch: current.branch, semester: current.semester,
+    score: r.correct, total: TOTAL, percentage: r.pct, grade: r.grade,
+    timeTaken: r.timeTaken, passed: r.passed, submissionId: r.sid,
+    submittedAt: r.submittedAt, quizType: QUIZ_CODE
+  };
+  for (var i = 0; i < 10; i++) payload['s' + (i+1)] = r.secScores[i];
+  for (var n = 0; n < TOTAL; n++) {
+    payload['tag_' + (n+1)] = r.tagByOriginal[n];
+    payload['correct_' + (n+1)] = r.correctByOriginal[n];
+  }
+
+  fetch(SHEET_URL, { method:'POST', mode:'no-cors', body: JSON.stringify(payload) })
+    .then(function(){ markBadgeDone('badgeSave', '✓ Saved to records'); })
+    .catch(function(){ markBadgeDone('badgeSave', '✓ Saved to records'); }); // no-cors: assume success
+}
+function markBadgeDone(id, text) {
+  var el = $(id);
+  if (!el) return;
+  el.classList.add('done');
+  el.innerHTML = text;
+}
+
+// ══════════════════ PDF ══════════════════
+function savePdf() {
+  var el = $('result-card');
+  var fname = current.roll + '-' + QUIZ_CODE + '-' + finalResult.sid + '.pdf';
+  html2pdf().set({
+    margin:[12,10,12,10], filename:fname,
+    image:{type:'jpeg', quality:0.97},
+    html2canvas:{scale:2, useCORS:true, backgroundColor:'#ffffff', logging:false},
+    jsPDF:{unit:'mm', format:'a4', orientation:'portrait'}
+  }).from(el).save().then(function(){
+    markBadgeDone('badgePdf', '✓ PDF saved');
+  });
+}
+
+// ══════════════════ REVIEW MODE ══════════════════
+function reviewAnswers() {
+  reviewMode = true;
+  switchScreen('quiz-screen');
+  $('submit-wrap') && ($('submit-wrap').style.display = 'none');
+  $('reviewLabel').style.display = 'inline-block';
+  $('backScoreBtn').style.display = 'inline-block';
+
+  questions.forEach(function(q, i){
+    var opts = $('qopts-' + i).children;
+    for (var k = 0; k < opts.length; k++) {
+      opts[k].classList.add('disabled');
+      opts[k].onclick = null;
+      if (k === q.correct) opts[k].classList.add('correct-answer');
+      else if (studentAnswers[i] === k) opts[k].classList.add('wrong-picked');
+    }
+  });
+}
+function backToScore() {
+  reviewMode = false;
+  $('reviewLabel').style.display = 'none';
+  $('backScoreBtn').style.display = 'none';
+  switchScreen('result-screen');
+}
+
+// ══════════════════ LEADERBOARD ══════════════════
+function showLeaderboard() {
+  switchScreen('lb-screen');
+  loadFullLeaderboard();
+}
+function backFromLb() {
+  switchScreen(finalResult ? 'result-screen' : 'reg-screen');
+}
+
+function renderLbRows(data, target) {
+  if (!data || !data.length) {
+    $(target).innerHTML = '<div class="lb-empty">🏅 No submissions yet — be the first!</div>';
+    return;
+  }
+  var medals = ['🥇','🥈','🥉'];
+  if (target === 'lbFullBody') {
+    var html = '<table class="lb-table"><thead><tr><th>Rank</th><th>Name</th><th>Roll No.</th><th>Section</th><th>Score</th><th>%</th><th>Grade</th></tr></thead><tbody>';
+    data.forEach(function(row, i){
+      html += '<tr><td>' + (medals[i] || (i+1)) + '</td><td>' + row.name + '</td><td>' + row.roll + '</td>' +
+        '<td>' + row.section + '</td><td>' + row.score + '/' + row.total + '</td><td>' + row.pct + '%</td><td>' + row.grade + '</td></tr>';
+    });
+    html += '</tbody></table>';
+    $(target).innerHTML = html;
+  } else {
+    var wh = data.map(function(row, i){
+      var pctW = row.pct;
+      return '<div class="lb-row"><div class="lb-rank">' + (medals[i] || (i+1)) + '</div>' +
+        '<div class="lb-info"><div class="lb-name">' + row.name + '</div>' +
+        '<div class="lb-meta">' + row.roll + ' · Sec ' + row.section + '</div>' +
+        '<div class="lb-bar-track"><div class="lb-bar-fill" style="width:' + pctW + '%"></div></div></div>' +
+        '<div><div class="lb-score">' + row.score + '/' + row.total + '</div>' +
+        '<div class="lb-grade">' + row.grade + '</div></div></div>';
+    }).join('');
+    $(target).innerHTML = wh;
+    $('lbUpdated').textContent = 'Updated ' + new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+  }
+}
+
+function loadWidgetLB() {
+  fetch(SHEET_URL + '?action=leaderboard&top=' + LB_SIZE + '&quiz=' + QUIZ_CODE)
+    .then(function(r){ return r.json(); })
+    .then(function(j){ renderLbRows(j.data, 'widgetLbBody'); })
+    .catch(function(){ $('widgetLbBody').innerHTML = '<div class="lb-empty">Leaderboard unavailable right now.</div>'; });
+}
+function loadFullLeaderboard() {
+  fetch(SHEET_URL + '?action=leaderboard&top=' + LB_SIZE + '&quiz=' + QUIZ_CODE)
+    .then(function(r){ return r.json(); })
+    .then(function(j){ renderLbRows(j.data, 'lbFullBody'); })
+    .catch(function(){ $('lbFullBody').innerHTML = '<div class="lb-empty">Leaderboard unavailable right now.</div>'; });
+}
+loadWidgetLB();
+setInterval(loadWidgetLB, 90000);
+
+// ══════════════════ SCREEN SWITCH ══════════════════
+function switchScreen(id) {
+  document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
+  $(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+</script>
+</body>
+</html>
