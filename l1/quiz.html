@@ -31,11 +31,13 @@ body::after{content:"";position:fixed;top:0;right:0;width:280px;height:280px;poi
 .nav-cta{background:var(--accent);color:#fff;padding:8px 16px;border-radius:20px;text-decoration:none;font-size:13px;font-weight:600}
 .nav-links{display:flex;align-items:center;gap:14px}
 .nav-link{font-family:'Inconsolata',monospace;font-size:12px;color:var(--accent);text-decoration:none;cursor:pointer}
+.lang-toggle{display:flex;align-items:center;background:var(--accent-pale);border:1.5px solid var(--border-strong);border-radius:16px;padding:2px;cursor:pointer;user-select:none}
+.lang-toggle span{padding:5px 12px;font-size:11px;font-weight:700;border-radius:14px;font-family:'Inconsolata',monospace;transition:all .2s}
+.lang-toggle span.active{background:var(--accent);color:#fff}
 
 .screen{display:none;padding-top:70px}
 .screen.active{display:block}
 
-/* ── SCREEN 1: REGISTRATION ── */
 #reg-screen .reg-wrap{max-width:1000px;margin:24px auto;padding:0 20px;display:grid;grid-template-columns:1.3fr 1fr;gap:24px;position:relative;z-index:1}
 @media(max-width:740px){#reg-screen .reg-wrap{grid-template-columns:1fr}}
 .reg-card{background:var(--cream);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
@@ -83,7 +85,6 @@ body::after{content:"";position:fixed;top:0;right:0;width:280px;height:280px;poi
   animation:spin .8s linear infinite;margin:0 auto 10px}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-/* ── SCREEN 2: QUIZ ── */
 .subbar{position:fixed;top:58px;left:0;right:0;z-index:150;background:#fff;border-bottom:1px solid var(--border);
   padding:10px 24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
 .subbar .sname{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px}
@@ -136,7 +137,6 @@ body::after{content:"";position:fixed;top:0;right:0;width:280px;height:280px;poi
   font-family:'DM Serif Display',serif;font-size:18px;cursor:pointer}
 .submit-btn:hover{background:#6B2D2D}
 
-/* ── TAB WARNING OVERLAY ── */
 .tab-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px}
 .tab-overlay-box{background:#fff;border:3px solid var(--rose);border-radius:16px;padding:34px 30px;max-width:400px;text-align:center}
 .tab-overlay-box .emoji{font-size:56px;margin-bottom:10px}
@@ -145,7 +145,6 @@ body::after{content:"";position:fixed;top:0;right:0;width:280px;height:280px;poi
 .tab-overlay-box .sub{font-size:12px;color:var(--slate);margin-bottom:18px}
 .tab-overlay-box button{background:var(--accent);color:#fff;border:none;padding:12px 26px;border-radius:24px;font-weight:600;cursor:pointer}
 
-/* ── SCREEN 3: RESULT ── */
 #result-screen{padding-top:100px}
 .result-wrap{max-width:640px;margin:0 auto;padding:0 20px 50px;position:relative;z-index:1}
 #result-card{background:var(--cream);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
@@ -191,7 +190,6 @@ body::after{content:"";position:fixed;top:0;right:0;width:280px;height:280px;poi
 .sid-box .sv{font-family:'Inconsolata',monospace;font-weight:700;font-size:14px;color:var(--accent);margin:4px 0}
 .sid-box .sh{font-size:10.5px;color:var(--slate-light);font-style:italic}
 
-/* ── SCREEN 4: LEADERBOARD ── */
 #lb-screen{padding-top:100px}
 .lb-full-wrap{max-width:760px;margin:0 auto;padding:0 20px 50px;position:relative;z-index:1}
 .lb-back{background:var(--accent-pale);color:var(--accent);border:none;padding:8px 16px;border-radius:16px;
@@ -219,24 +217,26 @@ body::after{content:"";position:fixed;top:0;right:0;width:280px;height:280px;poi
     </div>
   </div>
   <div class="nav-links">
+    <div class="lang-toggle" id="langToggle" onclick="toggleLang()">
+      <span id="langEnLabel" class="active">EN</span><span id="langHiLabel">हिंग्लिश</span>
+    </div>
     <span class="nav-link hide-m" onclick="showLeaderboard()">🏆 Leaderboard</span>
     <a class="nav-cta" href="https://kpsingh.in" target="_blank">kpsingh.in ↗</a>
   </div>
 </nav>
 
-<!-- ══════════ SCREEN 1: REGISTRATION ══════════ -->
 <div class="screen active" id="reg-screen">
   <div class="reg-wrap">
     <div class="reg-card">
       <div class="reg-card-top"></div>
       <div class="reg-card-body">
-        <div class="eyebrow">Lecture 1 · BTech CSE 7th Sem</div>
+        <div class="eyebrow" id="regEyebrow">Lecture 1 · BTech CSE 7th Sem</div>
         <h1 class="reg-title">AI &amp; ML <em>Quiz</em></h1>
-        <div class="reg-subtitle">20 MCQ · 10 Sections · 20 minutes · PDF on submission</div>
+        <div class="reg-subtitle" id="regSubtitle">20 MCQ · 10 Sections · 20 minutes · PDF on submission</div>
 
         <div class="topics-box">
-          <div class="tb-title">📖 Topics Covered</div>
-          <ul>
+          <div class="tb-title" id="topicsTitle">📖 Topics Covered</div>
+          <ul id="topicsList">
             <li>What is Artificial Intelligence</li>
             <li>Intelligence vs Knowledge</li>
             <li>Intelligent Agents &amp; the Perceive–Decide–Act cycle</li>
@@ -247,12 +247,12 @@ body::after{content:"";position:fixed;top:0;right:0;width:280px;height:280px;poi
         <div class="err-msg" id="errMsg"></div>
 
         <div class="form-row">
-          <div class="field"><label>Full Name</label><input type="text" id="regName" placeholder="e.g. Rahul Kumar"></div>
-          <div class="field"><label>Roll Number</label><input type="text" id="regRoll" placeholder="e.g. 231302045" style="text-transform:uppercase"></div>
+          <div class="field"><label id="labelName">Full Name</label><input type="text" id="regName" placeholder="e.g. Rahul Kumar"></div>
+          <div class="field"><label id="labelRoll">Roll Number</label><input type="text" id="regRoll" placeholder="e.g. 231302045" style="text-transform:uppercase"></div>
         </div>
         <div class="form-row">
           <div class="field">
-            <label>Section</label>
+            <label id="labelSection">Section</label>
             <select id="regSection">
               <option value="">-- Select --</option>
               <option value="A">Section A</option>
@@ -261,33 +261,32 @@ body::after{content:"";position:fixed;top:0;right:0;width:280px;height:280px;poi
               <option value="D">Section D</option>
             </select>
           </div>
-          <div class="field"><label>Branch 🔒</label><input type="text" class="locked" value="BTech CSE" disabled></div>
+          <div class="field"><label id="labelBranch">Branch 🔒</label><input type="text" class="locked" value="BTech CSE" disabled></div>
         </div>
         <div class="form-row full">
-          <div class="field"><label>Semester 🔒</label><input type="text" class="locked" value="7th Semester" disabled></div>
+          <div class="field"><label id="labelSemester">Semester 🔒</label><input type="text" class="locked" value="7th Semester" disabled></div>
         </div>
 
-        <button class="begin-btn" onclick="beginQuiz()">Begin Quiz →</button>
+        <button class="begin-btn" id="beginBtn" onclick="beginQuiz()">Begin Quiz →</button>
       </div>
     </div>
 
     <div class="lb-widget">
       <div class="lb-header">
-        <h3><span class="live-dot"></span> 🏆 Top 3 Students</h3>
-        <p>Live rankings · updates automatically</p>
+        <h3><span class="live-dot"></span> <span id="lbHeaderTitle">🏆 Top 3 Students</span></h3>
+        <p id="lbHeaderSub">Live rankings · updates automatically</p>
       </div>
       <div class="lb-body" id="widgetLbBody">
         <div class="lb-loading"><div class="spinner"></div>Loading leaderboard…</div>
       </div>
       <div class="lb-footer">
         <span id="lbUpdated">—</span>
-        <a onclick="showLeaderboard()">View Top 3 →</a>
+        <a onclick="showLeaderboard()" id="lbViewLink">View Top 3 →</a>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ══════════ SCREEN 2: QUIZ ══════════ -->
 <div class="screen" id="quiz-screen">
   <div class="subbar">
     <span class="sname" id="subbarName">—</span>
@@ -302,7 +301,6 @@ body::after{content:"";position:fixed;top:0;right:0;width:280px;height:280px;poi
   <div id="quiz-content"></div>
 </div>
 
-<!-- ══════════ SCREEN 3: RESULT ══════════ -->
 <div class="screen" id="result-screen">
   <div class="result-wrap">
     <div id="result-card">
@@ -316,47 +314,46 @@ body::after{content:"";position:fixed;top:0;right:0;width:280px;height:280px;poi
         <div class="status-badges" id="statusBadges"></div>
 
         <div class="info-grid">
-          <div class="info-item"><div class="il">Name</div><div class="iv" id="riName">—</div></div>
-          <div class="info-item"><div class="il">Roll No.</div><div class="iv" id="riRoll">—</div></div>
-          <div class="info-item"><div class="il">Section</div><div class="iv" id="riSection">—</div></div>
-          <div class="info-item"><div class="il">Branch/Sem</div><div class="iv">BTech CSE · 7th</div></div>
-          <div class="info-item"><div class="il">Time Taken</div><div class="iv" id="riTime">—</div></div>
-          <div class="info-item"><div class="il">Submitted At</div><div class="iv" id="riSubmitted">—</div></div>
+          <div class="info-item"><div class="il" id="ilName">Name</div><div class="iv" id="riName">—</div></div>
+          <div class="info-item"><div class="il" id="ilRoll">Roll No.</div><div class="iv" id="riRoll">—</div></div>
+          <div class="info-item"><div class="il" id="ilSection">Section</div><div class="iv" id="riSection">—</div></div>
+          <div class="info-item"><div class="il" id="ilBranchSem">Branch/Sem</div><div class="iv">BTech CSE · 7th</div></div>
+          <div class="info-item"><div class="il" id="ilTime">Time Taken</div><div class="iv" id="riTime">—</div></div>
+          <div class="info-item"><div class="il" id="ilSubmitted">Submitted At</div><div class="iv" id="riSubmitted">—</div></div>
         </div>
 
         <div class="topic-block">
-          <h4>📊 Topic Performance</h4>
+          <h4 id="topicHeading">📊 Topic Performance</h4>
           <div id="topicRows"></div>
           <div class="focus-next" id="focusNext"></div>
         </div>
 
         <div class="section-breakdown">
-          <h4>Section Breakdown</h4>
+          <h4 id="sectionBreakdownHeading">Section Breakdown</h4>
           <div id="sectionRows"></div>
         </div>
 
         <div class="action-row">
-          <button class="action-btn primary" onclick="savePdf()">⬇ Save PDF</button>
-          <button class="action-btn secondary" onclick="reviewAnswers()">Review Answers</button>
-          <button class="action-btn secondary" onclick="showLeaderboard()">🏆 Leaderboard</button>
+          <button class="action-btn primary" id="actionSavePdf" onclick="savePdf()">⬇ Save PDF</button>
+          <button class="action-btn secondary" id="actionReview" onclick="reviewAnswers()">Review Answers</button>
+          <button class="action-btn secondary" id="actionLeaderboard" onclick="showLeaderboard()">🏆 Leaderboard</button>
         </div>
 
         <div class="sid-box">
-          <div class="sl">Submission ID — Show to faculty</div>
+          <div class="sl" id="sidLabel">Submission ID — Show to faculty</div>
           <div class="sv" id="sidValue">—</div>
-          <div class="sh">Keep this ID — it's your proof of submission.</div>
+          <div class="sh" id="sidHint">Keep this ID — it's your proof of submission.</div>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ══════════ SCREEN 4: LEADERBOARD ══════════ -->
 <div class="screen" id="lb-screen">
   <div class="lb-full-wrap">
     <button class="lb-back" onclick="backFromLb()">← Back</button>
-    <div class="lb-full-title">🏆 Leaderboard</div>
-    <div class="lb-full-sub">AI &amp; ML — LECTURE 1 QUIZ · TOP 3 · BEST ATTEMPT PER STUDENT</div>
+    <div class="lb-full-title" id="lbFullTitle">🏆 Leaderboard</div>
+    <div class="lb-full-sub" id="lbFullSub">AI &amp; ML — LECTURE 1 QUIZ · TOP 3 · BEST ATTEMPT PER STUDENT</div>
     <div id="lbFullBody"><div class="lb-loading"><div class="spinner"></div>Loading…</div></div>
   </div>
 </div>
@@ -364,64 +361,168 @@ body::after{content:"";position:fixed;top:0;right:0;width:280px;height:280px;poi
 <script>
 'use strict';
 
-// ══════════════════ CONFIG ══════════════════
 var QUIZ_CODE = 'AIML_L1';
 var TIME_MINUTES = 20;
 var LB_SIZE = 3;
 var SHEET_URL = 'https://script.google.com/macros/s/AKfycbwCqK57Xw9IlHlXHQHIjNH2FUXoSj3dmZlzyFbtzM2I0G-IymR82fKqftilbm_J4akQwA/exec'; // ← separate deployment from attendance system
 
-// ══════════════════ SECTION META ══════════════════
+function checkSheetUrl() {
+  if (SHEET_URL.indexOf('PASTE_') === 0) {
+    return 'SHEET_URL has not been set yet - still shows the placeholder text.';
+  }
+  if (SHEET_URL.indexOf('/macros/library/') !== -1) {
+    return 'SHEET_URL is a LIBRARY url, not a WEB APP url. Get the correct one from Apps Script -> Deploy -> Manage Deployments -> Web app URL (it must end in /exec).';
+  }
+  if (SHEET_URL.indexOf('/macros/s/') === -1 || SHEET_URL.indexOf('/exec') === -1) {
+    return 'SHEET_URL does not look like a valid Web App URL (should contain /macros/s/ and end in /exec).';
+  }
+  return null;
+}
+
 var SECTIONS = [
-  {title:'Analogy',            sub:'Daily-life analogies',        color:'#8B3A3A'},
-  {title:'Witty Concept',      sub:'Spot the real explanation',   color:'#b8860b'},
-  {title:'Riddle',             sub:'What am I?',                  color:'#2e7d6b'},
-  {title:'Scenario',           sub:'Real student situations',     color:'#2c5c8a'},
-  {title:'Misconception',      sub:'Busting the myth',            color:'#6b3a8a'},
-  {title:'Debug the Mistake',  sub:'Find the flaw',                color:'#a0522d'},
-  {title:'Concept Application',sub:'Case → concept',              color:'#3a7d44'},
-  {title:'Best Definition',    sub:'Pick the precise one',        color:'#b03a5b'},
-  {title:'Sequence',           sub:'Order the steps',             color:'#6b7d3a'},
-  {title:'Cause → Effect',     sub:'Why did it happen?',           color:'#4a3a8c'}
+  {title:'Analogy',            titleHi:'Analogy',              sub:'Daily-life analogies',        subHi:'Roz ki zindagi ke analogies',   color:'#8B3A3A'},
+  {title:'Witty Concept',      titleHi:'Witty Concept',        sub:'Spot the real explanation',   subHi:'Asli explanation dhoondo',      color:'#b8860b'},
+  {title:'Riddle',             titleHi:'Paheli',               sub:'What am I?',                  subHi:'Main kaun hoon?',                color:'#2e7d6b'},
+  {title:'Scenario',           titleHi:'Scenario',             sub:'Real student situations',     subHi:'Real student situations',        color:'#2c5c8a'},
+  {title:'Misconception',      titleHi:'Galatfehmi',           sub:'Busting the myth',            subHi:'Myth ko bust karo',              color:'#6b3a8a'},
+  {title:'Debug the Mistake',  titleHi:'Galti Dhoondo',        sub:'Find the flaw',                subHi:'Kami dhoondo',                   color:'#a0522d'},
+  {title:'Concept Application',titleHi:'Concept Application',  sub:'Case -> concept',              subHi:'Case -> concept',                 color:'#3a7d44'},
+  {title:'Best Definition',    titleHi:'Best Definition',      sub:'Pick the precise one',        subHi:'Sabse precise chuno',            color:'#b03a5b'},
+  {title:'Sequence',           titleHi:'Sequence',             sub:'Order the steps',             subHi:'Steps ka order lagao',           color:'#6b7d3a'},
+  {title:'Cause -> Effect',    titleHi:'Cause -> Effect',      sub:'Why did it happen?',           subHi:'Yeh kyun hua?',                  color:'#4a3a8c'}
 ];
 
-// ══════════════════ QUESTION BANK (20 Qs · original order) ══════════════════
+var LANG = 'en';
+var UI = {
+  en: {
+    regEyebrow:'Lecture 1 - BTech CSE 7th Sem', regSubtitle:'20 MCQ - 10 Sections - 20 minutes - PDF on submission',
+    topicsTitle:'📖 Topics Covered',
+    topicsList:['What is Artificial Intelligence','Intelligence vs Knowledge','Intelligent Agents & the Perceive-Decide-Act cycle','Real-world AI applications'],
+    fieldName:'Full Name', fieldRoll:'Roll Number', fieldSection:'Section', fieldBranch:'Branch 🔒', fieldSemester:'Semester 🔒',
+    beginBtn:'Begin Quiz →', errMissing:'Please fill in your name, roll number, and section.',
+    lbHeaderTitle:'🏆 Top 3 Students', lbHeaderSub:'Live rankings - updates automatically', lbViewLink:'View Top 3 →',
+    progAnswered:' answered', progTotal:'20 questions',
+    reviewLabel:'📋 REVIEW', backScoreBtn:'← Back to Score', submitBtn:'Submit Quiz ✓',
+    warnUnanswered:function(n){ return '⚠️ ' + n + ' question(s) left unanswered. You can still submit - click Submit again to confirm.'; },
+    verdictPass:'✓ PASSED', verdictFail:'✗ Needs Improvement',
+    statusSaving:'Saving to records...', statusPdf:'Downloading PDF...',
+    statusSaveDone:'✓ Saved to records', statusSaveFail:'⚠ Save failed - screenshot this screen and show faculty',
+    statusSaveNetErr:'⚠ Could not reach server - screenshot this screen and show faculty', statusPdfDone:'✓ PDF saved',
+    infoName:'Name', infoRoll:'Roll No.', infoSection:'Section', infoBranchSem:'Branch/Sem', infoTime:'Time Taken', infoSubmitted:'Submitted At',
+    topicHeading:'📊 Topic Performance', focusNext:'📌 Focus next: ', sectionBreakdownHeading:'Section Breakdown',
+    actionSavePdf:'⬇ Save PDF', actionReview:'Review Answers', actionLeaderboard:'🏆 Leaderboard',
+    sidLabel:'Submission ID - Show to faculty', sidHint:"Keep this ID - it's your proof of submission.",
+    lbFullTitle:'🏆 Leaderboard', lbFullSub:'AI & ML - LECTURE 1 QUIZ - TOP 3 - BEST ATTEMPT PER STUDENT',
+    lbEmpty:'🏅 No submissions yet - be the first!', lbUnavailable:'Leaderboard unavailable - check connection.'
+  },
+  hi: {
+    regEyebrow:'Lecture 1 - BTech CSE 7th Sem', regSubtitle:'20 MCQ - 10 Sections - 20 minute - Submit karne par PDF',
+    topicsTitle:'📖 Kya Kya Cover Hoga',
+    topicsList:['Artificial Intelligence kya hai','Intelligence vs Knowledge','Intelligent Agents aur Perceive-Decide-Act cycle','Real-world AI applications'],
+    fieldName:'Poora Naam', fieldRoll:'Roll Number', fieldSection:'Section', fieldBranch:'Branch 🔒', fieldSemester:'Semester 🔒',
+    beginBtn:'Quiz Shuru Karo →', errMissing:'Kripya apna naam, roll number, aur section bharen.',
+    lbHeaderTitle:'🏆 Top 3 Students', lbHeaderSub:'Live rankings - khud-ba-khud update hota hai', lbViewLink:'Top 3 Dekho →',
+    progAnswered:' jawab diye', progTotal:'20 sawaal',
+    reviewLabel:'📋 REVIEW', backScoreBtn:'← Score Par Wapas', submitBtn:'Quiz Submit Karo ✓',
+    warnUnanswered:function(n){ return '⚠️ ' + n + ' sawaal abhi bhi unanswered hain. Aap phir bhi submit kar sakte ho - confirm karne ke liye dobara Submit dabao.'; },
+    verdictPass:'✓ PASS HO GAYE', verdictFail:'✗ Aur Mehnat Chahiye',
+    statusSaving:'Records mein save ho raha hai...', statusPdf:'PDF download ho raha hai...',
+    statusSaveDone:'✓ Records mein save ho gaya', statusSaveFail:'⚠ Save nahi hua - iss screen ka screenshot lekar faculty ko dikhao',
+    statusSaveNetErr:'⚠ Server tak nahi pahunch paye - iss screen ka screenshot lekar faculty ko dikhao', statusPdfDone:'✓ PDF save ho gaya',
+    infoName:'Naam', infoRoll:'Roll No.', infoSection:'Section', infoBranchSem:'Branch/Sem', infoTime:'Kitna Time Laga', infoSubmitted:'Submit Kab Hua',
+    topicHeading:'📊 Topic Performance', focusNext:'📌 Aage Focus Karo: ', sectionBreakdownHeading:'Section-wise Breakdown',
+    actionSavePdf:'⬇ PDF Save Karo', actionReview:'Answers Review Karo', actionLeaderboard:'🏆 Leaderboard',
+    sidLabel:'Submission ID - Faculty Ko Dikhao', sidHint:'Yeh ID sambhal ke rakho - yeh aapke submission ka proof hai.',
+    lbFullTitle:'🏆 Leaderboard', lbFullSub:'AI & ML - LECTURE 1 QUIZ - TOP 3 - HAR STUDENT KA BEST ATTEMPT',
+    lbEmpty:'🏅 Abhi tak koi submission nahi - sabse pehle aap bano!', lbUnavailable:'Leaderboard abhi available nahi - connection check karo.'
+  }
+};
+function T(){ return UI[LANG]; }
+
+function toggleLang() {
+  LANG = (LANG === 'en') ? 'hi' : 'en';
+  document.getElementById('langEnLabel').classList.toggle('active', LANG === 'en');
+  document.getElementById('langHiLabel').classList.toggle('active', LANG === 'hi');
+  applyStaticText();
+  if (questions.length) { renderQuiz(); reapplyQuizState(); }
+  if (finalResult) renderResult();
+}
+
+function applyStaticText() {
+  var t = T();
+  var el = function(id){ return document.getElementById(id); };
+  el('regEyebrow').textContent = t.regEyebrow;
+  el('regSubtitle').textContent = t.regSubtitle;
+  el('topicsTitle').textContent = t.topicsTitle;
+  el('topicsList').innerHTML = t.topicsList.map(function(x){ return '<li>' + x + '</li>'; }).join('');
+  el('labelName').textContent = t.fieldName;
+  el('labelRoll').textContent = t.fieldRoll;
+  el('labelSection').textContent = t.fieldSection;
+  el('labelBranch').textContent = t.fieldBranch;
+  el('labelSemester').textContent = t.fieldSemester;
+  el('beginBtn').textContent = t.beginBtn;
+  el('lbHeaderTitle').textContent = t.lbHeaderTitle;
+  el('lbHeaderSub').textContent = t.lbHeaderSub;
+  el('lbViewLink').textContent = t.lbViewLink;
+  el('progTotal').textContent = t.progTotal;
+  el('progAnswered').textContent = Object.keys(studentAnswers).length + t.progAnswered;
+  el('reviewLabel').textContent = t.reviewLabel;
+  el('backScoreBtn').textContent = t.backScoreBtn;
+  el('sidLabel').textContent = t.sidLabel;
+  el('sidHint').textContent = t.sidHint;
+  el('lbFullTitle').textContent = t.lbFullTitle;
+  el('lbFullSub').textContent = t.lbFullSub;
+  el('ilName').textContent = t.infoName;
+  el('ilRoll').textContent = t.infoRoll;
+  el('ilSection').textContent = t.infoSection;
+  el('ilBranchSem').textContent = t.infoBranchSem;
+  el('ilTime').textContent = t.infoTime;
+  el('ilSubmitted').textContent = t.infoSubmitted;
+  el('topicHeading').textContent = t.topicHeading;
+  el('sectionBreakdownHeading').textContent = t.sectionBreakdownHeading;
+  el('actionSavePdf').textContent = t.actionSavePdf;
+  el('actionReview').textContent = t.actionReview;
+  el('actionLeaderboard').textContent = t.actionLeaderboard;
+  var sw = document.getElementById('submit-wrap');
+  if (sw) { var sb = sw.querySelector('.submit-btn'); if (sb) sb.textContent = t.submitBtn; }
+}
+
 var allQs = [
-  {sec:0, tag:'Intelligent Agent', q:"A watchman who scans the colony gate, decides whether to let a visitor in, and then opens or shuts the gate is to security what a(n) ______ is to AI.", opts:["Intelligent Agent","Static Database","Compiler","Spreadsheet"], a:0},
-  {sec:0, tag:'Intelligence vs Knowledge', q:"Remembering every formula in your notebook is to knowledge what choosing the RIGHT formula during an exam is to ______.", opts:["Intelligence","Memory","Storage","Syllabus"], a:0},
+  {sec:0, tag:"Intelligent Agent", q:"A watchman who scans the colony gate, decides whether to let a visitor in, and then opens or shuts the gate is to security what a(n) ______ is to AI.", opts:["Intelligent Agent","Static Database","Compiler","Spreadsheet"], a:0, qHi:"Ek chowkidar jo colony ke gate par nazar rakhta hai, decide karta hai ki visitor ko andar aane dena hai ya nahi, aur phir gate khol ya band karta hai — yeh security ke liye wahi hai jo AI ke liye ek ______ hai.", optsHi:["Intelligent Agent","Static Database","Compiler","Spreadsheet"]},
+  {sec:0, tag:"Intelligence vs Knowledge", q:"Remembering every formula in your notebook is to knowledge what choosing the RIGHT formula during an exam is to ______.", opts:["Intelligence","Memory","Storage","Syllabus"], a:0, qHi:"Notebook mein har formula yaad rakhna 'knowledge' hai, lekin exam mein SAHI formula choose karna ______ hai.", optsHi:["Intelligence","Memory","Storage","Syllabus"]},
 
-  {sec:1, tag:'AI Definition', q:"A student proudly declares, 'My phone is AI because it has a touchscreen.' The real explanation is:", opts:["A touchscreen is just an input method — AI requires perceiving, deciding, and acting, not merely sensing touch","Any phone with a screen automatically counts as an intelligent agent","Touchscreens are themselves a form of machine learning","AI is defined by the number of apps installed on a device"], a:0},
-  {sec:1, tag:'Intelligent Agent', q:"Someone insists ChatGPT is 'basically a robot with legs.' The actual explanation is:", opts:["ChatGPT is a software agent — it perceives text prompts and acts by producing responses, with no physical body needed","ChatGPT is not AI unless it has a physical form","Software can never be considered an agent under any definition","Only hardware fitted with sensors qualifies as intelligent"], a:0},
+  {sec:1, tag:"AI Definition", q:"A student proudly declares, 'My phone is AI because it has a touchscreen.' The real explanation is:", opts:["A touchscreen is just an input method — AI requires perceiving, deciding, and acting, not merely sensing touch","Any phone with a screen automatically counts as an intelligent agent","Touchscreens are themselves a form of machine learning","AI is defined by the number of apps installed on a device"], a:0, qHi:"Ek student garv se kehta hai, 'Mera phone AI hai kyunki isme touchscreen hai.' Iska sahi explanation hai:", optsHi:["Touchscreen sirf ek input method hai — AI ke liye perceive, decide, aur act karna zaroori hai, sirf touch sense karna nahi","Screen wale kisi bhi phone ko automatically intelligent agent maan liya jayega","Touchscreen khud hi ek tarah ki machine learning hai","AI ka definition phone mein installed apps ki ginti se hota hai"]},
+  {sec:1, tag:"Intelligent Agent", q:"Someone insists ChatGPT is 'basically a robot with legs.' The actual explanation is:", opts:["ChatGPT is a software agent — it perceives text prompts and acts by producing responses, with no physical body needed","ChatGPT is not AI unless it has a physical form","Software can never be considered an agent under any definition","Only hardware fitted with sensors qualifies as intelligent"], a:0, qHi:"Koi keh raha hai ChatGPT 'basically ek robot hai jiski legs hain.' Actual explanation hai:", optsHi:["ChatGPT ek software agent hai — yeh text prompt ko perceive karta hai aur response generate karke act karta hai, isko physical body ki zaroorat nahi","ChatGPT AI nahi hai jab tak usko physical form na ho","Software kabhi bhi agent nahi ho sakta, kisi bhi definition ke hisaab se","Sirf sensors wala hardware hi intelligent kehla sakta hai"]},
 
-  {sec:2, tag:'Intelligent Agent', q:"I never touch a steering wheel, yet I study thousands of roads every second and quietly pick the fastest one for you. What am I, as a concept?", opts:["An Intelligent Agent performing route optimisation","A static lookup table","A printed map","A GPS satellite"], a:0},
-  {sec:2, tag:'Intelligence vs Knowledge', q:"I am not the information stored in your head — I am what you DO with that information when a tricky problem shows up. What am I?", opts:["Intelligence","Knowledge","Memory","Data"], a:0},
+  {sec:2, tag:"Intelligent Agent", q:"I never touch a steering wheel, yet I study thousands of roads every second and quietly pick the fastest one for you. What am I, as a concept?", opts:["An Intelligent Agent performing route optimisation","A static lookup table","A printed map","A GPS satellite"], a:0, qHi:"Main kabhi steering wheel nahi chhuta, phir bhi har second hazaron roads study karta hoon aur chup-chaap sabse fast route pick karta hoon. Main kya hoon, ek concept ke roop mein?", optsHi:["Route optimisation karne wala ek Intelligent Agent","Ek static lookup table","Ek printed map","Ek GPS satellite"]},
+  {sec:2, tag:"Intelligence vs Knowledge", q:"I am not the information stored in your head — I am what you DO with that information when a tricky problem shows up. What am I?", opts:["Intelligence","Knowledge","Memory","Data"], a:0, qHi:"Main woh information nahi hoon jo tumhare dimaag mein stored hai — main woh hoon jo tum us information ka use karte ho jab koi tricky problem aata hai. Main kya hoon?", optsHi:["Intelligence","Knowledge","Memory","Data"]},
 
-  {sec:3, tag:'AI Applications', q:"Arjun wants to explain to his younger cousin, in one line, why Gmail automatically moves certain emails to Spam without him touching a single setting. He should say Gmail is:", opts:["Perceiving incoming mail patterns and deciding, on its own, which ones look like spam","Simply following a fixed list of banned words typed by engineers","Randomly guessing which emails to move each day","Copying what unrelated email accounts happen to do"], a:0},
-  {sec:3, tag:'Perceive-Decide-Act', q:"Neha is asked in her viva to justify why a thermostat counts as a simple intelligent agent. Her BEST answer is:", opts:["It perceives room temperature and decides to switch the AC on or off to reach a goal","It has a digital display showing numbers","It was manufactured by a well-known electronics company","It can be controlled using a remote"], a:0},
+  {sec:3, tag:"AI Applications", q:"Arjun wants to explain to his younger cousin, in one line, why Gmail automatically moves certain emails to Spam without him touching a single setting. He should say Gmail is:", opts:["Perceiving incoming mail patterns and deciding, on its own, which ones look like spam","Simply following a fixed list of banned words typed by engineers","Randomly guessing which emails to move each day","Copying what unrelated email accounts happen to do"], a:0, qHi:"Arjun apne chhote cousin ko ek line mein samjhana chahta hai ki Gmail bina koi setting touch kiye automatically kuch emails ko Spam mein kyun daal deta hai. Usse kehna chahiye ki Gmail:", optsHi:["Aane wale mail patterns ko perceive karke khud decide karta hai ki kaunse emails spam jaise lagte hain","Bas engineers ke likhe hue banned words ki fixed list follow karta hai","Har roz randomly guess karta hai ki kaunse emails move karne hain","Doosre unrelated email accounts jo kar rahe hain wahi copy karta hai"]},
+  {sec:3, tag:"Perceive-Decide-Act", q:"Neha is asked in her viva to justify why a thermostat counts as a simple intelligent agent. Her BEST answer is:", opts:["It perceives room temperature and decides to switch the AC on or off to reach a goal","It has a digital display showing numbers","It was manufactured by a well-known electronics company","It can be controlled using a remote"], a:0, qHi:"Neha se uski viva mein poocha jata hai ki thermostat ek simple intelligent agent kyun kehlata hai. Uska BEST answer hai:", optsHi:["Yeh room temperature ko perceive karta hai aur apne goal tak pahunchne ke liye AC on/off karne ka decision leta hai","Isme ek digital display hai jisme numbers dikhte hain","Yeh ek jaani-mani electronics company ne banaya hai","Isse remote se control kiya ja sakta hai"]},
 
-  {sec:4, tag:'AI Definition', q:"MYTH: 'A machine is AI only if it looks or talks like a human.' The truth is:", opts:["AI is defined by the ability to perform tasks needing intelligence — appearance or human-likeness is irrelevant","Only humanoid robots can be classified as AI","Voice assistants are AI only because they can talk","Physical resemblance to humans is a required AI criterion"], a:0},
-  {sec:4, tag:'Intelligence vs Knowledge', q:"MYTH: 'Someone who has memorised the entire syllabus is automatically the most intelligent student.' The truth is:", opts:["Intelligence depends on how effectively that knowledge is applied to new problems, not how much is memorised","Memorising more content always guarantees higher intelligence","Knowledge and intelligence are interchangeable terms","Exam marks alone measure true intelligence"], a:0},
+  {sec:4, tag:"AI Definition", q:"MYTH: 'A machine is AI only if it looks or talks like a human.' The truth is:", opts:["AI is defined by the ability to perform tasks needing intelligence — appearance or human-likeness is irrelevant","Only humanoid robots can be classified as AI","Voice assistants are AI only because they can talk","Physical resemblance to humans is a required AI criterion"], a:0, qHi:"MYTH: 'Koi machine tabhi AI hai jab wo dikhne ya baat karne mein human jaisi ho.' Sach yeh hai:", optsHi:["AI ka definition intelligence-wale tasks perform karne ki ability se hota hai — appearance ya human-jaisa dikhna irrelevant hai","Sirf humanoid robots hi AI classify hote hain","Voice assistants AI isliye hain kyunki wo baat kar sakte hain","Human se physical similarity AI ka zaroori criterion hai"]},
+  {sec:4, tag:"Intelligence vs Knowledge", q:"MYTH: 'Someone who has memorised the entire syllabus is automatically the most intelligent student.' The truth is:", opts:["Intelligence depends on how effectively that knowledge is applied to new problems, not how much is memorised","Memorising more content always guarantees higher intelligence","Knowledge and intelligence are interchangeable terms","Exam marks alone measure true intelligence"], a:0, qHi:"MYTH: 'Jisne poora syllabus yaad kar liya woh automatically class ka sabse intelligent student hai.' Sach yeh hai:", optsHi:["Intelligence iss baat par depend karti hai ki us knowledge ko naye problems mein kitne effectively apply kiya jata hai, sirf memorise karne se nahi","Zyada content memorise karna hamesha zyada intelligence guarantee karta hai","Knowledge aur intelligence ek hi cheez hai","Sirf exam marks hi true intelligence measure karte hain"]},
 
-  {sec:5, tag:'Intelligent Agent', q:"A student writes: 'A calculator is an Intelligent Agent because it processes numbers.' The examiner marks this wrong. The MOST LIKELY reason is:", opts:["A calculator does not perceive an environment or make autonomous decisions — it only executes fixed operations typed by the user","Calculators are too old to be considered technology","Intelligent Agents must always be expensive machines","Numbers cannot be processed by intelligent systems"], a:0},
-  {sec:5, tag:'AI Applications', q:"A student claims Netflix gives every user the exact same recommendations, and is confused why this is marked incorrect. The MOST LIKELY cause of the error is:", opts:["The student overlooked that Netflix perceives individual viewing history and personalises decisions per user","Netflix recommendations are unrelated to any form of AI","All streaming platforms show identical content to everyone","Recommendations are chosen manually by staff for each user"], a:0},
+  {sec:5, tag:"Intelligent Agent", q:"A student writes: 'A calculator is an Intelligent Agent because it processes numbers.' The examiner marks this wrong. The MOST LIKELY reason is:", opts:["A calculator does not perceive an environment or make autonomous decisions — it only executes fixed operations typed by the user","Calculators are too old to be considered technology","Intelligent Agents must always be expensive machines","Numbers cannot be processed by intelligent systems"], a:0, qHi:"Ek student likhta hai: 'Calculator ek Intelligent Agent hai kyunki yeh numbers process karta hai.' Examiner isse galat mark karta hai. MOST LIKELY reason hai:", optsHi:["Calculator kisi environment ko perceive nahi karta aur khud se decisions bhi nahi leta — yeh sirf user ke type kiye fixed operations execute karta hai","Calculators technology ke liye bahut purane hain","Intelligent Agents hamesha mehenge machines hone chahiye","Numbers ko intelligent systems process nahi kar sakte"]},
+  {sec:5, tag:"AI Applications", q:"A student claims Netflix gives every user the exact same recommendations, and is confused why this is marked incorrect. The MOST LIKELY cause of the error is:", opts:["The student overlooked that Netflix perceives individual viewing history and personalises decisions per user","Netflix recommendations are unrelated to any form of AI","All streaming platforms show identical content to everyone","Recommendations are chosen manually by staff for each user"], a:0, qHi:"Ek student claim karta hai ki Netflix har user ko exact same recommendations deta hai, aur confuse hai ki yeh galat kyun mark hua. MOST LIKELY cause of error hai:", optsHi:["Student ne yeh miss kiya ki Netflix har student ki individual viewing history perceive karke per-user decisions personalise karta hai","Netflix ke recommendations ka AI se koi lena-dena nahi","Saare streaming platforms sabko identical content dikhate hain","Recommendations staff dwara manually har user ke liye choose kiye jaate hain"]},
 
-  {sec:6, tag:'Perceive-Decide-Act', q:"A hospital wants a system that studies each patient's vitals, decides if a nurse should be alerted, and triggers the alert automatically. The best way to describe this system is:", opts:["An Intelligent Agent performing perceive-decide-act on patient data","A static spreadsheet of patient names","A printed chart updated manually each hour","A fixed alarm that rings at scheduled times only"], a:0},
-  {sec:6, tag:'Intelligent Agent', q:"Who Am I? I don't need a human-like body. I gather data from my surroundings, weigh my options, and take an action to move closer to a goal — again and again, in a loop.", opts:["An Intelligent Agent","A knowledge base","A user manual","A static webpage"], a:0},
+  {sec:6, tag:"Perceive-Decide-Act", q:"A hospital wants a system that studies each patient's vitals, decides if a nurse should be alerted, and triggers the alert automatically. The best way to describe this system is:", opts:["An Intelligent Agent performing perceive-decide-act on patient data","A static spreadsheet of patient names","A printed chart updated manually each hour","A fixed alarm that rings at scheduled times only"], a:0, qHi:"Ek hospital chahta hai ek system jo har patient ke vitals study kare, decide kare ki nurse ko alert karna hai ya nahi, aur automatically alert trigger kare. Iss system ko describe karne ka best tareeka hai:", optsHi:["Patient data par perceive-decide-act perform karne wala ek Intelligent Agent","Patient names ki ek static spreadsheet","Har ghante manually update hone wala printed chart","Sirf scheduled times par bajne wala ek fixed alarm"]},
+  {sec:6, tag:"Intelligent Agent", q:"Who Am I? I don't need a human-like body. I gather data from my surroundings, weigh my options, and take an action to move closer to a goal — again and again, in a loop.", opts:["An Intelligent Agent","A knowledge base","A user manual","A static webpage"], a:0, qHi:"Who Am I? Mujhe human jaisa body nahi chahiye. Main apne surroundings se data gather karta hoon, options weigh karta hoon, aur goal ke kareeb pahunchne ke liye action leta hoon — baar-baar, ek loop mein.", optsHi:["Ek Intelligent Agent","Ek knowledge base","Ek user manual","Ek static webpage"]},
 
-  {sec:7, tag:'AI Definition', q:"Which is the MOST ACCURATE definition of Artificial Intelligence?", opts:["The science of making machines capable of performing tasks that normally require human intelligence, such as learning, reasoning, and deciding","Any computer program written in a modern programming language","A category of expensive electronic hardware fitted with sensors","Software that specifically mimics human speech and appearance"], a:0},
-  {sec:7, tag:'Intelligent Agent', q:"Which is the MOST ACCURATE definition of an Intelligent Agent?", opts:["Anything that perceives its environment, makes decisions, and performs actions to achieve a goal","Any software application that runs continuously in the background","A physical robot equipped with a camera and wheels","A program that stores large amounts of user data"], a:0},
+  {sec:7, tag:"AI Definition", q:"Which is the MOST ACCURATE definition of Artificial Intelligence?", opts:["The science of making machines capable of performing tasks that normally require human intelligence, such as learning, reasoning, and deciding","Any computer program written in a modern programming language","A category of expensive electronic hardware fitted with sensors","Software that specifically mimics human speech and appearance"], a:0, qHi:"Artificial Intelligence ki MOST ACCURATE definition kaunsi hai?", optsHi:["Machines ko wo tasks perform karne layak banane ka science jo normally human intelligence maangte hain, jaise learning, reasoning aur deciding","Modern programming language mein likha koi bhi computer program","Sensors laga hua mehenga electronic hardware ka ek category","Software jo specifically human speech aur appearance ko mimic kare"]},
+  {sec:7, tag:"Intelligent Agent", q:"Which is the MOST ACCURATE definition of an Intelligent Agent?", opts:["Anything that perceives its environment, makes decisions, and performs actions to achieve a goal","Any software application that runs continuously in the background","A physical robot equipped with a camera and wheels","A program that stores large amounts of user data"], a:0, qHi:"Intelligent Agent ki MOST ACCURATE definition kaunsi hai?", optsHi:["Kuch bhi jo apne environment ko perceive karta hai, decisions leta hai, aur goal achieve karne ke liye actions perform karta hai","Koi bhi software application jo background mein continuously chalta rahe","Camera aur wheels wala physical robot","Ek program jo bahut zyada user data store karta hai"]},
 
-  {sec:8, tag:'Perceive-Decide-Act', q:"What is the correct sequence describing how an Intelligent Agent operates?", opts:["Step 1: Perceive the environment → Step 2: Decide the best action → Step 3: Act on the environment","Step 1: Act on the environment → Step 2: Perceive the environment → Step 3: Decide the best action","Step 1: Decide the best action → Step 2: Act on the environment → Step 3: Perceive the environment","Step 1: Store data permanently → Step 2: Delete old data → Step 3: Perceive the environment"], a:0},
-  {sec:8, tag:'AI Applications', q:"A student describes how Google Maps produces a route suggestion. Which order of steps is correct?", opts:["Step 1: Gather live traffic and road data → Step 2: Evaluate possible routes → Step 3: Select and display the best route","Step 1: Display a route → Step 2: Gather traffic data afterward → Step 3: Ignore road closures","Step 1: Select a random route → Step 2: Ask the driver to confirm → Step 3: Gather traffic data","Step 1: Evaluate possible routes → Step 2: Delete all traffic data → Step 3: Gather live data"], a:0},
+  {sec:8, tag:"Perceive-Decide-Act", q:"What is the correct sequence describing how an Intelligent Agent operates?", opts:["Step 1: Perceive the environment → Step 2: Decide the best action → Step 3: Act on the environment","Step 1: Act on the environment → Step 2: Perceive the environment → Step 3: Decide the best action","Step 1: Decide the best action → Step 2: Act on the environment → Step 3: Perceive the environment","Step 1: Store data permanently → Step 2: Delete old data → Step 3: Perceive the environment"], a:0, qHi:"Intelligent Agent kaise operate karta hai, iska sahi sequence kya hai?", optsHi:["Step 1: Environment ko perceive karo → Step 2: Best action decide karo → Step 3: Environment par act karo","Step 1: Environment par act karo → Step 2: Environment ko perceive karo → Step 3: Best action decide karo","Step 1: Best action decide karo → Step 2: Environment par act karo → Step 3: Environment ko perceive karo","Step 1: Data permanently store karo → Step 2: Purana data delete karo → Step 3: Environment ko perceive karo"]},
+  {sec:8, tag:"AI Applications", q:"A student describes how Google Maps produces a route suggestion. Which order of steps is correct?", opts:["Step 1: Gather live traffic and road data → Step 2: Evaluate possible routes → Step 3: Select and display the best route","Step 1: Display a route → Step 2: Gather traffic data afterward → Step 3: Ignore road closures","Step 1: Select a random route → Step 2: Ask the driver to confirm → Step 3: Gather traffic data","Step 1: Evaluate possible routes → Step 2: Delete all traffic data → Step 3: Gather live data"], a:0, qHi:"Ek student describe karta hai ki Google Maps kaise route suggestion produce karta hai. Steps ka sahi order kaunsa hai?", optsHi:["Step 1: Live traffic aur road data gather karo → Step 2: Possible routes evaluate karo → Step 3: Best route select karke display karo","Step 1: Ek route display karo → Step 2: Baad mein traffic data gather karo → Step 3: Road closures ignore karo","Step 1: Random route select karo → Step 2: Driver se confirm karwao → Step 3: Traffic data gather karo","Step 1: Possible routes evaluate karo → Step 2: Saara traffic data delete karo → Step 3: Live data gather karo"]},
 
-  {sec:9, tag:'Perceive-Decide-Act', q:"CAUSE: A thermostat senses the room temperature has crossed the set threshold. EFFECT: It automatically switches on the AC. Why?", opts:["Because it is functioning as an intelligent agent — perceiving a condition and deciding on the appropriate action to reach its goal","Because the AC switches on randomly every few minutes regardless of temperature","Because the thermostat was manually switched on by a person at that exact moment","Because room temperature has no connection to AC operation"], a:0},
-  {sec:9, tag:'AI Applications', q:"CAUSE: Two students use Netflix on the same account type but see completely different homepage recommendations. What is the MOST LIKELY EFFECT explanation?", opts:["Netflix's recommendation system perceives each student's individual viewing history and personalises decisions accordingly","Netflix shows recommendations in a fixed, unchanging order for every account","The difference happens purely due to random chance with no underlying system","Recommendations depend only on the country selected in account settings"], a:0}
+  {sec:9, tag:"Perceive-Decide-Act", q:"CAUSE: A thermostat senses the room temperature has crossed the set threshold. EFFECT: It automatically switches on the AC. Why?", opts:["Because it is functioning as an intelligent agent — perceiving a condition and deciding on the appropriate action to reach its goal","Because the AC switches on randomly every few minutes regardless of temperature","Because the thermostat was manually switched on by a person at that exact moment","Because room temperature has no connection to AC operation"], a:0, qHi:"CAUSE: Thermostat sense karta hai ki room temperature set threshold cross kar gaya hai. EFFECT: Yeh automatically AC on kar deta hai. Kyun?", optsHi:["Kyunki yeh ek intelligent agent ki tarah kaam kar raha hai — ek condition ko perceive karke apne goal tak pahunchne ke liye sahi action decide kar raha hai","Kyunki AC har kuch minute mein temperature se bina matlab randomly on ho jata hai","Kyunki thermostat ko us exact moment par kisi insaan ne manually on kiya tha","Kyunki room temperature ka AC operation se koi connection nahi hai"]},
+  {sec:9, tag:"AI Applications", q:"CAUSE: Two students use Netflix on the same account type but see completely different homepage recommendations. What is the MOST LIKELY EFFECT explanation?", opts:["Netflix's recommendation system perceives each student's individual viewing history and personalises decisions accordingly","Netflix shows recommendations in a fixed, unchanging order for every account","The difference happens purely due to random chance with no underlying system","Recommendations depend only on the country selected in account settings"], a:0, qHi:"CAUSE: Do students same account type par Netflix use karte hain lekin unki homepage recommendations bilkul alag hain. MOST LIKELY EFFECT explanation kya hai?", optsHi:["Netflix ka recommendation system har student ki individual viewing history perceive karke uske hisaab se decisions personalise karta hai","Netflix har account ke liye ek fixed, unchanging order mein recommendations dikhata hai","Yeh difference purely random chance ki wajah se hota hai, koi underlying system nahi hai","Recommendations sirf account settings mein select kiye gaye country par depend karte hain"]}
 ];
 var TOTAL = allQs.length;
 
-// ══════════════════ STATE ══════════════════
-var questions = [];          // shuffled working copy
-var studentAnswers = {};     // shuffled index -> chosen shuffled option index
-var current = null;          // registration data
+var questions = [];
+var studentAnswers = {};
+var current = null;
 var timerInterval = null, secsLeft = TIME_MINUTES * 60;
 var submitted = false, tabSwitchCount = 0, reviewMode = false;
 var startTime = null, finalResult = null;
@@ -434,15 +535,16 @@ function shuffle(arr){
   }
   return arr;
 }
+function qText(q){ return LANG === 'hi' ? q.qHi : q.q; }
+function optText(q, origOptIdx){ return LANG === 'hi' ? q.optsHi[origOptIdx] : q.opts[origOptIdx]; }
 
-// ══════════════════ REGISTRATION ══════════════════
 function beginQuiz() {
   var name = $('regName').value.trim();
   var roll = $('regRoll').value.trim().toUpperCase();
   var section = $('regSection').value;
 
   if (!name || !roll || !section) {
-    $('errMsg').textContent = 'Please fill in your name, roll number, and section.';
+    $('errMsg').textContent = T().errMissing;
     $('errMsg').style.display = 'block';
     return;
   }
@@ -450,16 +552,16 @@ function beginQuiz() {
 
   current = {name:name, roll:roll, section:section, branch:'BTech CSE', semester:'7th'};
 
-  // Build shuffled question set with original-number tracking
   var order = shuffle(allQs.map(function(q, i){ return i; }));
   questions = order.map(function(origIdx){
     var q = allQs[origIdx];
-    var shuffledOpts = shuffle(q.opts.map(function(o,i){ return {text:o, wasCorrect:(i===q.a)}; }));
-    var newCorrectIndex = shuffledOpts.findIndex(function(o){ return o.wasCorrect; });
+    var optOrder = shuffle([0,1,2,3]);
+    var newCorrectIndex = optOrder.indexOf(q.a);
     return {
       origNum: origIdx + 1,
-      sec: q.sec, tag: q.tag, q: q.q,
-      opts: shuffledOpts.map(function(o){ return o.text; }),
+      origIdx: origIdx,
+      sec: q.sec, tag: q.tag,
+      optOrder: optOrder,
       correct: newCorrectIndex
     };
   });
@@ -475,36 +577,60 @@ function beginQuiz() {
   attachLeaveProtection();
 }
 
-// ══════════════════ RENDER QUIZ ══════════════════
 function renderQuiz() {
   var html = '';
   var lastSec = -1;
-  questions.forEach(function(q, i){
-    if (q.sec !== lastSec) {
-      lastSec = q.sec;
-      var s = SECTIONS[q.sec];
+  questions.forEach(function(qs, i){
+    var qSrc = allQs[qs.origIdx];
+    if (qs.sec !== lastSec) {
+      lastSec = qs.sec;
+      var s = SECTIONS[qs.sec];
+      var stitle = LANG === 'hi' ? s.titleHi : s.title;
+      var ssub = LANG === 'hi' ? s.subHi : s.sub;
       html += '<div class="section-header"><div class="line"></div>' +
         '<div class="section-pill" style="background:' + s.color + '">' +
-          '<div class="st">' + s.title + '</div><div class="ss">' + s.sub + '</div>' +
+          '<div class="st">' + stitle + '</div><div class="ss">' + ssub + '</div>' +
         '</div><div class="line"></div></div>';
     }
     html += '<div class="q-card" id="qcard-' + i + '">' +
       '<div class="q-head"><div class="q-num" id="qnum-' + i + '">' + (i+1) + '</div>' +
-      '<div class="q-stem">' + q.q + '</div></div>' +
-      '<div class="q-tag" style="background:' + SECTIONS[q.sec].color + '">' + q.tag + '</div>' +
+      '<div class="q-stem">' + qText(qSrc) + '</div></div>' +
+      '<div class="q-tag" style="background:' + SECTIONS[qs.sec].color + '">' + qs.tag + '</div>' +
       '<div class="q-opts" id="qopts-' + i + '">';
-    q.opts.forEach(function(opt, oi){
-      var letter = String.fromCharCode(65 + oi);
-      html += '<button class="opt-btn" onclick="selectOption(' + i + ',' + oi + ')">' +
-        '<span class="opt-letter">' + letter + '</span><span>' + opt + '</span></button>';
+    qs.optOrder.forEach(function(origOptIdx, position){
+      var letter = String.fromCharCode(65 + position);
+      html += '<button class="opt-btn" onclick="selectOption(' + i + ',' + position + ')">' +
+        '<span class="opt-letter">' + letter + '</span><span>' + optText(qSrc, origOptIdx) + '</span></button>';
     });
     html += '</div></div>';
   });
   html += '<div id="submit-wrap">' +
     '<div class="warn-box" id="warnBox"></div>' +
-    '<button class="submit-btn" onclick="attemptSubmit()">Submit Quiz ✓</button>' +
+    '<button class="submit-btn" onclick="attemptSubmit()">' + T().submitBtn + '</button>' +
     '</div>';
   $('quiz-content').innerHTML = html;
+}
+
+function reapplyQuizState() {
+  questions.forEach(function(qs, i){
+    var opts = $('qopts-' + i).children;
+    if (reviewMode) {
+      for (var k = 0; k < opts.length; k++) {
+        opts[k].classList.add('disabled');
+        opts[k].onclick = null;
+        if (k === qs.correct) opts[k].classList.add('correct-answer');
+        else if (studentAnswers[i] === k) opts[k].classList.add('wrong-picked');
+      }
+    } else if (studentAnswers.hasOwnProperty(i)) {
+      opts[studentAnswers[i]].classList.add('selected');
+      $('qnum-' + i).classList.add('answered');
+    }
+  });
+  if (reviewMode) {
+    $('submit-wrap') && ($('submit-wrap').style.display = 'none');
+    $('reviewLabel').style.display = 'inline-block';
+    $('backScoreBtn').style.display = 'inline-block';
+  }
 }
 
 function selectOption(qi, oi) {
@@ -518,11 +644,10 @@ function selectOption(qi, oi) {
 
 function updateProgress() {
   var answered = Object.keys(studentAnswers).length;
-  $('progAnswered').textContent = answered + ' answered';
+  $('progAnswered').textContent = answered + T().progAnswered;
   $('progFill').style.width = (answered / TOTAL * 100) + '%';
 }
 
-// ══════════════════ TIMER ══════════════════
 function startTimer() {
   clearInterval(timerInterval);
   updateTimerDisplay();
@@ -538,7 +663,6 @@ function updateTimerDisplay() {
   $('timerBadge').textContent = m + ':' + String(s).padStart(2,'0');
 }
 
-// ══════════════════ LEAVE / TAB PROTECTION ══════════════════
 function attachLeaveProtection() {
   window.addEventListener('beforeunload', function(e){
     if (!submitted) { e.preventDefault(); e.returnValue = ''; }
@@ -565,11 +689,10 @@ function showTabWarning() {
   document.body.appendChild(overlay);
 }
 
-// ══════════════════ SUBMIT ══════════════════
 function attemptSubmit() {
   var unanswered = TOTAL - Object.keys(studentAnswers).length;
   if (unanswered > 0 && !$('warnBox').dataset.shown) {
-    $('warnBox').textContent = '⚠️ ' + unanswered + ' question(s) left unanswered. You can still submit — click Submit again to confirm.';
+    $('warnBox').textContent = T().warnUnanswered(unanswered);
     $('warnBox').style.display = 'block';
     $('warnBox').dataset.shown = '1';
     return;
@@ -588,12 +711,12 @@ function finalize() {
   var tagByOriginal = new Array(TOTAL);
   var correctByOriginal = new Array(TOTAL);
 
-  questions.forEach(function(q, i){
-    var isCorrect = studentAnswers[i] === q.correct;
-    if (isCorrect) { correct++; secScores[q.sec]++; }
-    secTotals[q.sec]++;
-    tagByOriginal[q.origNum - 1] = q.tag;
-    correctByOriginal[q.origNum - 1] = isCorrect ? 1 : 0;
+  questions.forEach(function(qs, i){
+    var isCorrect = studentAnswers[i] === qs.correct;
+    if (isCorrect) { correct++; secScores[qs.sec]++; }
+    secTotals[qs.sec]++;
+    tagByOriginal[qs.origNum - 1] = qs.tag;
+    correctByOriginal[qs.origNum - 1] = isCorrect ? 1 : 0;
   });
 
   var pct = Math.round(correct / TOTAL * 100);
@@ -607,7 +730,6 @@ function finalize() {
   var submittedAt = new Date().toLocaleString('en-IN');
   var sid = current.roll + '-' + QUIZ_CODE + '-' + grade + '-' + Date.now().toString(36).toUpperCase();
 
-  // Topic Performance (Layer 1)
   var topicStats = {};
   for (var n = 0; n < TOTAL; n++) {
     var t = tagByOriginal[n];
@@ -629,19 +751,18 @@ function finalize() {
   setTimeout(savePdf, 1200);
 }
 
-// ══════════════════ RENDER RESULT ══════════════════
 function renderResult() {
-  var r = finalResult;
+  var r = finalResult, t = T();
   var emojiMap = {'A+':'🏆','A':'🌟','B':'🎯','C':'📚','D':'💪','E':'🤞','F':'📖'};
   $('gradeEmoji').textContent = emojiMap[r.grade];
   $('bigScore').textContent = r.correct + '/' + TOTAL;
   $('scoreLabel').textContent = r.pct + '% · Grade ' + r.grade;
-  $('verdict').textContent = r.passed ? '✓ PASSED' : '✗ Needs Improvement';
+  $('verdict').textContent = r.passed ? t.verdictPass : t.verdictFail;
   $('verdict').className = 'verdict ' + (r.passed ? 'pass' : 'fail');
 
   $('statusBadges').innerHTML =
-    '<span class="status-badge" id="badgeSave"><span class="pulse-dot"></span>Saving to records…</span>' +
-    '<span class="status-badge" id="badgePdf"><span class="pulse-dot"></span>Downloading PDF…</span>';
+    '<span class="status-badge' + (r._saveDone ? ' done' : '') + '" id="badgeSave"><span class="pulse-dot"></span>' + (r._saveText || t.statusSaving) + '</span>' +
+    '<span class="status-badge' + (r._pdfDone ? ' done' : '') + '" id="badgePdf"><span class="pulse-dot"></span>' + (r._pdfText || t.statusPdf) + '</span>';
 
   $('riName').textContent = current.name;
   $('riRoll').textContent = current.roll;
@@ -649,26 +770,26 @@ function renderResult() {
   $('riTime').textContent = r.timeTaken;
   $('riSubmitted').textContent = r.submittedAt;
 
-  // Topic performance rows, best to weakest
-  var topics = Object.keys(r.topicStats).map(function(t){
-    var s = r.topicStats[t];
-    return {name:t, correct:s.correct, total:s.total, acc: s.correct / s.total};
+  var topics = Object.keys(r.topicStats).map(function(tg){
+    var s = r.topicStats[tg];
+    return {name:tg, correct:s.correct, total:s.total, acc: s.correct / s.total};
   }).sort(function(a,b){ return b.acc - a.acc; });
 
-  $('topicRows').innerHTML = topics.map(function(t){
-    return '<div class="topic-row"><div class="topic-name">' + t.name + '</div>' +
-      '<div class="topic-bar-track"><div class="topic-bar-fill" style="width:' + (t.acc*100) + '%"></div></div>' +
-      '<div class="topic-frac">' + t.correct + '/' + t.total + '</div></div>';
+  $('topicRows').innerHTML = topics.map(function(tp){
+    return '<div class="topic-row"><div class="topic-name">' + tp.name + '</div>' +
+      '<div class="topic-bar-track"><div class="topic-bar-fill" style="width:' + (tp.acc*100) + '%"></div></div>' +
+      '<div class="topic-frac">' + tp.correct + '/' + tp.total + '</div></div>';
   }).join('');
 
-  var weakTopics = topics.filter(function(t){ return t.total >= 2; }).slice(-2).reverse().map(function(t){ return t.name; });
-  $('focusNext').textContent = weakTopics.length ? '📌 Focus next: ' + weakTopics.join(', ') : '';
+  var weakTopics = topics.filter(function(tp){ return tp.total >= 2; }).slice(-2).reverse().map(function(tp){ return tp.name; });
+  $('focusNext').textContent = weakTopics.length ? t.focusNext + weakTopics.join(', ') : '';
 
   $('sectionRows').innerHTML = SECTIONS.map(function(s, i){
     if (!r.secTotals[i]) return '';
+    var stitle = LANG === 'hi' ? s.titleHi : s.title;
     var frac = r.secScores[i] + '/' + r.secTotals[i];
     var pctW = (r.secScores[i] / r.secTotals[i] * 100);
-    return '<div class="sb-row"><div class="sb-name">' + s.title + '</div>' +
+    return '<div class="sb-row"><div class="sb-name">' + stitle + '</div>' +
       '<div class="sb-track"><div class="sb-fill" style="width:' + pctW + '%;background:' + s.color + '"></div></div>' +
       '<div class="sb-frac">' + frac + '</div></div>';
   }).join('');
@@ -676,8 +797,14 @@ function renderResult() {
   $('sidValue').textContent = r.sid;
 }
 
-// ══════════════════ SUBMIT TO SHEET ══════════════════
 function postToSheet() {
+  var urlProblem = checkSheetUrl();
+  if (urlProblem) {
+    finalResult._saveText = '⚠ Setup problem — tell faculty: ' + urlProblem;
+    finalResult._saveDone = false;
+    markBadgeDone('badgeSave', finalResult._saveText, false);
+    return;
+  }
   var r = finalResult;
   var payload = {
     name: current.name, roll: current.roll, section: current.section,
@@ -701,54 +828,44 @@ function postToSheet() {
     .then(function(res){ return res.json(); })
     .then(function(result){
       if (result && result.status === 'ok') {
-        markBadgeDone('badgeSave', '✓ Saved to records');
+        markBadgeDone('badgeSave', T().statusSaveDone, true);
       } else {
-        markBadgeDone('badgeSave', '⚠ Save failed — screenshot this screen and show faculty');
+        markBadgeDone('badgeSave', T().statusSaveFail, false);
       }
     })
     .catch(function(err){
       console.warn('Sheet save error:', err);
-      markBadgeDone('badgeSave', '⚠ Could not reach server — screenshot this screen and show faculty');
+      markBadgeDone('badgeSave', T().statusSaveNetErr, false);
     });
 }
-function markBadgeDone(id, text) {
-  var el = $(id);
-  if (!el) return;
-  el.classList.add('done');
-  el.innerHTML = text;
+function markBadgeDone(id, text, isSuccess) {
+  var elx = $(id);
+  if (!elx) return;
+  elx.classList.toggle('done', !!isSuccess);
+  elx.innerHTML = text;
+  if (finalResult) { finalResult._saveText = text; finalResult._saveDone = !!isSuccess; }
 }
 
-// ══════════════════ PDF ══════════════════
 function savePdf() {
-  var el = $('result-card');
+  var elx = $('result-card');
   var fname = current.roll + '-' + QUIZ_CODE + '-' + finalResult.sid + '.pdf';
   html2pdf().set({
     margin:[12,10,12,10], filename:fname,
     image:{type:'jpeg', quality:0.97},
     html2canvas:{scale:2, useCORS:true, backgroundColor:'#ffffff', logging:false},
     jsPDF:{unit:'mm', format:'a4', orientation:'portrait'}
-  }).from(el).save().then(function(){
-    markBadgeDone('badgePdf', '✓ PDF saved');
+  }).from(elx).save().then(function(){
+    var el2 = $('badgePdf');
+    if (el2) { el2.classList.add('done'); el2.innerHTML = T().statusPdfDone; }
+    if (finalResult) { finalResult._pdfText = T().statusPdfDone; finalResult._pdfDone = true; }
   });
 }
 
-// ══════════════════ REVIEW MODE ══════════════════
 function reviewAnswers() {
   reviewMode = true;
   switchScreen('quiz-screen');
-  $('submit-wrap') && ($('submit-wrap').style.display = 'none');
-  $('reviewLabel').style.display = 'inline-block';
-  $('backScoreBtn').style.display = 'inline-block';
-
-  questions.forEach(function(q, i){
-    var opts = $('qopts-' + i).children;
-    for (var k = 0; k < opts.length; k++) {
-      opts[k].classList.add('disabled');
-      opts[k].onclick = null;
-      if (k === q.correct) opts[k].classList.add('correct-answer');
-      else if (studentAnswers[i] === k) opts[k].classList.add('wrong-picked');
-    }
-  });
+  renderQuiz();
+  reapplyQuizState();
 }
 function backToScore() {
   reviewMode = false;
@@ -757,7 +874,6 @@ function backToScore() {
   switchScreen('result-screen');
 }
 
-// ══════════════════ LEADERBOARD ══════════════════
 function showLeaderboard() {
   switchScreen('lb-screen');
   loadFullLeaderboard();
@@ -768,7 +884,7 @@ function backFromLb() {
 
 function renderLbRows(data, target) {
   if (!data || !data.length) {
-    $(target).innerHTML = '<div class="lb-empty">🏅 No submissions yet — be the first!</div>';
+    $(target).innerHTML = '<div class="lb-empty">' + T().lbEmpty + '</div>';
     return;
   }
   var medals = ['🥇','🥈','🥉'];
@@ -796,32 +912,37 @@ function renderLbRows(data, target) {
 }
 
 function loadWidgetLB() {
+  var urlProblem = checkSheetUrl();
+  if (urlProblem) { $('widgetLbBody').innerHTML = '<div class="lb-empty">' + urlProblem + '</div>'; return; }
   fetch(SHEET_URL + '?action=leaderboard&top=' + LB_SIZE + '&quiz=' + QUIZ_CODE, {redirect:'follow'})
     .then(function(r){ return r.json(); })
     .then(function(j){
       if (j.status === 'error') { $('widgetLbBody').innerHTML = '<div class="lb-empty">Leaderboard error: ' + j.message + '</div>'; return; }
       renderLbRows(j.data, 'widgetLbBody');
     })
-    .catch(function(err){ $('widgetLbBody').innerHTML = '<div class="lb-empty">Leaderboard unavailable — check connection.</div>'; console.warn(err); });
+    .catch(function(err){ $('widgetLbBody').innerHTML = '<div class="lb-empty">' + T().lbUnavailable + '</div>'; console.warn(err); });
 }
 function loadFullLeaderboard() {
+  var urlProblem = checkSheetUrl();
+  if (urlProblem) { $('lbFullBody').innerHTML = '<div class="lb-empty">' + urlProblem + '</div>'; return; }
   fetch(SHEET_URL + '?action=leaderboard&top=' + LB_SIZE + '&quiz=' + QUIZ_CODE, {redirect:'follow'})
     .then(function(r){ return r.json(); })
     .then(function(j){
       if (j.status === 'error') { $('lbFullBody').innerHTML = '<div class="lb-empty">Leaderboard error: ' + j.message + '</div>'; return; }
       renderLbRows(j.data, 'lbFullBody');
     })
-    .catch(function(err){ $('lbFullBody').innerHTML = '<div class="lb-empty">Leaderboard unavailable — check connection.</div>'; console.warn(err); });
+    .catch(function(err){ $('lbFullBody').innerHTML = '<div class="lb-empty">' + T().lbUnavailable + '</div>'; console.warn(err); });
 }
 loadWidgetLB();
 setInterval(loadWidgetLB, 90000);
 
-// ══════════════════ SCREEN SWITCH ══════════════════
 function switchScreen(id) {
   document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
   $(id).classList.add('active');
   window.scrollTo(0,0);
 }
+
+applyStaticText();
 </script>
 </body>
 </html>
