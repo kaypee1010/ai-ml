@@ -366,7 +366,7 @@ body::after{content:"";position:fixed;top:0;right:0;width:280px;height:280px;poi
 
 // ══════════════════ CONFIG ══════════════════
 var QUIZ_CODE = 'AIML_L1';
-var TIME_MINUTES = 10;
+var TIME_MINUTES = 20;
 var LB_SIZE = 3;
 var SHEET_URL = 'https://script.google.com/macros/s/AKfycbwCqK57Xw9IlHlXHQHIjNH2FUXoSj3dmZlzyFbtzM2I0G-IymR82fKqftilbm_J4akQwA/exec'; // ← separate deployment from attendance system
 
@@ -692,9 +692,24 @@ function postToSheet() {
     payload['correct_' + (n+1)] = r.correctByOriginal[n];
   }
 
-  fetch(SHEET_URL, { method:'POST', mode:'no-cors', body: JSON.stringify(payload) })
-    .then(function(){ markBadgeDone('badgeSave', '✓ Saved to records'); })
-    .catch(function(){ markBadgeDone('badgeSave', '✓ Saved to records'); }); // no-cors: assume success
+  fetch(SHEET_URL, {
+    method: 'POST',
+    redirect: 'follow',
+    headers: {'Content-Type': 'text/plain'},
+    body: JSON.stringify(payload)
+  })
+    .then(function(res){ return res.json(); })
+    .then(function(result){
+      if (result && result.status === 'ok') {
+        markBadgeDone('badgeSave', '✓ Saved to records');
+      } else {
+        markBadgeDone('badgeSave', '⚠ Save failed — screenshot this screen and show faculty');
+      }
+    })
+    .catch(function(err){
+      console.warn('Sheet save error:', err);
+      markBadgeDone('badgeSave', '⚠ Could not reach server — screenshot this screen and show faculty');
+    });
 }
 function markBadgeDone(id, text) {
   var el = $(id);
@@ -781,16 +796,22 @@ function renderLbRows(data, target) {
 }
 
 function loadWidgetLB() {
-  fetch(SHEET_URL + '?action=leaderboard&top=' + LB_SIZE + '&quiz=' + QUIZ_CODE)
+  fetch(SHEET_URL + '?action=leaderboard&top=' + LB_SIZE + '&quiz=' + QUIZ_CODE, {redirect:'follow'})
     .then(function(r){ return r.json(); })
-    .then(function(j){ renderLbRows(j.data, 'widgetLbBody'); })
-    .catch(function(){ $('widgetLbBody').innerHTML = '<div class="lb-empty">Leaderboard unavailable right now.</div>'; });
+    .then(function(j){
+      if (j.status === 'error') { $('widgetLbBody').innerHTML = '<div class="lb-empty">Leaderboard error: ' + j.message + '</div>'; return; }
+      renderLbRows(j.data, 'widgetLbBody');
+    })
+    .catch(function(err){ $('widgetLbBody').innerHTML = '<div class="lb-empty">Leaderboard unavailable — check connection.</div>'; console.warn(err); });
 }
 function loadFullLeaderboard() {
-  fetch(SHEET_URL + '?action=leaderboard&top=' + LB_SIZE + '&quiz=' + QUIZ_CODE)
+  fetch(SHEET_URL + '?action=leaderboard&top=' + LB_SIZE + '&quiz=' + QUIZ_CODE, {redirect:'follow'})
     .then(function(r){ return r.json(); })
-    .then(function(j){ renderLbRows(j.data, 'lbFullBody'); })
-    .catch(function(){ $('lbFullBody').innerHTML = '<div class="lb-empty">Leaderboard unavailable right now.</div>'; });
+    .then(function(j){
+      if (j.status === 'error') { $('lbFullBody').innerHTML = '<div class="lb-empty">Leaderboard error: ' + j.message + '</div>'; return; }
+      renderLbRows(j.data, 'lbFullBody');
+    })
+    .catch(function(err){ $('lbFullBody').innerHTML = '<div class="lb-empty">Leaderboard unavailable — check connection.</div>'; console.warn(err); });
 }
 loadWidgetLB();
 setInterval(loadWidgetLB, 90000);
