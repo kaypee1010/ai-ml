@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI & ML Innovation Project — Team Registration</title>
+<title>AI &amp; ML Innovation Project — Team Registration (7A · 7B · 7C · 7D)</title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body {
@@ -12,17 +12,13 @@ body {
     color: #2c2c2c;
     line-height: 1.6;
 }
-.container { max-width: 900px; margin: 0 auto; padding: 20px; }
+.container { max-width: 980px; margin: 0 auto; padding: 20px; }
 
+/* ══ HEADER ══ */
 .header {
     background: linear-gradient(135deg, #8B3A3A 0%, #6B2D2D 100%);
-    color: white;
-    padding: 30px;
-    border-radius: 8px;
-    display: flex;
-    gap: 20px;
-    align-items: center;
-    margin-bottom: 20px;
+    color: white; padding: 30px; border-radius: 8px;
+    display: flex; gap: 20px; align-items: center; margin-bottom: 20px;
 }
 .header-logo { width: 70px; height: 70px; border-radius: 50%; background: rgba(255,255,255,0.1); overflow: hidden; flex-shrink: 0; border: 2px solid rgba(255,255,255,0.3); }
 .header-logo img { width: 100%; height: 100%; object-fit: cover; }
@@ -31,72 +27,153 @@ body {
 .header-content a { color: #ffd89b; text-decoration: none; font-size: 12px; margin-top: 6px; display: inline-block; border: 1px solid rgba(255,216,155,.4); padding: 3px 10px; border-radius: 4px; }
 .header-content a:hover { background: rgba(255,216,155,.15); }
 
+/* ══ TABS ══ */
 .tabbar { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
-.tab-btn {
-    background: #fff; border: 1.5px solid #d0c2ae; color: #6b6258;
-    padding: 10px 18px; border-radius: 20px; font-family: inherit; font-size: 13.5px;
-    font-weight: 600; cursor: pointer; transition: all .2s;
-}
+.tab-btn { background: #fff; border: 1.5px solid #d0c2ae; color: #6b6258; padding: 10px 18px; border-radius: 20px; font-family: inherit; font-size: 13.5px; font-weight: 600; cursor: pointer; transition: all .2s; }
 .tab-btn.active { background: #8B3A3A; color: #fff; border-color: #8B3A3A; }
 .tab-btn:hover:not(.active) { border-color: #8B3A3A; color: #8B3A3A; }
 
 .panel { display: none; background: #fff; border-radius: 10px; padding: 28px 30px; box-shadow: 0 3px 14px rgba(139,58,58,.08); margin-bottom: 30px; }
 .panel.active { display: block; }
-
-.panel h2 { font-family: 'Georgia', serif; color: #8B3A3A; font-size: 20px; margin-bottom: 14px; border-bottom: 2px solid #8B3A3A; padding-bottom: 8px; }
+.panel h2 { color: #8B3A3A; font-size: 20px; margin-bottom: 14px; border-bottom: 2px solid #8B3A3A; padding-bottom: 8px; }
 .panel h3 { color: #6B2D2D; font-size: 15px; margin: 18px 0 8px; }
 
 .info-box { background: #f5ede8; border-left: 4px solid #8B3A3A; padding: 14px 18px; border-radius: 0 8px 8px 0; margin-bottom: 18px; font-size: 13.5px; }
 .info-box strong { display: block; margin-bottom: 4px; color: #8B3A3A; }
+.info-box ul.mini { list-style: none; margin: 0; }
+.info-box ul.mini li { padding: 2px 0 2px 16px; position: relative; }
+.info-box ul.mini li::before { content: "\2022"; position: absolute; left: 2px; color: #8B3A3A; }
 
 .err-msg { display:none; background: #fbeaea; color: #c0392b; padding: 10px 14px; border-radius: 8px; font-size: 13px; margin-bottom: 14px; }
 .success-msg { display:none; background: #e3f2ef; color: #2e7d6b; padding: 10px 14px; border-radius: 8px; font-size: 13px; margin-bottom: 14px; }
 
-.stats-row { display: flex; gap: 12px; margin-bottom: 18px; flex-wrap: wrap; }
+.stats-row { display: flex; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; }
 .stat-chip { background: #f5ede8; border-radius: 16px; padding: 6px 14px; font-size: 12px; color: #8B3A3A; font-weight: 600; font-family: 'Courier New', monospace; }
 
-.student-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; align-items: end; }
-@media(max-width:600px){ .student-row{ grid-template-columns: 1fr; } }
+/* ══ STEP RAIL ══ */
+.steprail { display: flex; gap: 6px; margin-bottom: 20px; flex-wrap: wrap; font-family: 'Courier New', monospace; font-size: 11px; }
+.steprail span { padding: 4px 12px; border-radius: 12px; background: #f0ebe0; color: #9a8f80; letter-spacing: .04em; }
+.steprail span.on { background: #8B3A3A; color: #fff; }
+.steprail span.done { background: #e3f2ef; color: #2e7d6b; }
+
+/* ══ FORM ══ */
+.student-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; align-items: end; }
+@media(max-width:640px){ .student-row{ grid-template-columns: 1fr; } }
 .field label { display: block; font-size: 12px; font-weight: 700; color: #6b6258; margin-bottom: 5px; }
-.field input { width: 100%; padding: 10px 12px; border: 1.5px solid #d0c2ae; border-radius: 6px; font-size: 14px; font-family: inherit; background: #fafafa; }
-.field input:focus { outline: none; border-color: #8B3A3A; background: #fff; }
-.name-display { background: #f0ebe0; border: 1px solid #c8b89a; border-radius: 6px; padding: 10px 12px; font-size: 13.5px; font-weight: 600; color: #5a3a1a; min-height: 40px; display: flex; align-items: center; }
+.field input { width: 100%; padding: 10px 12px; border: 1.5px solid #d0c2ae; border-radius: 6px; font-size: 14px; font-family: 'Courier New', monospace; background: #fafafa; }
+.field input:focus-visible { outline: 2px solid #8B3A3A; outline-offset: 1px; border-color: #8B3A3A; background: #fff; }
+.name-display { background: #f0ebe0; border: 1px solid #c8b89a; border-radius: 6px; padding: 10px 12px; font-size: 13.5px; font-weight: 600; color: #5a3a1a; min-height: 42px; display: flex; align-items: center; gap: 8px; }
 .name-display.ok { color: #1a5c2a; }
 .name-display.err { color: #7c1c24; }
+.sec-badge { font-family: 'Courier New', monospace; font-size: 10.5px; background: #8B3A3A; color: #fff; border-radius: 4px; padding: 2px 7px; letter-spacing: .05em; }
+.optional-tag { font-weight: 400; color: #9a8f80; font-size: 11px; }
 
 .btn { padding: 12px 26px; background: #8B3A3A; color: #fff; border: none; border-radius: 8px; font-family: inherit; font-size: 15px; font-weight: 700; cursor: pointer; transition: all .2s; }
-.btn:hover { background: #6B2D2D; }
+.btn:hover:not(:disabled) { background: #6B2D2D; }
 .btn:disabled { background: #bbb; cursor: not-allowed; }
+.btn:focus-visible { outline: 2px solid #2c2c2c; outline-offset: 2px; }
 .btn.secondary { background: #f5ede8; color: #8B3A3A; }
 .btn.secondary:hover { background: #ecdfd3; }
+.btn.ghost { background: transparent; color: #8B3A3A; border: 1.5px solid #d0c2ae; }
 
-.topics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin: 16px 0 20px; }
-.topic-card { background: #faf7f0; border: 1.5px solid #d0c2ae; border-radius: 8px; padding: 14px; cursor: pointer; transition: all .2s; }
-.topic-card:hover:not(.unavailable) { border-color: #8B3A3A; box-shadow: 0 2px 8px rgba(139,58,58,.12); }
-.topic-card.selected { background: #f5ede8; border-color: #8B3A3A; box-shadow: 0 0 0 2px rgba(139,58,58,.15); }
-.topic-card.unavailable { opacity: .45; cursor: not-allowed; }
+/* ══ GLASS TRACK STAGE ══ */
+.track-stage {
+    position: relative; border-radius: 14px; padding: 24px; margin: 4px 0 20px;
+    background:
+      radial-gradient(circle at 12% 18%, rgba(31,111,107,.55), transparent 45%),
+      radial-gradient(circle at 88% 12%, rgba(47,107,58,.5), transparent 45%),
+      radial-gradient(circle at 20% 88%, rgba(74,78,140,.5), transparent 45%),
+      radial-gradient(circle at 82% 85%, rgba(160,66,66,.55), transparent 45%),
+      linear-gradient(140deg, #4a1e1e 0%, #35171d 55%, #241a2c 100%);
+    overflow: hidden;
+}
+.track-stage::after {
+    content:""; position:absolute; inset:0; pointer-events:none;
+    background-image: radial-gradient(rgba(255,255,255,.05) 1px, transparent 1px);
+    background-size: 5px 5px;
+}
+.track-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); gap: 14px; position: relative; z-index: 1; }
+.track-card {
+    position: relative; text-align: left; width: 100%; cursor: pointer;
+    border-radius: 12px; padding: 18px 18px 16px;
+    background: rgba(255,255,255,.11);
+    border: 1px solid rgba(255,255,255,.24);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.28), 0 8px 24px rgba(0,0,0,.22);
+    -webkit-backdrop-filter: blur(16px) saturate(150%);
+    backdrop-filter: blur(16px) saturate(150%);
+    color: #fff; font-family: inherit; transition: transform .18s ease, background .18s ease, border-color .18s ease;
+}
+.track-card:hover:not(.locked) { transform: translateY(-3px); background: rgba(255,255,255,.17); border-color: rgba(255,255,255,.42); }
+.track-card:focus-visible { outline: 2px solid #ffd89b; outline-offset: 2px; }
+.track-card.selected { background: rgba(255,255,255,.24); border-color: rgba(255,255,255,.7); box-shadow: inset 0 1px 0 rgba(255,255,255,.45), 0 0 0 2px rgba(255,216,155,.55), 0 10px 28px rgba(0,0,0,.3); }
+.track-card.locked { opacity: .42; cursor: not-allowed; }
+.track-code { font-family: 'Courier New', monospace; font-size: 10.5px; letter-spacing: .14em; opacity: .82; display: flex; align-items: center; gap: 8px; }
+.track-dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; box-shadow: 0 0 10px currentColor; }
+.track-name { font-size: 17px; font-weight: bold; margin: 8px 0 3px; line-height: 1.3; }
+.track-tag { font-size: 12px; opacity: .86; line-height: 1.45; }
+.track-meta { margin-top: 12px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,.2); font-family: 'Courier New', monospace; font-size: 10.5px; opacity: .88; display: flex; justify-content: space-between; gap: 8px; }
+.stage-head { position: relative; z-index: 1; color: #fff; margin-bottom: 16px; }
+.stage-head h3 { color: #fff; margin: 0 0 4px; font-size: 16px; }
+.stage-head p { font-size: 12.5px; opacity: .82; }
+
+/* ══ TOPICS ══ */
+.track-banner { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; border-left: 5px solid; background: #faf7f0; flex-wrap: wrap; }
+.track-banner strong { font-size: 15px; }
+.track-banner span { font-size: 12.5px; color: #6b6258; }
+.topics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-bottom: 20px; }
+.topic-card { background: #faf7f0; border: 1.5px solid #d0c2ae; border-radius: 8px; padding: 14px; cursor: pointer; transition: all .18s; text-align: left; font-family: inherit; width: 100%; }
+.topic-card:hover:not(.unavailable) { border-color: #8B3A3A; box-shadow: 0 3px 10px rgba(139,58,58,.14); transform: translateY(-2px); }
+.topic-card:focus-visible { outline: 2px solid #8B3A3A; outline-offset: 2px; }
+.topic-card.selected { background: #f5ede8; border-color: #8B3A3A; box-shadow: 0 0 0 2px rgba(139,58,58,.2); }
+.topic-card.unavailable { opacity: .42; cursor: not-allowed; }
+.topic-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
 .topic-num { font-family: 'Courier New', monospace; font-size: 11px; color: #8B3A3A; font-weight: 700; }
-.topic-title { font-size: 13px; font-weight: 600; margin: 4px 0; line-height: 1.4; }
+.lvl { font-family: 'Courier New', monospace; font-size: 9.5px; padding: 2px 7px; border-radius: 9px; letter-spacing: .05em; }
+.lvl.Foundation { background: #e3f2ef; color: #2e7d6b; }
+.lvl.Intermediate { background: #f6efe0; color: #97722a; }
+.lvl.Advanced { background: #f6e6e6; color: #a03a3a; }
+.topic-title { font-size: 13.5px; font-weight: 600; margin: 7px 0 4px; line-height: 1.4; }
 .topic-area { font-size: 11px; color: #6b6258; }
-.topic-status { font-size: 10.5px; margin-top: 6px; font-weight: 700; }
+.topic-status { font-size: 10.5px; margin-top: 8px; font-weight: 700; }
 .topic-status.avail { color: #2e7d6b; }
 .topic-status.taken { color: #c0392b; }
 
-.confirm-box { background: linear-gradient(135deg,#8B3A3A,#6B2D2D); color: #fff; border-radius: 10px; padding: 24px 26px; text-align: center; }
-.confirm-box .team-no { font-size: 30px; font-weight: bold; margin-bottom: 8px; }
+/* ══ MODAL ══ */
+.modal-back { display: none; position: fixed; inset: 0; z-index: 60; background: rgba(40,20,20,.55); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); padding: 20px; overflow-y: auto; }
+.modal-back.open { display: flex; align-items: flex-start; justify-content: center; }
+.modal { background: #fffdf9; border-radius: 12px; max-width: 660px; width: 100%; margin: auto; box-shadow: 0 24px 60px rgba(0,0,0,.3); overflow: hidden; }
+.modal-head { padding: 22px 26px 18px; color: #fff; }
+.modal-head .mh-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.modal-head .mh-id { font-family: 'Courier New', monospace; font-size: 11px; letter-spacing: .1em; opacity: .9; }
+.modal-head h3 { font-size: 19px; line-height: 1.35; margin: 8px 0 8px; }
+.modal-head .mh-meta { font-size: 12px; opacity: .92; font-family: 'Courier New', monospace; }
+.modal-close { background: rgba(255,255,255,.18); border: 1px solid rgba(255,255,255,.35); color: #fff; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; font-size: 16px; line-height: 1; flex-shrink: 0; font-family: inherit; }
+.modal-close:hover { background: rgba(255,255,255,.3); }
+.modal-body { padding: 22px 26px 8px; }
+.modal-body h4 { font-size: 11px; font-family: 'Courier New', monospace; letter-spacing: .11em; color: #8B3A3A; text-transform: uppercase; margin: 18px 0 5px; }
+.modal-body h4:first-child { margin-top: 0; }
+.modal-body p { font-size: 14px; line-height: 1.65; color: #3a3a3a; }
+.modal-body .barline { background: #f5ede8; border-left: 4px solid #8B3A3A; padding: 12px 16px; border-radius: 0 8px 8px 0; font-size: 13.5px; }
+.modal-foot { padding: 18px 26px 24px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.modal-foot .note { font-size: 12px; color: #9a8f80; }
+
+/* ══ CONFIRM ══ */
+.confirm-box { background: linear-gradient(135deg,#8B3A3A,#6B2D2D); color: #fff; border-radius: 10px; padding: 26px; text-align: center; }
+.confirm-box .team-no { font-size: 30px; font-weight: bold; margin-bottom: 6px; }
+.confirm-box .track-line { font-family: 'Courier New', monospace; font-size: 11.5px; opacity: .82; letter-spacing: .1em; margin-bottom: 8px; }
 .confirm-box .topic-name { font-size: 16px; margin-bottom: 12px; }
-.confirm-box .members { font-size: 13px; opacity: .9; text-align: left; margin-top: 14px; background: rgba(255,255,255,.1); border-radius: 8px; padding: 12px 16px; }
+.confirm-box .members { font-size: 13px; opacity: .92; text-align: left; margin-top: 14px; background: rgba(255,255,255,.1); border-radius: 8px; padding: 12px 16px; }
 .confirm-box .members div { padding: 4px 0; }
 
 table { width: 100%; border-collapse: collapse; margin: 12px 0 20px; font-size: 13px; }
 th { background: #8B3A3A; color: #fff; padding: 9px 12px; text-align: left; }
-td { padding: 8px 12px; border-bottom: 1px solid #e5dccf; }
+td { padding: 8px 12px; border-bottom: 1px solid #e5dccf; vertical-align: top; }
 tr:nth-child(even) td { background: #faf7f0; }
 
 .check-list { list-style: none; margin: 10px 0 18px; }
 .check-list li { padding: 5px 0 5px 26px; position: relative; font-size: 13.5px; }
-.check-list li::before { content: "✓"; position: absolute; left: 0; color: #2e7d6b; font-weight: bold; }
-.check-list.no li::before { content: "✗"; color: #c0392b; }
+.check-list li::before { content: "\2713"; position: absolute; left: 0; color: #2e7d6b; font-weight: bold; }
+.check-list.no li::before { content: "\2717"; color: #c0392b; }
 
 .faq-item { margin-bottom: 14px; }
 .faq-q { font-weight: 700; color: #8B3A3A; font-size: 13.5px; margin-bottom: 4px; }
@@ -104,513 +181,1312 @@ tr:nth-child(even) td { background: #faf7f0; }
 
 .spinner-inline { display:inline-block; width:14px; height:14px; border:2px solid #ddd; border-top-color:#8B3A3A; border-radius:50%; animation: spin .7s linear infinite; margin-right:6px; vertical-align:-2px; }
 @keyframes spin { to { transform: rotate(360deg); } }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: .001ms !important; transition-duration: .001ms !important; }
+  .track-card:hover:not(.locked), .topic-card:hover:not(.unavailable) { transform: none; }
+}
 </style>
 </head>
 <body>
 <div class="container">
 
-  <!-- NAV -->
   <div class="header">
     <div class="header-logo">
-      <img src="KP_Singh.png" alt="KP Singh" onerror="this.style.display='none'">
+      <img src="KP_Singh.png" alt="" onerror="this.style.display='none'">
     </div>
     <div class="header-content">
       <h1>BTech 7th Semester</h1>
-      <p>AI &amp; Machine Learning Course — Innovation Project</p>
-      <a href="https://kpsingh.in" target="_blank">🌐 kpsingh.in</a>
+      <p>AI &amp; Machine Learning Course — Innovation Project · Sections A, B, C &amp; D</p>
+      <a href="https://kpsingh.in" target="_blank" rel="noopener">kpsingh.in</a>
     </div>
   </div>
 
-  <!-- TABS -->
   <div class="tabbar">
-    <button class="tab-btn active" onclick="showTab('register')">📝 Register Team</button>
-    <button class="tab-btn" onclick="showTab('brochure')">📋 Project Brochure</button>
-    <button class="tab-btn" onclick="showTab('handbook')">📖 Student Handbook</button>
+    <button class="tab-btn active" data-tab="register">Register Team</button>
+    <button class="tab-btn" data-tab="brochure">Project Brochure</button>
+    <button class="tab-btn" data-tab="handbook">Student Handbook</button>
   </div>
 
-  <!-- ══════════ REGISTER TAB ══════════ -->
+  <!-- ══════════ REGISTER ══════════ -->
   <div class="panel active" id="panel-register">
 
+    <div class="steprail" id="steprail"></div>
     <div id="stateStats" class="stats-row"></div>
-    <div id="regErr" class="err-msg"></div>
-    <div id="regSuccess" class="success-msg"></div>
+    <div id="regErr" class="err-msg" role="alert"></div>
+    <div id="regSuccess" class="success-msg" role="status"></div>
 
-    <!-- STEP 1: Team formation -->
+    <!-- STEP 1 -->
     <div id="step-team">
-      <h2>Step 1 — Form Your Team</h2>
+      <h2>Step 1 — Form your team</h2>
       <div class="info-box">
         <strong>Rules</strong>
-        Exactly 4 students per team. Student 1 is the team Leader and will select the topic in Step 2.
-        A student already in a registered team cannot join another team. Enter each registration number —
-        the name fills in automatically from the class roster.
+        <ul class="mini">
+          <li>4 students per team, 5th slot optional.</li>
+          <li>Student 1 is the leader and picks the topic.</li>
+          <li>Members can be from any section.</li>
+          <li>One team per student.</li>
+        </ul>
       </div>
 
-      <div class="student-row">
-        <div class="field"><label>Student 1 — Reg. No. (Leader)</label><input type="text" id="roll0" placeholder="e.g. 231302164" maxlength="9" inputmode="numeric"></div>
-        <div class="field"><label>Name (auto-filled)</label><div class="name-display" id="name0">—</div></div>
-      </div>
-      <div class="student-row">
-        <div class="field"><label>Student 2 — Reg. No.</label><input type="text" id="roll1" placeholder="e.g. 231302165" maxlength="9" inputmode="numeric"></div>
-        <div class="field"><label>Name (auto-filled)</label><div class="name-display" id="name1">—</div></div>
-      </div>
-      <div class="student-row">
-        <div class="field"><label>Student 3 — Reg. No.</label><input type="text" id="roll2" placeholder="e.g. 231302167" maxlength="9" inputmode="numeric"></div>
-        <div class="field"><label>Name (auto-filled)</label><div class="name-display" id="name2">—</div></div>
-      </div>
-      <div class="student-row">
-        <div class="field"><label>Student 4 — Reg. No.</label><input type="text" id="roll3" placeholder="e.g. 231302169" maxlength="9" inputmode="numeric"></div>
-        <div class="field"><label>Name (auto-filled)</label><div class="name-display" id="name3">—</div></div>
-      </div>
+      <div id="memberFields"></div>
 
-      <button class="btn" id="registerBtn" onclick="registerTeam()">Register Team →</button>
+      <button class="btn" id="registerBtn">Register team</button>
     </div>
 
-    <!-- STEP 2: Topic selection -->
+    <!-- STEP 2 -->
+    <div id="step-track" style="display:none">
+      <h2>Step 2 — Choose your track</h2>
+      <div class="track-stage">
+        <div class="stage-head">
+          <h3>Research tracks</h3>
+          <p id="trackStageNote">Pick a track to see its topics.</p>
+        </div>
+        <div class="track-grid" id="trackGrid"></div>
+      </div>
+      <button class="btn secondary" id="backToTeamBtn">Back</button>
+    </div>
+
+    <!-- STEP 3 -->
     <div id="step-topic" style="display:none">
-      <h2>Step 2 — Select Your Topic (Leader only)</h2>
+      <h2>Step 3 — Select your topic</h2>
+      <div id="trackBanner"></div>
       <div class="info-box">
-        <strong>First-Come-First-Served</strong>
-        Pick one topic below. As soon as you confirm, it locks immediately — no other team can select it.
-        Once confirmed, your team's details are saved and cannot be changed.
+        <strong>First come, first served</strong>
+        Tap a topic to read its brief. Confirming locks it for your team and cannot be undone.
       </div>
       <div id="topicsGrid" class="topics-grid"></div>
-      <button class="btn" id="confirmTopicBtn" onclick="confirmTopic()" disabled>Confirm Topic Selection</button>
-      <button class="btn secondary" onclick="refreshTopics()" style="margin-left:8px">🔄 Refresh Availability</button>
+      <button class="btn" id="confirmTopicBtn" disabled>Confirm topic</button>
+      <button class="btn secondary" id="refreshBtn" style="margin-left:8px">Refresh availability</button>
+      <button class="btn ghost" id="backToTrackBtn" style="margin-left:8px">Change track</button>
     </div>
 
-    <!-- STEP 3: Confirmation -->
+    <!-- STEP 4 -->
     <div id="step-done" style="display:none">
       <div class="confirm-box">
-        <div class="team-no" id="doneTeamNo">Team —</div>
-        <div class="topic-name" id="doneTopicName">—</div>
+        <div class="team-no" id="doneTeamNo">Team</div>
+        <div class="track-line" id="doneTrack"></div>
+        <div class="topic-name" id="doneTopicName"></div>
         <div class="members" id="doneMembers"></div>
       </div>
       <p style="text-align:center; margin-top:16px; font-size:13px; color:#6b6258">
-        ✅ Registration complete. Your team and topic are saved. Show this screen to faculty if asked to confirm.
+        Registration complete. Your team and topic are saved. Show this screen to faculty if asked to confirm.
       </p>
     </div>
   </div>
 
-  <!-- ══════════ BROCHURE TAB ══════════ -->
+  <!-- ══════════ BROCHURE ══════════ -->
   <div class="panel" id="panel-brochure">
     <h2>Project Brochure</h2>
     <div class="info-box">
       <strong>Overview</strong>
-      A 15-week team project where you solve a real-world AI/ML problem — build a working system, write a technical
-      paper, and defend your work in a viva. This becomes a genuine portfolio piece.
+      A 15-week team project where you solve a real AI/ML problem — build a working system, write a
+      technical paper, and defend the work in a viva. This becomes a genuine portfolio piece.
     </div>
 
     <div class="stats-row">
       <div class="stat-chip">15 weeks</div>
-      <div class="stat-chip">4 students/team</div>
-      <div class="stat-chip">13 teams</div>
-      <div class="stat-chip">15 topics</div>
-      <div class="stat-chip">40 marks total</div>
+      <div class="stat-chip">4-5 per team</div>
+      <div class="stat-chip">59 teams</div>
+      <div class="stat-chip">238 students</div>
+      <div class="stat-chip">4 tracks</div>
+      <div class="stat-chip">69 topics</div>
+      <div class="stat-chip">40 marks</div>
     </div>
+
+    <h3>The four tracks</h3>
+    <table>
+      <tr><th>Track</th><th>Theme</th><th>Topics</th></tr>
+      <tbody id="brochureSections"></tbody>
+    </table>
+    <p style="font-size:12px;color:#6b6258;margin-bottom:18px">All four tracks are open to every section. Teams may mix students from 7A, 7B, 7C and 7D.</p>
 
     <h3>Timeline</h3>
     <table>
       <tr><th>Week</th><th>Milestone</th></tr>
-      <tr><td>1</td><td>Team formation &amp; topic selection (this page)</td></tr>
-      <tr><td>2–3</td><td>Literature review, finalize dataset &amp; methodology</td></tr>
-      <tr><td>4–6</td><td>Data prep &amp; baseline model</td></tr>
-      <tr><td>7–8</td><td>Mid-term check-in — demo working prototype</td></tr>
-      <tr><td>9–12</td><td>Experiments &amp; optimization</td></tr>
-      <tr><td>13–14</td><td>Write paper (IEEE format), prepare slides</td></tr>
-      <tr><td>15</td><td>Final presentation + viva (10 min demo, 5 min viva/student)</td></tr>
+      <tr><td>1</td><td>Team formation and topic selection (this page)</td></tr>
+      <tr><td>2-3</td><td>Literature review, finalise dataset and methodology</td></tr>
+      <tr><td>4-6</td><td>Data preparation and baseline model</td></tr>
+      <tr><td>7-8</td><td>Mid-term check-in — demo a working prototype</td></tr>
+      <tr><td>9-12</td><td>Experiments and optimisation</td></tr>
+      <tr><td>13-14</td><td>Write the paper (IEEE format), prepare slides</td></tr>
+      <tr><td>15</td><td>Final presentation and viva (10 min demo, 5 min viva per student)</td></tr>
     </table>
 
-    <h3>The 15 Topics</h3>
-    <table>
-      <tr><th>#</th><th>Topic</th><th>Focus Area</th></tr>
-      <tr><td>1</td><td>A* Search for Smart City Traffic Navigation</td><td>Search Algorithms</td></tr>
-      <tr><td>2</td><td>Intelligent Maze Solving Robot using Search Algorithms</td><td>Search Algorithms</td></tr>
-      <tr><td>3</td><td>Genetic Algorithm for University Timetable Scheduling</td><td>Evolutionary Computing</td></tr>
-      <tr><td>4</td><td>Genetic Algorithm for Vehicle Routing in Logistics</td><td>Evolutionary Computing</td></tr>
-      <tr><td>5</td><td>Neural Network for Student Academic Performance Prediction</td><td>Machine Learning</td></tr>
-      <tr><td>6</td><td>Credit Card Fraud Detection using ANN and Classical ML</td><td>Machine Learning</td></tr>
-      <tr><td>7</td><td>Speech Emotion Recognition using Deep Neural Networks</td><td>Deep Learning</td></tr>
-      <tr><td>8</td><td>Handwritten Digit Recognition using CNN and MLP</td><td>Deep Learning</td></tr>
-      <tr><td>9</td><td>Bayesian Medical Diagnosis Support System</td><td>Probabilistic ML</td></tr>
-      <tr><td>10</td><td>KNN Recommendation System for E-Commerce</td><td>Machine Learning</td></tr>
-      <tr><td>11</td><td>Explainable Email Spam Detection</td><td>Explainable AI</td></tr>
-      <tr><td>12</td><td>Rule-Based Expert System for Plant Disease Diagnosis</td><td>Expert Systems</td></tr>
-      <tr><td>13</td><td>Genetic Programming for Automated Feature Selection</td><td>Evolutionary Computing</td></tr>
-      <tr><td>14</td><td>Fake News Detection using NLP and Transformer Models</td><td>NLP</td></tr>
-      <tr><td>15</td><td>AI-Powered Resume Screening and Candidate Ranking</td><td>AI Ethics</td></tr>
-    </table>
-
-    <h3>Key Rules</h3>
+    <h3>Key rules</h3>
     <ul class="check-list">
-      <li>Exactly 4 students per team, one leader</li>
+      <li>Four students per team, with an optional fifth</li>
+      <li>One leader per team; members may come from any section</li>
       <li>No mid-semester team changes</li>
-      <li>Leader only selects the topic — first-come-first-served</li>
-      <li>One topic per team — duplicates not allowed</li>
-      <li>All 4 members explain their individual contribution at viva</li>
-      <li>All members must attend the final presentation</li>
+      <li>Leader selects the topic — first come, first served</li>
+      <li>One topic per team, locked across the whole cohort once confirmed</li>
+      <li>All members explain their individual contribution at the viva</li>
+      <li>All members attend the final presentation</li>
     </ul>
 
-    <h3>Evaluation Scheme (40 Marks)</h3>
+    <h3>Evaluation (40 marks)</h3>
     <table>
-      <tr><th>Component</th><th>Marks</th></tr>
-      <tr><td>Problem Understanding</td><td>5</td></tr>
-      <tr><td>Literature Review</td><td>5</td></tr>
-      <tr><td>Methodology &amp; Implementation</td><td>10</td></tr>
-      <tr><td>Experimental Results</td><td>5</td></tr>
-      <tr><td>GitHub Repository</td><td>5</td></tr>
-      <tr><td>Technical Paper</td><td>5</td></tr>
-      <tr><td>Presentation &amp; Viva</td><td>5</td></tr>
+      <tr><th>Component</th><th>Marks</th><th>What earns them</th></tr>
+      <tr><td>Problem understanding</td><td>5</td><td>Clear problem statement, relevance, research motivation</td></tr>
+      <tr><td>Literature review</td><td>5</td><td>8-10 key papers, proper citations, synthesis rather than listing</td></tr>
+      <tr><td>Methodology and implementation</td><td>10</td><td>Algorithm choice, code quality, reproducibility, repository organisation</td></tr>
+      <tr><td>Experimental results</td><td>5</td><td>Quantitative metrics, baseline comparison, analysis of failure cases</td></tr>
+      <tr><td>GitHub repository</td><td>5</td><td>Structure, README, documentation, commit history</td></tr>
+      <tr><td>Technical paper</td><td>5</td><td>IEEE format, 6-8 pages, abstract through future work</td></tr>
+      <tr><td>Presentation and viva</td><td>5</td><td>Live demo, clarity, answering questions, individual contribution</td></tr>
     </table>
-    <p style="font-size:12px;color:#6b6258;margin-bottom:18px">Converted to a 30-mark UA scale as per assessment policy.</p>
+    <p style="font-size:12px;color:#6b6258;margin-bottom:18px">Converted to a 30-mark UA scale as per assessment policy. Depth of analysis outweighs raw accuracy: a 60 percent model with genuine insight scores above an 85 percent model with none.</p>
 
     <h3>FAQs</h3>
-    <div class="faq-item"><div class="faq-q">Can we change topic after selecting?</div><div class="faq-a">No. Discuss with your team before confirming.</div></div>
-    <div class="faq-item"><div class="faq-q">Can we use ChatGPT/Claude?</div><div class="faq-a">Yes for learning and brainstorming — but you must understand and be able to explain every line during viva. Blind copying = automatic fail.</div></div>
-    <div class="faq-item"><div class="faq-q">Can we use a public dataset (Kaggle etc.)?</div><div class="faq-a">Yes — just cite the source and explain why you chose it.</div></div>
+    <div class="faq-item"><div class="faq-q">Can our team mix sections?</div><div class="faq-a">Yes. Any four or five students from 7A, 7B, 7C or 7D can register together.</div></div>
+    <div class="faq-item"><div class="faq-q">Can we change topic after confirming?</div><div class="faq-a">No. Read the full topic brief before you confirm — that is what the detail view is for.</div></div>
+    <div class="faq-item"><div class="faq-q">Can two teams take the same topic?</div><div class="faq-a">No. All 69 topics are unique across the cohort, so once a topic is confirmed it is gone for everyone.</div></div>
+    <div class="faq-item"><div class="faq-q">Can we use ChatGPT or Claude?</div><div class="faq-a">Yes, for learning and brainstorming. You must understand and be able to explain every line at the viva. Blind copying is an automatic fail.</div></div>
+    <div class="faq-item"><div class="faq-q">Can we use a public dataset?</div><div class="faq-a">Yes. Cite the source and explain why you chose it.</div></div>
+    <div class="faq-item"><div class="faq-q">Our topic needs human participants. What then?</div><div class="faq-a">Get written informed consent and institutional ethics clearance before collecting anything. Build this into Week 2-3, not Week 12.</div></div>
   </div>
 
-  <!-- ══════════ HANDBOOK TAB ══════════ -->
-  <!-- ══════════ HANDBOOK TAB ══════════ -->
+  <!-- ══════════ HANDBOOK ══════════ -->
   <div class="panel" id="panel-handbook">
     <h2>Student Handbook</h2>
     <div class="info-box">
       <strong>Welcome</strong>
-      This is your chance to build a real AI/ML application from start to finish — a working system, a technical
-      paper, and a defended viva. This handbook explains what's expected, how to stay organized, and how to succeed.
+      This is your chance to build a real AI/ML application end to end — a working system, a technical
+      paper, and a defended viva. This handbook covers what is expected and how to succeed.
     </div>
 
-    <h3>Your Responsibilities</h3>
-    <p style="font-size:13px;font-weight:700;color:#6b6258;margin-bottom:4px">As a Team Member</p>
+    <h3>Your responsibilities</h3>
+    <p style="font-size:13px;font-weight:700;color:#6b6258;margin-bottom:4px">As a team member</p>
     <ul class="check-list">
-      <li>Show up to team meetings (online or in-person)</li>
+      <li>Show up to team meetings, online or in person</li>
       <li>Contribute your part of the code and documentation</li>
-      <li>Understand the entire project, not just your piece</li>
-      <li>Be honest at viva — explain what you personally did</li>
+      <li>Understand the entire project, not only your piece</li>
+      <li>Be honest at the viva about what you personally did</li>
       <li>Follow academic integrity rules</li>
     </ul>
-    <p style="font-size:13px;font-weight:700;color:#6b6258;margin:10px 0 4px">As Team Leader (only the leader)</p>
+    <p style="font-size:13px;font-weight:700;color:#6b6258;margin:10px 0 4px">As team leader</p>
     <ul class="check-list">
-      <li>Select the project topic during Week 1 registration</li>
-      <li>Represent the team in all communications with faculty</li>
-      <li>Ensure the team stays on schedule and submits on time</li>
-      <li>Handle conflicts, or escalate to faculty if needed</li>
+      <li>Select the track and topic during Week 1 registration</li>
+      <li>Represent the team in all communication with faculty</li>
+      <li>Keep the team on schedule and submitting on time</li>
+      <li>Handle conflicts, escalating to faculty only if peer resolution fails</li>
     </ul>
 
-    <h3>What You Must Deliver</h3>
+    <h3>What you must deliver</h3>
     <table>
       <tr><th>Deliverable</th><th>Key requirements</th></tr>
-      <tr><td>Working Code (GitHub)</td><td>Runs without errors on faculty's machine; requirements.txt lists all dependencies; clear data pipeline; meaningful commit messages (not "fix", "final")</td></tr>
-      <tr><td>Technical Paper</td><td>6–8 pages, IEEE format. Title, Abstract (150 words), Keywords, Intro, Lit Review (8–10 papers), Methodology, Results &amp; Discussion, Conclusion, 10+ References</td></tr>
-      <tr><td>Presentation</td><td>10–12 slides, font ≥18pt, one main point per slide, 10–12 min total including Q&amp;A</td></tr>
-      <tr><td>Live Demo</td><td>3–5 minutes; real-time predictions on new data, or a video backup if live demo is risky</td></tr>
+      <tr><td>Working code (GitHub)</td><td>Runs without errors on the faculty machine; requirements.txt complete; clear data pipeline; meaningful commit messages, not "fix" or "final"</td></tr>
+      <tr><td>Technical paper</td><td>6-8 pages, IEEE format. Title, abstract (150 words), keywords, introduction, literature review (8-10 papers), methodology, results and discussion, conclusion, 10+ references</td></tr>
+      <tr><td>Presentation</td><td>10-12 slides, font 18pt or larger, one main point per slide, 10-12 minutes including Q&amp;A</td></tr>
+      <tr><td>Live demo</td><td>3-5 minutes on new data, with a recorded backup if the live run is risky</td></tr>
     </table>
 
-    <p style="font-size:12.5px;color:#6b6258;margin-bottom:6px"><strong>Suggested repo structure:</strong></p>
+    <p style="font-size:12.5px;color:#6b6258;margin-bottom:6px"><strong>Suggested repository structure:</strong></p>
     <div style="background:#faf7f0;border:1px solid #e5dccf;border-radius:6px;padding:10px 14px;font-family:'Courier New',monospace;font-size:11.5px;color:#444;margin-bottom:18px;line-height:1.7">
       README.md · requirements.txt · .gitignore<br>
       src/ (data_loader.py, model.py, train.py, evaluate.py)<br>
       notebooks/ · data/raw/ · data/processed/ · results/ · paper/
     </div>
 
-    <h3>AI Tool Usage Policy</h3>
+    <h3>Reporting results honestly</h3>
+    <div class="info-box">
+      <strong>Every number needs an interval</strong>
+      A bare accuracy figure is not a result. Report a confidence interval or a variance across seeds,
+      and compare against a stated baseline. Two models at 85 and 87 percent are often statistically
+      indistinguishable, and claiming an improvement you cannot defend is the single most common
+      weakness in submitted papers.
+    </div>
+    <ul class="check-list">
+      <li>State your baseline before reporting your model</li>
+      <li>Report variability across random seeds, not a single best run</li>
+      <li>Show where the model fails, not only where it succeeds</li>
+      <li>Match the metric to the problem — accuracy misleads on imbalanced data</li>
+      <li>Keep test data untouched until the final evaluation</li>
+    </ul>
+
+    <h3>AI tool policy</h3>
     <p style="font-size:13px;font-weight:700;color:#2e7d6b;margin-bottom:4px">You can</p>
     <ul class="check-list">
-      <li>Use AI for learning &amp; brainstorming ("Explain how convolutional layers work")</li>
-      <li>Use AI for boilerplate code ("Generate a Flask app template with 3 routes")</li>
-      <li>Use AI to debug ("Why does my model return NaN during training?")</li>
+      <li>Use AI for learning and brainstorming ("explain how convolutional layers work")</li>
+      <li>Use AI for boilerplate ("generate a Flask template with three routes")</li>
+      <li>Use AI to debug ("why does my model return NaN during training?")</li>
     </ul>
-    <p style="font-size:13px;font-weight:700;color:#c0392b;margin:10px 0 4px">You can't</p>
+    <p style="font-size:13px;font-weight:700;color:#c0392b;margin:10px 0 4px">You cannot</p>
     <ul class="check-list no">
-      <li>Copy code blocks and submit as-is without understanding every line</li>
-      <li>Ask AI to write your entire training script, then submit it unchanged</li>
+      <li>Copy code blocks and submit them without understanding every line</li>
+      <li>Have AI write your training script and submit it unchanged</li>
       <li>Use AI-generated paper text without rewriting it in your own words</li>
       <li>Rely on AI to do your thinking — you must understand your own results</li>
     </ul>
-    <p style="font-size:12.5px;color:#6b6258;margin-bottom:18px">At viva you must explain: every algorithm you used and why, every major code function, what your results mean, and your individual contribution. <strong>If you can't explain it, don't submit it.</strong> Turnitin target: &lt;20% similarity, with proper citations — if you use an AI tool, acknowledge it in the paper.</p>
+    <p style="font-size:12.5px;color:#6b6258;margin-bottom:18px">At the viva you must explain every algorithm and why you chose it, every major function, what your results mean, and your individual contribution. <strong>If you cannot explain it, do not submit it.</strong> Turnitin target is under 20 percent with proper citation, and any AI tool you used should be acknowledged in the paper.</p>
 
-    <h3>Timeline &amp; Deadlines</h3>
+    <h3>Research ethics</h3>
+    <ul class="check-list">
+      <li>Human participants require written informed consent and ethics clearance before collection</li>
+      <li>Participants may withdraw at any point, and their data goes with them</li>
+      <li>Institutional data must be anonymised before modelling — hashed identifiers, contact and medical fields removed</li>
+      <li>State dataset provenance plainly, including when data is simulated rather than observed</li>
+      <li>Any system touching people needs a written account of who is harmed when it is wrong</li>
+    </ul>
+
+    <h3>Timeline and deadlines</h3>
     <table>
       <tr><th>Week</th><th>Milestone</th><th>Deliverable</th></tr>
-      <tr><td>1</td><td>Team registration &amp; topic selection</td><td>Team list + topic assigned</td></tr>
-      <tr><td>3</td><td>Literature review + dataset validation</td><td>8–10 papers, data sample</td></tr>
-      <tr><td>8</td><td>Mid-term check-in</td><td>Working prototype + progress report</td></tr>
-      <tr><td>13</td><td>Paper draft (optional, for feedback)</td><td>First draft of technical paper</td></tr>
-      <tr><td>15</td><td>Final submission + presentation &amp; viva</td><td>Code + GitHub + Paper + Slides; 10 min demo + 5 min viva/student</td></tr>
+      <tr><td>1</td><td>Team registration and topic selection</td><td>Team list, track and topic assigned</td></tr>
+      <tr><td>3</td><td>Literature review, dataset validation, ethics clearance where required</td><td>8-10 papers, data sample, approval on file</td></tr>
+      <tr><td>8</td><td>Mid-term check-in</td><td>Working prototype and progress report</td></tr>
+      <tr><td>13</td><td>Paper draft (optional, for feedback)</td><td>First draft of the technical paper</td></tr>
+      <tr><td>15</td><td>Final submission, presentation and viva</td><td>Code, repository, paper, slides; 10 min demo plus 5 min viva per student</td></tr>
     </table>
-    <p style="font-size:12px;color:#6b6258;margin-bottom:18px">Late: 10% penalty/day for 1–2 days; 3+ days late caps that component at 50%. Medical/emergency extensions need faculty approval + documentation.</p>
+    <p style="font-size:12px;color:#6b6258;margin-bottom:18px">Late: 10 percent penalty per day for 1-2 days; 3 or more days caps that component at 50 percent. Medical or emergency extensions need faculty approval and documentation.</p>
 
-    <h3>Week-by-Week Success Tips</h3>
+    <h3>Week by week</h3>
     <ul class="check-list">
-      <li>Weeks 1–2: Lock in team and topic early; start reading papers immediately</li>
-      <li>Weeks 2–4: Understand your dataset inside-out — clean, visualize, summarize</li>
-      <li>Weeks 4–6: Build a baseline model fast. Aim for "working," not "perfect" — you'll iterate</li>
-      <li>Weeks 7–8: Mid-term — you should have results, even imperfect ones</li>
-      <li>Weeks 9–12: Experiment with algorithms/hyperparameters/features; document every run</li>
-      <li>Weeks 13–14: Start writing the paper — draft one section per day, don't wait for Week 15</li>
-      <li>Week 15: Polish presentation, rehearse the demo, know your project inside-out</li>
+      <li>Weeks 1-2: Lock in the team and topic, start reading papers immediately</li>
+      <li>Weeks 2-4: Understand your dataset thoroughly — clean, visualise, summarise</li>
+      <li>Weeks 4-6: Build a baseline fast. Aim for working, not perfect</li>
+      <li>Weeks 7-8: Mid-term. You should have results, even imperfect ones</li>
+      <li>Weeks 9-12: Experiment with algorithms, hyperparameters and features. Log every run</li>
+      <li>Weeks 13-14: Write the paper, one section per day. Do not wait for Week 15</li>
+      <li>Week 15: Polish slides, rehearse the demo, know the project thoroughly</li>
     </ul>
 
-    <h3>Frequently Asked Questions</h3>
-    <div class="faq-item"><div class="faq-q">What if I don't know Python well?</div><div class="faq-a">Learn as you go — tutorials, peers, and faculty office hours are all there to help.</div></div>
-    <div class="faq-item"><div class="faq-q">Can we change our topic after Week 1?</div><div class="faq-a">No. Choose wisely. If you truly dislike your topic, talk to faculty early (Week 2–3).</div></div>
-    <div class="faq-item"><div class="faq-q">Our accuracy is only 60% — will we fail?</div><div class="faq-a">Not necessarily. A 60% model with deep analysis of why it fails beats an 85% model with no analysis.</div></div>
-    <div class="faq-item"><div class="faq-q">Can we use a pre-trained model like BERT or ResNet?</div><div class="faq-a">Yes — transfer learning is valid. Document what you changed and what you trained from scratch.</div></div>
-    <div class="faq-item"><div class="faq-q">Is it OK to adapt a solution we found on GitHub?</div><div class="faq-a">You can study and adapt it — never copy-paste. You must understand and modify every line.</div></div>
-    <div class="faq-item"><div class="faq-q">What if one teammate does nothing?</div><div class="faq-a">At viva, each student is asked individually what they did. If someone can't explain their part, they're marked down individually.</div></div>
+    <h3>FAQs</h3>
+    <div class="faq-item"><div class="faq-q">I do not know Python well. What now?</div><div class="faq-a">Learn as you go. Tutorials, peers and office hours are all available, and Week 1-4 exists for exactly this.</div></div>
+    <div class="faq-item"><div class="faq-q">Our accuracy is only 60 percent. Will we fail?</div><div class="faq-a">No. A 60 percent model with a real analysis of why it fails beats an 85 percent model with none.</div></div>
+    <div class="faq-item"><div class="faq-q">Can we use a pre-trained model such as BERT or ResNet?</div><div class="faq-a">Yes, transfer learning is valid. Document what you changed and what you trained from scratch.</div></div>
+    <div class="faq-item"><div class="faq-q">Can we adapt a solution found on GitHub?</div><div class="faq-a">You can study and adapt it, never copy-paste. You must understand and be able to modify every line.</div></div>
+    <div class="faq-item"><div class="faq-q">What if a teammate does nothing?</div><div class="faq-a">Each student is questioned individually at the viva. Someone who cannot explain their part is marked down individually.</div></div>
 
-    <h3>Pre-Submission Checklist</h3>
+    <h3>Before you submit</h3>
     <ul class="check-list">
-      <li>Code runs end-to-end without errors; requirements.txt complete; commits are meaningful</li>
-      <li>Paper: 6–8 pages IEEE format, 10+ references, all cited, &lt;20% Turnitin</li>
-      <li>Slides: 10–12, font ≥18pt, demo script or video backup ready</li>
-      <li>Every team member can explain their individual contribution</li>
-      <li>Faculty has repository access (shared if private)</li>
+      <li>Code runs end to end without errors; requirements.txt complete; commits meaningful</li>
+      <li>Paper: 6-8 pages IEEE format, 10+ references all cited, under 20 percent Turnitin</li>
+      <li>Every reported metric carries an interval or a variance across seeds</li>
+      <li>Slides: 10-12, font 18pt or larger, demo script or recorded backup ready</li>
+      <li>Every member can explain their individual contribution</li>
+      <li>Faculty has repository access, shared if private</li>
     </ul>
   </div>
+</div>
 
-
+<!-- ══════════ TOPIC DETAIL MODAL ══════════ -->
+<div class="modal-back" id="modalBack" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal">
+    <div class="modal-head" id="modalHead">
+      <div class="mh-top">
+        <div>
+          <div class="mh-id" id="modalId"></div>
+          <h3 id="modalTitle"></h3>
+          <div class="mh-meta" id="modalMeta"></div>
+        </div>
+        <button class="modal-close" id="modalClose" aria-label="Close">&times;</button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <h4>The problem</h4>
+      <p id="modalBrief"></p>
+      <h4>Where the data comes from</h4>
+      <p id="modalData"></p>
+      <h4>Suggested methods</h4>
+      <p id="modalMethods"></p>
+      <h4>Required extension</h4>
+      <p id="modalExt"></p>
+      <h4>What a strong submission looks like</h4>
+      <p class="barline" id="modalBar"></p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn" id="modalPick">Choose this topic</button>
+      <button class="btn secondary" id="modalCancel">Back to list</button>
+      <span class="note" id="modalNote"></span>
+    </div>
+  </div>
 </div>
 
 <script>
 'use strict';
 
-// ══════════════════ CONFIG ══════════════════
-var GAS_URL = 'https://script.google.com/macros/s/AKfycby4qwOxnm1ASrxkd86I4ti-WmHx8lxw8olUVRq2orPTkp5WhvTw9j29fcKKNnoNU-aTsw/exec'; // must contain /macros/s/ and end in /exec
-var MAX_TEAMS = 13;
+var ROSTER = {
+  "231302002":["Tannu Tiwari","A"], "231302003":["Pranav Singh","A"], "231302006":["Tanish","A"], "231302007":["Prince Kumar","A"], 
+  "231302023":["Rahul Kumar","A"], "231302024":["Himanshu Singh","A"], "231302025":["Samyak Jain","A"], "231302026":["Anshul","A"], 
+  "231302028":["Vikash Srivastava","A"], "231302031":["Varun Yadav","A"], "231302033":["Aman","A"], "231302034":["Anurag","A"], 
+  "231302035":["Sahil Singh","A"], "231302037":["Lavisha","A"], "231302038":["Umesh","A"], "231302045":["Aakash","A"], 
+  "231302047":["Arshad Khan","A"], "231302049":["Deepesh","A"], "231302051":["Kunal","A"], "231302054":["Harsh Chauhan","A"], 
+  "231302055":["Lakshita","A"], "231302058":["Pratishtha","A"], "231302061":["Sarthak","A"], "231302062":["Hunny Gulia","A"], 
+  "231302065":["Dushyant Vasisht","A"], "231302066":["Mayank Goyal","A"], "231302072":["Shubham Dagar","A"], "231302073":["Mahesh Kumar","A"], 
+  "231302075":["Shubham","A"], "231302081":["Tanush Banduni","A"], "231302082":["Anjali","A"], "231302083":["Himanshu Soni","A"], 
+  "231302085":["Shashank Verma","A"], "231302086":["Harsh","A"], "231302097":["Megha Sharma","A"], "231302099":["Mayank Garg","A"], 
+  "231302101":["Punit","A"], "231302102":["Deepanshu","A"], "231302105":["Tarun Yadav","A"], "231302107":["Priya","A"], "231302110":["Arpit","A"], 
+  "231302111":["Rohan","A"], "231302113":["Rajat Yadav","A"], "231302118":["Vandana Kumari","A"], "231302121":["Abhimanyu Kandhal","A"], 
+  "231302128":["Raghav Kumar Jha","A"], "231302133":["Rahul Kumar","A"], "231302136":["Prashant Rohilla","A"], "231302140":["Vanshika Rathi","A"], 
+  "231302142":["Nikhil Narang","A"], "231302144":["Yuvraj Singh Yadav","A"], "231302149":["Yash","A"], "231302151":["Pushpender Yadav","A"], 
+  "231302152":["Devesh Dwivedi","A"], "231302156":["Angel Suri","A"], "231302157":["Vishal Kumar Upadhyay","A"], 
+  "231302163":["Shubham Bhardwaj","A"], "231302166":["Manish Rathi","A"], "231302175":["Pinki Badhana","A"], "231302186":["Deepak Kumar","A"], 
+  "231302192":["Saloni","A"], "231302194":["Robin","A"], "231302203":["Varsha","A"], "231302205":["Sneha","A"], "231302214":["Monu","A"], 
+  "231302216":["Arpit Gupta","A"], "231302221":["Nikshey Yadav","A"], "231302230":["Aditya Chauhan","A"], "231302232":["Diksha Sharma","A"], 
+  "231302244":["Naman Sharma","A"], "231302257":["Lakshay Rohilla","A"], "231302022":["Himanshu","B"], "231302032":["Aditya","B"], 
+  "231302043":["Deepak","B"], "231302050":["Savitender Singh","B"], "231302108":["Riya Yadav","B"], "231302123":["Yusuf Safi","B"], 
+  "231302148":["Pratik Dagar","B"], "231302160":["Piyush Kumar","B"], "231302171":["Harsh Yadav","B"], "231302173":["Depinder Kumar","B"], 
+  "231302178":["Jasmeet","B"], "231302188":["Aman Yadav","B"], "231302191":["Nitin Kumar","B"], "231302200":["Vinit Sheetal","B"], 
+  "231302201":["Anshu","B"], "231302204":["Samarth Ratwaya","B"], "231302209":["Ankit","B"], "231302215":["Vishal","B"], 
+  "231302218":["Vansh Rana","B"], "231302222":["Neeraj Lodhi","B"], "231302224":["Rudransh Bhardwaj","B"], "231302226":["Siddharth Sehwag","B"], 
+  "231302235":["Naman Kumar","B"], "231302237":["Nishant Choudhary","B"], "231302245":["Parikshit Gulia","B"], "231302253":["Trish Dalal","B"], 
+  "231302258":["Priyanshu","B"], "231302262":["Ashish Verma","B"], "231302263":["Ranu Raj","B"], "241302030":["Archi","B"], 
+  "241302267":["Jatin","B"], "241302279":["Vimarsh","B"], "221302122":["Mayank","B"], "231302001":["Yash Gupta","B"], 
+  "231302013":["Kishlay Kisu","B"], "231302018":["Abhishek Pal","B"], "231302080":["Aryan Sharma","B"], "231302094":["Rohit Kumar","B"], 
+  "231302127":["Shubranshu Sekher Sahoo","B"], "231302129":["Kunal Vashist","B"], "231302137":["Muskan","B"], "231302138":["Pooja","B"], 
+  "231302177":["Adarsh Kumar","B"], "231302190":["Lakshay Sharma","B"], "231302193":["Usha","B"], "231302211":["Aditya Tokas","B"], 
+  "231302213":["Priyanshu","B"], "231302217":["Mukul Punia","B"], "231302220":["Mishra Suyansh Naresh","B"], "231302233":["Ayush Gupta","B"], 
+  "231302252":["Rohan","B"], "241302251":["Rait Ranvirsingh Surinder Singh","B"], "241302050":["Rajan","B"], "231302009":["Himanshu","C"], 
+  "231302012":["Prince Kumar","C"], "231302014":["Harish","C"], "231302016":["Arpit Sharma","C"], "231302017":["Tushar Singh","C"], 
+  "231302019":["Arjun Singh Dogra","C"], "231302021":["Ankit","C"], "231302027":["Janvi","C"], "231302029":["Himani Gupta","C"], 
+  "231302030":["Mohammad Ali","C"], "231302036":["Ishan","C"], "231302039":["Aryan Kumar","C"], "231302040":["Vishal","C"], 
+  "231302041":["Karan Sharma","C"], "231302042":["Anshuman Singh","C"], "231302044":["Gaurav Yadav","C"], "231302046":["Aakash Bisht","C"], 
+  "231302048":["Anvi Goyal","C"], "231302052":["Vishal","C"], "231302056":["Devanshi Sharma","C"], "231302057":["Neha Sharma","C"], 
+  "231302059":["Lekit Yadav","C"], "231302060":["Rahul Bajaj","C"], "231302063":["Riya","C"], "231302067":["Varun Raghav","C"], 
+  "231302068":["Faiza","C"], "231302069":["Deepak Yadav","C"], "231302070":["Nirupam Sharma","C"], "231302071":["Deepanshu Jangra","C"], 
+  "231302078":["Manjeet","C"], "231302079":["Jasneet Kaur","C"], "231302088":["Deepanshu Rai","C"], "231302089":["Sidhanshu","C"], 
+  "231302093":["Vaibhav","C"], "231302095":["Ayush Parashar","C"], "231302100":["Ritika Sharma","C"], "231302103":["Akash Rana","C"], 
+  "231302104":["Pallavi Mudgal","C"], "231302106":["Chetan Sagar","C"], "231302109":["Arvind Kumar","C"], "231302112":["Daksh Yadav","C"], 
+  "231302114":["Guneet Dhaka","C"], "231302115":["Aaditya Kaushik","C"], "231302116":["Jatin Nagarwal","C"], "231302117":["Sneha Boora","C"], 
+  "231302120":["Kushagar Siwach","C"], "231302122":["Renu","C"], "231302125":["Manish Dahiya","C"], "231302130":["Tanuj Bhardwaj","C"], 
+  "231302131":["Karan Singh Aswal","C"], "231302135":["Aneek Raj","C"], "231302139":["Rahul","C"], "231302141":["Vivek","C"], 
+  "231302143":["Jai Anmol Arora","C"], "231302150":["Noama Syed","C"], "231302153":["Dhairya Singh","C"], "231302154":["Goutam Verma","C"], 
+  "231302155":["Vanshika","C"], "231302158":["Nishant","C"], "231302159":["Krrish Malhotra","C"], "231302161":["Tanya Singh","C"], 
+  "231302162":["Rohit Korpal","C"], "231302164":["Priyanshu","D"], "231302165":["Purav Tanwar","D"], "231302167":["Kislay Pandey","D"], 
+  "231302169":["Arpit Pandey","D"], "231302174":["Vishav Garg","D"], "231302176":["Sukhsham Sharma","D"], "231302181":["Devesh Yadav","D"], 
+  "231302182":["Aditya Vats","D"], "231302185":["Kunal Sharma","D"], "231302189":["Saurav","D"], "231302196":["Vrishank Sharma","D"], 
+  "231302199":["Parteek","D"], "231302206":["Dharam Singh","D"], "231302207":["Nikhil Kumar","D"], "231302208":["Punyam","D"], 
+  "231302210":["Pushpender Yadav","D"], "231302212":["Deepanshu","D"], "231302223":["Anurag","D"], "231302227":["Sandeep Singh","D"], 
+  "231302228":["Khushi Singhal","D"], "231302231":["Tanvir Singh Wasir","D"], "231302234":["Vanshika Bisht","D"], "231302239":["Aanchal","D"], 
+  "231302247":["Aakash Dagar","D"], "231302250":["Aakash","D"], "231302251":["Himanshu Aggarwal","D"], "231302255":["Anshika","D"], 
+  "231302256":["Tanishk","D"], "231302266":["Dhawan Sawant","D"], "241302032":["Arunava Chakraborty","D"], "231302004":["Vivek Singh","D"], 
+  "231302005":["Himanshi","D"], "231302008":["Aryan","D"], "231302010":["Hiten","D"], "231302011":["Muskan","D"], 
+  "231302015":["Devanshu Shekhar","D"], "231302084":["Nirmit","D"], "231302087":["Vikash Meena","D"], "231302091":["Muskan","D"], 
+  "231302092":["Yashika Janghu","D"], "231302124":["Harsh Vashisth","D"], "231302145":["Rajat Mallick","D"], "231302170":["Nikita Sengar","D"], 
+  "231302183":["Ayush Yadav","D"], "231302184":["Ayush Gulia","D"], "231302197":["Uday Pratap Singh","D"], "231302219":["Manish Kumar","D"], 
+  "231302229":["Prikshit","D"], "231302246":["Saket","D"], "231302248":["Sambhav","D"], "231302254":["Tushar Singh Tanwar","D"], 
+  "231302264":["Katrine Alice Daniel","D"]
+};
+var TRACK_A_TOPICS = [
+{id:"A1", t:"Vehicle Routing for Mobile Service Units with Time Windows", area:"Evolutionary Computing", lvl:"Intermediate",
+brief:"One van, a day of bookings scattered across the city, a fixed shift. Find the visiting order that serves every customer inside their promised time window while driving the fewest kilometres. This is the operational core of any at-your-doorstep service business.",
+data:"Solomon VRPTW benchmark instances, or synthetic bookings generated over a real road network pulled from OpenStreetMap using OSMnx.",
+methods:"Genetic algorithm with order crossover and a repair operator for time-window violations. Google OR-Tools as the reference solver.",
+ext:"Report the optimality gap and runtime of your GA against OR-Tools across at least three problem sizes.",
+bar:"A convergence plot, the final route drawn on a map, and an honest account of where your GA loses to the solver and why."},
+
+{id:"A2", t:"Demand Forecasting for On-Demand Services", area:"Time Series ML", lvl:"Foundation",
+brief:"Predict how many service bookings arrive tomorrow, next weekend, on a festival day. Staffing and inventory decisions are made days ahead, so a forecast that arrives with the demand is worthless. Weather and calendar effects dominate in this domain.",
+data:"Any public booking or ride-hailing demand series as the base signal, joined with historical weather from Open-Meteo and an Indian public holiday calendar.",
+methods:"SARIMA and Prophet as baselines, gradient boosting on lag and calendar features as the contender.",
+ext:"Produce prediction intervals, not point forecasts, and verify that the stated 90 percent interval actually contains 90 percent of held-out values.",
+bar:"Backtesting on a rolling origin rather than a single train/test split, and a clear statement of forecast horizon."},
+
+{id:"A3", t:"Dynamic Slot Pricing with Multi-Armed Bandits", area:"Reinforcement Learning", lvl:"Advanced",
+brief:"Morning slots sell out, mid-afternoon slots go empty. Learn a price for each slot that fills the day without leaving money on the table, while the system is still learning from live customer responses.",
+data:"A simulated customer-response environment you build and justify. Document your demand curve assumptions explicitly, since every result depends on them.",
+methods:"Epsilon-greedy, UCB1 and Thompson sampling on a contextual bandit formulation.",
+ext:"Compare cumulative regret across all three strategies, averaged over many seeds with confidence bands.",
+bar:"Regret curves with variability shown across seeds. A single run proves nothing about a stochastic algorithm."},
+
+{id:"A4", t:"Geospatial Demand Clustering for Micro-Depot Placement", area:"Unsupervised Learning", lvl:"Foundation",
+brief:"If you can park supplies at three points in a city, where should they go? Cluster historical demand geographically and place depots to minimise the distance travelled to reach customers.",
+data:"Public city-level point-of-interest or trip data, or synthetic demand seeded from real population density rasters.",
+methods:"K-Means, DBSCAN and HDBSCAN, with a k-medoids pass to force depot locations onto reachable points.",
+ext:"Compare the three clustering methods under varying demand density and argue which assumption each one makes about the city.",
+bar:"Silhouette and Davies-Bouldin scores reported alongside a map, plus a clear answer on how many depots are actually worth opening."},
+
+{id:"A5", t:"Idle-Capacity Prediction for Shared Physical Assets", area:"Machine Learning", lvl:"Intermediate",
+brief:"The premise of shared-asset services is that owned equipment sits idle most of its life. Model when a given asset is likely to be free, so that idle time can be sold instead of wasted.",
+data:"Public shared-mobility or equipment-utilisation datasets, or bike-share system data as a well-documented proxy.",
+methods:"Survival analysis for time-to-next-use, plus a regression model for utilisation rate.",
+ext:"Estimate utilisation curves with uncertainty bands rather than single-value point estimates.",
+bar:"A utilisation curve a business could actually plan against, with the uncertainty at low-data hours made visible."},
+
+{id:"A6", t:"Appointment Scheduling under Staff, Travel and SLA Constraints", area:"Constraint Satisfaction", lvl:"Intermediate",
+brief:"Assign jobs to staff and slots such that nobody is double-booked, travel between consecutive jobs is feasible, and every customer is served within the promised window. The classic constraint problem underneath every service roster.",
+data:"A synthetic instance generator you write, with parameters for job count, staff count and city radius.",
+methods:"Constraint programming with OR-Tools CP-SAT, benchmarked against a greedy heuristic and a GA.",
+ext:"Turn it multi-objective: minimise operating cost and customer wait time together, and show the trade-off curve.",
+bar:"A Pareto front, not a single solution, plus a note on which point you would actually ship and why."},
+
+{id:"A7", t:"Water and Consumable Optimisation for Eco-Efficient Service Delivery", area:"Optimisation", lvl:"Intermediate",
+brief:"A mobile wash uses a fraction of the water of a driveway wash, and that ratio is the sustainability case for the whole service model. Model consumption per job as a function of vehicle condition and method, then optimise the schedule under a hard resource cap.",
+data:"Published water-use figures for commercial and domestic vehicle washing, with your assumptions documented and cited.",
+methods:"Regression for per-job consumption, then linear or integer programming for allocation under the cap.",
+ext:"Treat carbon and water footprint as hard constraints rather than soft penalties and report what capacity that costs.",
+bar:"Every consumption figure traceable to a cited source. Invented numbers make the whole optimisation meaningless."},
+
+{id:"A8", t:"Provider and Customer Matching Engine", area:"Matching Algorithms", lvl:"Intermediate",
+brief:"Given available workers with different skills, locations and ratings, and customers with different jobs and preferences, produce an assignment both sides accept. Whether you optimise for total welfare or for stability changes the answer.",
+data:"Synthetic two-sided preference data generated from a documented model, with sensitivity analysis over the preference structure.",
+methods:"Gale-Shapley stable matching, Hungarian algorithm for optimal assignment, and an ML-scored greedy baseline.",
+ext:"Compare stable matching against ML-scored greedy assignment on both total welfare and the number of blocking pairs.",
+bar:"A clear demonstration that the welfare-maximising matching is not always stable, with a concrete example from your data."},
+
+{id:"A9", t:"Churn Prediction for Subscription Service Plans", area:"Machine Learning", lvl:"Foundation",
+brief:"Subscription models only work if customers stay. Predict which subscribers are about to lapse, early enough that a retention offer can still reach them.",
+data:"Telco Customer Churn from Kaggle, or the KKBox churn dataset for a larger and messier alternative.",
+methods:"Logistic regression as an interpretable baseline, gradient boosting as the contender, SHAP for attribution.",
+ext:"Make the loss cost-sensitive. A missed churner and a wasted discount do not cost the same, so the decision threshold should not be 0.5.",
+bar:"An explicit cost matrix, a threshold chosen from it, and profit curves rather than accuracy alone."},
+
+{id:"A10", t:"Real-Time Route Repair under Disruption", area:"Heuristic Search", lvl:"Advanced",
+brief:"A customer cancels at 11am and traffic closes a road at noon. Repairing the existing route is fast but suboptimal; re-solving from scratch is optimal but slow. Quantify that trade-off under a realistic latency budget.",
+data:"Your A1 route instances, with a disruption generator that injects cancellations, delays and new urgent bookings.",
+methods:"Large neighbourhood search and ruin-and-recreate operators, timed against a full re-solve.",
+ext:"Plot solution quality against repair latency and identify the point where re-solving becomes worth the wait.",
+bar:"Wall-clock timings on stated hardware, and a defensible recommendation for a dispatcher who has thirty seconds to decide."},
+
+{id:"A11", t:"No-Show and Late-Cancellation Prediction", area:"Imbalanced Classification", lvl:"Foundation",
+brief:"No-shows are the quiet profit killer of appointment businesses. Predict them from booking metadata, and treat the class imbalance honestly rather than hiding behind a high accuracy score.",
+data:"The Medical Appointment No-Shows dataset from Kaggle transfers directly to this problem structure.",
+methods:"SMOTE, class weighting and threshold tuning, compared on precision-recall rather than ROC.",
+ext:"Compare all three imbalance strategies on PR-AUC and argue which is right when the minority class is the expensive one.",
+bar:"Precision-recall curves. A model that predicts nobody no-shows can still hit 80 percent accuracy, and your paper should say so."},
+
+{id:"A12", t:"Multi-Objective Fleet Optimisation: Cost, Carbon and Service Level", area:"Evolutionary Computing", lvl:"Advanced",
+brief:"Cheapest, greenest and fastest are three different fleets. Rather than collapsing them into one weighted score, find the frontier of solutions where improving one objective necessarily damages another.",
+data:"Your A1 routing instances extended with vehicle emission factors from published transport datasets.",
+methods:"NSGA-II, with hypervolume as the convergence metric.",
+ext:"Analyse the Pareto front itself: where are the knees, and which trade-offs are cheap versus punishing?",
+bar:"A front, a hypervolume convergence plot, and three named solutions on it that you would put to a decision-maker."},
+
+{id:"A13", t:"Discrete-Event Simulation of a Service Network with an ML Surrogate", area:"Simulation and ML", lvl:"Advanced",
+brief:"A faithful simulation of a service network takes minutes to run, which makes optimisation over its parameters impractical. Train a model that imitates the simulator in milliseconds, then optimise against the imitation.",
+data:"Generated by your own simulation runs. The dataset is the experiment.",
+methods:"SimPy for the discrete-event model, gradient boosting or a small neural net as the surrogate.",
+ext:"Quantify surrogate fidelity and show where in the parameter space the surrogate becomes untrustworthy.",
+bar:"An honest error map over the parameter space, not just an average error. Surrogates fail at the edges, which is where optimisers go."},
+
+{id:"A14", t:"Vision-Based Vehicle Condition Assessment", area:"Computer Vision", lvl:"Intermediate",
+brief:"Photograph a vehicle before and after service to settle disputes and to price jobs by actual condition rather than a flat rate. Classify soiling level, and flag pre-existing damage so it is not blamed on the service.",
+data:"Stanford Cars or the CarDD car-damage dataset, with a small self-collected set for the soiling classes.",
+methods:"Transfer learning from ResNet or EfficientNet, with Grad-CAM to check the model looks at the vehicle and not the background.",
+ext:"Use Grad-CAM to verify the model attends to the right region, and report what you find when it does not.",
+bar:"Evidence that the model learned the vehicle rather than the lighting or the driveway. Most student CV projects skip this check."},
+
+{id:"A15", t:"Review Mining for Service Quality Feedback Loops", area:"Natural Language Processing", lvl:"Foundation",
+brief:"A three-star review is not actionable; knowing that punctuality drives three-star reviews is. Extract which service attribute each review is actually complaining about, and which attributes move the overall rating.",
+data:"Yelp Open Dataset or Google Local Reviews, filtered to service businesses.",
+methods:"Aspect-based sentiment analysis, with a fine-tuned transformer against a lexicon baseline.",
+ext:"Quantify which aspect most strongly predicts overall rating, and whether that differs between one-star and five-star reviews.",
+bar:"An aspect-level finding a manager could act on this week, not a sentiment accuracy number."},
+
+{id:"A16", t:"Agent-Based Digital Twin of a Shared-Asset Marketplace", area:"Agent Systems", lvl:"Advanced",
+brief:"Model customers and providers as independent agents with their own rules, then watch what the marketplace does. Behaviour that no single agent was programmed with, such as price cascades or supply deserts, is the point of the exercise.",
+data:"None external. The model is the contribution, and its assumptions must be defended explicitly.",
+methods:"Mesa for agent-based modelling, with sensitivity analysis over the behavioural parameters.",
+ext:"Introduce a supply shock and characterise the emergent response and recovery time.",
+bar:"Emergent behaviour you did not hard-code, identified and explained. Otherwise it is an expensive simulation of your own assumptions."},
+
+{id:"A17", t:"Surge and Anomaly Detection in Service Demand Streams", area:"Anomaly Detection", lvl:"Foundation",
+brief:"Distinguish a genuine demand surge worth staffing for from a data glitch or a one-off event. The cost of confusing the two is either idle staff or abandoned customers.",
+data:"NYC Taxi demand or a bike-share trip series, both of which contain real and well-documented anomalies.",
+methods:"Isolation Forest, seasonal-hybrid ESD, and classical statistical process control charts.",
+ext:"Compare a machine learning detector against a statistical control chart and state when the simpler tool wins.",
+bar:"A labelled list of detected anomalies checked against real events, plus a false-positive count. Detection without validation is decoration."},
+
+{id:"A18", t:"Service Bundling Recommender", area:"Recommender Systems", lvl:"Foundation",
+brief:"Customers who book an exterior wash often want interior cleaning too, but not always, and the pattern differs by customer. Recommend the bundle rather than the item.",
+data:"Instacart Market Basket or the Online Retail dataset, both of which have the transaction structure this problem needs.",
+methods:"Apriori and FP-Growth association rules, compared against item-based collaborative filtering.",
+ext:"Compare rule mining against collaborative filtering on the same data, and explain where each approach breaks down.",
+bar:"Lift and confidence reported together. High-confidence rules with lift near 1 are just popular items and mean nothing."},
+
+{id:"A19", t:"Comparative Metaheuristics on a Single Routing Instance", area:"Evolutionary Computing", lvl:"Intermediate",
+brief:"Papers claiming one metaheuristic beats another usually differ in tuning effort, not algorithm quality. Build a fair benchmark: identical instances, identical evaluation budget, identical seeds, and report what survives.",
+data:"Standard VRP or TSP benchmark instances with published optimal values, so absolute quality is verifiable.",
+methods:"Genetic algorithm, simulated annealing and ant colony optimisation under a shared evaluation-count budget.",
+ext:"Design and defend the fair-benchmarking protocol itself. The protocol is the contribution.",
+bar:"Statistical testing across seeds. Reporting the best run of each algorithm is the exact error this project exists to correct."},
+
+{id:"A20", t:"Fairness-Constrained Job Allocation for Gig Workers", area:"AI Ethics", lvl:"Advanced",
+brief:"An allocator that maximises platform efficiency will concentrate the best jobs on the highest-rated workers, and newcomers never recover from a cold start. Measure that effect, then constrain it, then measure what efficiency the constraint costs.",
+data:"Synthetic worker populations calibrated to published gig-economy earnings distributions, with sources cited.",
+methods:"Constrained optimisation with Gini and Jain fairness indices, tracked over a simulated season.",
+ext:"Map the equity-efficiency frontier and identify whose income variance rises under each policy.",
+bar:"A named trade-off with numbers attached, and a recommendation you are willing to defend to both a worker and a platform."}
+];
+
+var TRACK_B_TOPICS = [
+{id:"B1", t:"First-Innings Score Prediction from Powerplay State", area:"Regression", lvl:"Foundation",
+brief:"Six overs are gone. Runs, wickets and run rate are known. Predict the final first-innings total. This is the foundation topic of the track and everything else in it extends this baseline.",
+data:"The department SRL dataset, 800+ matches, distributed as a cleaned ball-by-ball CSV.",
+methods:"Linear regression as a baseline, then gradient boosting. Feature set fixed at the over-6 state.",
+ext:"Report prediction intervals and compare interval width against empirical coverage.",
+bar:"A stated interval that actually holds. An interval claiming 90 percent coverage that delivers 60 percent is a failed model, however good its RMSE."},
+
+{id:"B2", t:"Uncertainty Narrowing across Overs 6, 10, 12 and 15", area:"Uncertainty Quantification", lvl:"Intermediate",
+brief:"Prediction should get sharper as the innings unfolds. Measure exactly how much sharper, at each checkpoint, and find where the largest single jump in information happens. That over is the one worth watching.",
+data:"The department SRL dataset, with feature snapshots built at each of the four checkpoints.",
+methods:"One model per checkpoint, evaluated on a common held-out set for comparability.",
+ext:"Plot RMSE and interval width as a function of information available, and identify the point of steepest gain.",
+bar:"All four models trained and evaluated identically. Any change in preprocessing between checkpoints invalidates the comparison."},
+
+{id:"B3", t:"Wickets in Hand: Re-Deriving Resource Curves from Data", area:"Statistical ML", lvl:"Advanced",
+brief:"Runs remaining depend jointly on overs left and wickets in hand, and the Duckworth-Lewis method encodes this as a published resource table. Re-derive that surface from your own data and see whether the simulator agrees with real cricket.",
+data:"The department SRL dataset, aggregated to over-and-wicket state.",
+methods:"Non-linear surface fitting, splines or a small neural net, with bootstrap confidence bands on the surface.",
+ext:"Compare your empirically derived curves against published DLS resource tables and explain every systematic divergence.",
+bar:"A clear statement of where the simulator departs from real-cricket resource values, since that divergence is the actual finding."},
+
+{id:"B4", t:"Sequence Modelling of Innings Trajectories", area:"Deep Learning", lvl:"Advanced",
+brief:"An innings is a sequence, not a feature vector. Test whether a recurrent model reading the over-by-over trajectory beats engineered summary features, and be prepared for the answer to be no.",
+data:"The department SRL dataset as over-by-over sequences of runs, wickets and run rate.",
+methods:"LSTM and GRU, against a gradient boosting model on hand-built features.",
+ext:"Compare against the feature-engineered baseline at matched training budget and report parameter counts.",
+bar:"An honest verdict. On tabular sports data the simple baseline frequently wins, and reporting that is a stronger result than hiding it."},
+
+{id:"B5", t:"Is the Generator Memoryless? Markov Order Estimation", area:"Probabilistic ML", lvl:"Advanced",
+brief:"SRL matches are produced by an algorithm. If that algorithm carries state between deliveries or between matches, the data will show it. Test formally for memory, and you are reverse-engineering the generator rather than describing cricket.",
+data:"The department SRL dataset, treated as a symbol sequence over ball outcomes.",
+methods:"Markov chain order estimation with AIC and BIC, Wald-Wolfowitz runs test, Ljung-Box on residual series.",
+ext:"Test for dependence at the ball, over and match level separately, since each could carry different state.",
+bar:"A stated null hypothesis, a test statistic and a p-value. This is the most genuinely publishable topic in the track if done rigorously."},
+
+{id:"B6", t:"Series, Day and Sequence Effects: A Hierarchical Model", area:"Bayesian Statistics", lvl:"Advanced",
+brief:"Matches are nested inside days, days inside series. Treating them as independent overstates confidence in every result. Partition the variance properly and find out how much is series, how much is team, and how much is irreducible noise.",
+data:"The department SRL dataset with series, day and sequence-position identifiers retained.",
+methods:"Mixed-effects models via statsmodels, or a Bayesian hierarchical model in PyMC.",
+ext:"Decompose the variance and report what fraction is attributable to each level.",
+bar:"An intraclass correlation coefficient. If series effects are negligible, that is a real finding and should be stated plainly."},
+
+{id:"B7", t:"Innings Archetype Discovery via Shape-Based Clustering", area:"Unsupervised Learning", lvl:"Intermediate",
+brief:"Two innings ending on 165 can look nothing alike: one a steady accumulation, the other a collapse followed by a rescue. Cluster on the shape of the scoring curve rather than the final number.",
+data:"The department SRL dataset, resampled to fixed-length over-by-over run curves.",
+methods:"Dynamic time warping distance with k-medoids, against Euclidean k-means on the raw curves.",
+ext:"Compare DTW against Euclidean distance and show which shapes the simpler metric collapses together.",
+bar:"Named, interpretable archetypes with example innings shown for each, and cluster counts justified rather than assumed."},
+
+{id:"B8", t:"Conformal Prediction Intervals for Final Score", area:"Uncertainty Quantification", lvl:"Advanced",
+brief:"Most prediction intervals rest on distributional assumptions the data quietly violates. Conformal prediction gives coverage guarantees without those assumptions, which makes it the right tool when you do not trust your error distribution.",
+data:"The department SRL dataset, split into training, calibration and test partitions.",
+methods:"Split conformal and adaptive conformal prediction, on top of any underlying regressor.",
+ext:"Validate empirical coverage against the nominal level, and test whether coverage holds within subgroups such as high-wicket states.",
+bar:"Marginal coverage is easy. Show whether coverage also holds conditionally, because that is where conformal methods usually strain."},
+
+{id:"B9", t:"Momentum and Collapse Detection via Change-Point Analysis", area:"Time Series", lvl:"Intermediate",
+brief:"Commentators call momentum shifts constantly. Test whether the scoring rate actually contains statistically detectable change points, or whether the human eye is finding structure in noise.",
+data:"The department SRL dataset as per-over scoring rate series.",
+methods:"CUSUM and PELT, against Bayesian online change-point detection.",
+ext:"Compare offline against online detection and report detection lag, since a signal that arrives three overs late is useless live.",
+bar:"A false-positive rate measured on shuffled series. Change-point methods find change points in pure noise if you let them."},
+
+{id:"B10", t:"Over-by-Over Win Probability with a Calibration Audit", area:"Probabilistic ML", lvl:"Intermediate",
+brief:"Build a live win-probability model, then audit whether it means what it says: of all the moments it called 70 percent, did the team go on to win about 70 percent of the time?",
+data:"The department SRL dataset, including second-innings chases for outcome labels.",
+methods:"Gradient boosting or logistic regression per match state, with reliability diagrams and Brier decomposition.",
+ext:"Decompose the Brier score into reliability, resolution and uncertainty components.",
+bar:"A reliability diagram with confidence bands. A well-calibrated but uninformative model and a sharp but miscalibrated one fail differently, and the decomposition separates them."},
+
+{id:"B11", t:"Fixed-Budget Benchmark: Linear, Boosted and Neural", area:"Machine Learning", lvl:"Foundation",
+brief:"Compare three model families on the same task under a genuinely equal budget, and produce learning curves that show at what dataset size the extra capacity starts paying for itself.",
+data:"The department SRL dataset, with subsampled training sets to build the learning curves.",
+methods:"Ridge regression, gradient boosting and a small MLP, tuned under a shared trial budget.",
+ext:"Plot learning curves and identify the crossover point where the more complex model overtakes the simpler one.",
+bar:"Equal tuning effort documented for all three. Unequal tuning is the most common way benchmark papers reach false conclusions."},
+
+{id:"B12", t:"What Drives the Over-10 Prediction? SHAP Attribution", area:"Explainable AI", lvl:"Intermediate",
+brief:"Open the model and find out which features carry the prediction, then test whether the answer changes as the innings progresses. If wickets matter more at over 15 than at over 6, the attribution should show it.",
+data:"The department SRL dataset, with models trained at each checkpoint from B2.",
+methods:"SHAP values with dependence and interaction plots.",
+ext:"Compare attributions across checkpoints and report which features gain and lose influence as the innings develops.",
+bar:"An interaction effect identified and explained, not just a bar chart of mean absolute SHAP values."},
+
+{id:"B13", t:"Monte Carlo Ball-by-Ball Innings Simulator", area:"Simulation", lvl:"Advanced",
+brief:"Estimate outcome probabilities per delivery from data, then simulate whole innings thousands of times. If your simulator is faithful, the distribution of simulated totals should match the observed histogram.",
+data:"The department SRL dataset, used to estimate per-ball outcome distributions conditioned on match state.",
+methods:"Monte Carlo simulation with state-conditioned outcome probabilities.",
+ext:"Compare the simulated score distribution against the observed histogram using a Kolmogorov-Smirnov test.",
+bar:"Distributional agreement, not just a matching mean. Matching the average while missing the variance means the simulator is wrong."},
+
+{id:"B14", t:"Outlier and Glitch Detection in Generated Matches", area:"Anomaly Detection", lvl:"Intermediate",
+brief:"In a generated dataset, anomalies may be simulator artefacts rather than remarkable sporting events. Find them, then test whether they cluster in time or by series, which would point at the generator rather than at chance.",
+data:"The department SRL dataset in full.",
+methods:"Isolation Forest and autoencoder reconstruction error on innings-level feature vectors.",
+ext:"Test whether anomalies are uniformly distributed across series and dates, or concentrated.",
+bar:"A statistical test for clustering of anomalies. Non-uniform anomalies are evidence about the generator and a genuinely interesting finding."},
+
+{id:"B15", t:"Transfer Validity: Does an SRL-Trained Model Work on Real Cricket?", area:"Model Validation", lvl:"Advanced",
+brief:"Every other topic in this track assumes findings from simulated data mean something. This topic tests that assumption directly, and its result determines what the other fifteen teams are permitted to claim.",
+data:"The department SRL dataset for training, with real T20 ball-by-ball data from Cricsheet for evaluation.",
+methods:"Train on SRL, evaluate on real matches. Distribution comparison, plus domain-adaptation baselines.",
+ext:"Quantify the domain gap feature by feature and identify which relationships transfer and which do not.",
+bar:"A clear, quotable verdict on transferability. This team should finish by Week 10 so the rest of the track can cite the result."},
+
+{id:"B16", t:"Bayesian Hierarchical Team Strength Estimation", area:"Bayesian Statistics", lvl:"Advanced",
+brief:"Estimate each team's underlying strength with credible intervals rather than a win-loss record. Teams with few matches should be pulled toward the population mean, which is exactly what a hierarchical prior does automatically.",
+data:"The department SRL dataset, aggregated to match results by team.",
+methods:"Bayesian hierarchical modelling in PyMC, with posterior predictive checks.",
+ext:"Demonstrate the shrinkage effect on teams with small sample sizes and quantify how much it changes the ranking.",
+bar:"Convergence diagnostics reported, R-hat and effective sample size. An unconverged posterior is not a result."}
+];
+
+var TRACK_C_TOPICS = [
+{id:"C1", t:"Calibration Audit of Standard Classifiers", area:"Uncertainty Quantification", lvl:"Foundation",
+brief:"A model that says 90 percent should be right about 90 percent of the time. Most are not, and neural networks are among the worst offenders. Audit several classifiers, then try to repair them.",
+data:"Any well-known tabular benchmark such as Adult Income or Credit Default, kept fixed across all models.",
+methods:"Expected calibration error, Brier score and reliability diagrams, then Platt scaling and isotonic regression as repairs.",
+ext:"Test whether post-hoc recalibration fixes the problem without damaging discrimination.",
+bar:"Reliability diagrams before and after, with ECE and AUC reported together to show recalibration did not cost accuracy."},
+
+{id:"C2", t:"Conformal Prediction on a Tabular Task", area:"Uncertainty Quantification", lvl:"Advanced",
+brief:"Produce prediction sets with a coverage guarantee that holds without assuming anything about the data distribution. Then stress it by shifting the distribution and watching the guarantee degrade.",
+data:"A tabular benchmark of your choosing, with a deliberately constructed distribution shift between calibration and test.",
+methods:"Split conformal and adaptive conformal prediction, using the MAPIE library or your own implementation.",
+ext:"Measure how coverage degrades under distribution shift and at what magnitude of shift the guarantee fails.",
+bar:"The point where the theoretical guarantee stops holding in practice, identified and explained."},
+
+{id:"C3", t:"Confidence Intervals for Model Metrics", area:"Statistical ML", lvl:"Foundation",
+brief:"Nearly every student paper reports accuracy as a bare number. Two models at 85 percent and 87 percent may be statistically indistinguishable. Build the tooling that decides whether a reported improvement is real.",
+data:"Any classification benchmark, evaluated repeatedly under resampling.",
+methods:"Bootstrap confidence intervals, analytic Wilson intervals, and McNemar's test for paired model comparison.",
+ext:"Compare bootstrap intervals against analytic intervals and state when each is appropriate.",
+bar:"A reusable tool the other teams in this section can apply to their own results, plus a worked example of an improvement that turns out not to be significant."},
+
+{id:"C4", t:"Uncertainty in Neural Networks: MC Dropout versus Deep Ensembles", area:"Deep Learning", lvl:"Advanced",
+brief:"Two practical ways to make a neural network express doubt. One is nearly free, the other costs several times the training budget. Determine whether the expensive one earns its cost.",
+data:"CIFAR-10 or Fashion-MNIST, with corrupted variants to test out-of-distribution behaviour.",
+methods:"Monte Carlo dropout at inference, against an ensemble of independently initialised networks.",
+ext:"Compare at equal total compute rather than equal model count, which is the comparison that matters in practice.",
+bar:"Performance on out-of-distribution inputs. Both methods look fine in-distribution, and the difference only shows where it matters."},
+
+{id:"C5", t:"Interval-Valued Student Performance Prediction", area:"Machine Learning", lvl:"Intermediate",
+brief:"Predicting a student will score 62 is less useful, and less honest, than predicting they will land between 55 and 71. Build a predictor that outputs a range, and be careful about what such a system would do if deployed.",
+data:"The UCI Student Performance dataset, or anonymised institutional data with ethics clearance.",
+methods:"Quantile regression and quantile gradient boosting, evaluated with pinball loss.",
+ext:"Compare interval width across student subgroups and check whether the model is systematically less certain about some groups.",
+bar:"Explicit discussion of what happens when a predicted range is shown to a student or a teacher, and who is harmed if it is wrong."},
+
+{id:"C6", t:"Learner Calibration: Self-Rated Confidence versus Measured Accuracy", area:"Educational Data Mining", lvl:"Intermediate",
+brief:"Ask students how confident they are before they answer, then compare that against whether they were right. The gap between the two is a measurable quantity, and it is the core construct behind the departmental gamification study.",
+data:"Collected by you from consenting participants. Requires ethics clearance before any collection begins.",
+methods:"Brier score decomposition, confidence-accuracy correlation, and per-student overconfidence indices.",
+ext:"Test whether calibration differs by topic difficulty, by prior performance, or by team versus individual work.",
+bar:"Informed consent obtained and documented, participants anonymised, and the right to withdraw honoured. No exceptions on this."},
+
+{id:"C7", t:"Gamified Quiz Platform with a Controlled Engagement Study", area:"HCI and Analytics", lvl:"Advanced",
+brief:"Build a gamified quiz system, then run a real experiment on it. The engineering is the easy half; designing a study whose result you would believe if it went against you is the hard half.",
+data:"Generated by your own deployment, with consent, plus a pre-registered analysis plan written before data collection.",
+methods:"Randomised assignment within cohort, with engagement and learning-gain measures analysed separately.",
+ext:"Pre-register hypotheses and the analysis plan before collecting data, and report deviations honestly.",
+bar:"Randomisation within a group rather than comparing whole sections, because between-section comparison confounds the intervention with mentor and cohort."},
+
+{id:"C8", t:"Overconfidence Detection from Interaction Logs", area:"Behavioural ML", lvl:"Advanced",
+brief:"Confidence leaves traces even when nobody reports it: answer latency, revision count, hesitation before submitting. Test whether behaviour alone predicts miscalibration.",
+data:"Interaction logs from the C7 platform, or a public MOOC clickstream dataset such as EdNet.",
+methods:"Feature engineering over interaction sequences, with a sequence model for temporal patterns.",
+ext:"Test whether response latency alone predicts overconfidence, and how much the richer features add.",
+bar:"A stated position on the surveillance implications. Inferring internal states from behavioural traces is not an ethically neutral capability."},
+
+{id:"C9", t:"Knowledge Tracing: Modelling Mastery over Time", area:"Sequence Modelling", lvl:"Advanced",
+brief:"Track what a learner knows as it changes across a course. The classical Bayesian formulation is interpretable; the deep version is more accurate. Ask which one's confidence you would actually trust.",
+data:"ASSISTments or EdNet, both standard public knowledge-tracing benchmarks.",
+methods:"Bayesian knowledge tracing against deep knowledge tracing with an LSTM.",
+ext:"Compare not just accuracy but calibration, and argue which matters more for an intervention system.",
+bar:"A calibration comparison alongside the accuracy comparison, since a mastery estimate is acted upon and therefore needs to be trustworthy."},
+
+{id:"C10", t:"Early-Warning System for At-Risk Students from Attendance Data", area:"Machine Learning", lvl:"Intermediate",
+brief:"Attendance falls before grades do. Build a system that flags students early enough for support to help, and think hard about the cost of a false flag on a student who was fine.",
+data:"The department July 2026 attendance workbook, fully anonymised: hashed identifiers, all contact and medical remark columns removed before use.",
+methods:"Gradient boosting on attendance trajectory features, with survival analysis for time-to-disengagement.",
+ext:"Optimise the alert threshold for intervention capacity rather than for accuracy, since only so many students can be supported.",
+bar:"Anonymisation completed before modelling starts, and explicit reasoning about the harm of wrongly labelling a student at risk."},
+
+{id:"C11", t:"Fairness Audit of a Student Performance Predictor", area:"AI Ethics", lvl:"Advanced",
+brief:"A predictor can be equally accurate for two groups while being systematically overconfident about one of them. Audit subgroup calibration, not just subgroup accuracy, and attempt a repair.",
+data:"UCI Student Performance, which carries demographic attributes suitable for subgroup analysis.",
+methods:"Demographic parity, equalised odds and subgroup calibration, using Fairlearn or AIF360.",
+ext:"Demonstrate the impossibility result: show empirically that you cannot satisfy all fairness criteria at once.",
+bar:"A concrete demonstration that fixing one fairness metric breaks another, using your own numbers rather than citing the theorem."},
+
+{id:"C12", t:"Sample Size and Power Simulator for Educational Experiments", area:"Statistical Computing", lvl:"Foundation",
+brief:"Most classroom studies are too small to detect the effects they claim to find. Build a simulator that answers the question properly: how many students are needed to detect a five percent improvement?",
+data:"Simulated, with effect sizes drawn from published educational intervention literature and cited.",
+methods:"Monte Carlo power simulation, with analytic power calculations as a cross-check.",
+ext:"Extend to clustered designs, where students are nested inside teams and observations are not independent.",
+bar:"Correct handling of clustering. Treating team members as independent observations inflates the effective sample size and is the standard error in this literature."},
+
+{id:"C13", t:"Active Learning with Uncertainty Sampling", area:"Machine Learning", lvl:"Intermediate",
+brief:"Labelling is expensive. If a model can nominate which unlabelled examples would teach it most, the labelling budget goes further. This only works if the model's uncertainty estimates are trustworthy, which links it to C1.",
+data:"Any classification benchmark with labels withheld to simulate a labelling budget.",
+methods:"Uncertainty sampling, query-by-committee and expected model change, against random selection.",
+ext:"Test whether active learning still helps when the model is poorly calibrated.",
+bar:"Random sampling as the baseline. Active learning frequently fails to beat it, and reporting that honestly is a real contribution."},
+
+{id:"C14", t:"Selective Prediction: Models That Abstain When Unsure", area:"Uncertainty Quantification", lvl:"Intermediate",
+brief:"A model allowed to say I do not know can be far more accurate on the cases it does answer. Quantify that trade: how much coverage must you give up to reach a target accuracy?",
+data:"Any classification benchmark, with a rejection option added at inference.",
+methods:"Softmax response, entropy thresholds and learned rejection functions, evaluated on risk-coverage curves.",
+ext:"Determine the coverage level at which a target accuracy becomes achievable, and what that costs.",
+bar:"Risk-coverage curves plus an analysis of what the abstained cases have in common. Rejected examples are rarely a random sample."},
+
+{id:"C15", t:"Frequentist versus Bayesian A/B Testing", area:"Bayesian Statistics", lvl:"Intermediate",
+brief:"Two frameworks for deciding whether an intervention worked, with different behaviour when you peek at results early, which everyone does. Simulate both under realistic misuse.",
+data:"Simulated experiments with known ground-truth effects, so error rates can be measured directly.",
+methods:"Classical hypothesis testing with sequential correction, against Bayesian posterior estimation.",
+ext:"Quantify the false-discovery inflation caused by repeated peeking under each framework.",
+bar:"Measured error rates under known truth. This is the value of simulation: you can check whether the method actually delivers what it promises."},
+
+{id:"C16", t:"Effect of Label Noise on Confidence Estimates", area:"Machine Learning", lvl:"Intermediate",
+brief:"Real labels contain errors. Inject noise systematically and watch what happens to the model's stated confidence, which may become more extreme rather than less as quality degrades.",
+data:"A clean benchmark with synthetic label noise injected at controlled rates and patterns.",
+methods:"Controlled noise injection, both uniform and class-conditional, with calibration measured at each level.",
+ext:"Compare uniform noise against class-conditional noise, which is what real annotation errors look like.",
+bar:"A dose-response curve relating noise rate to calibration error, with the noise mechanism clearly specified."},
+
+{id:"C17", t:"Peer-Assessment Reliability Modelling", area:"Statistical ML", lvl:"Intermediate",
+brief:"If peers grade each other, how much do their scores actually agree, and does agreement rise with expertise or with confidence? Rater reliability is a well-developed statistical field and this applies it to a real setting.",
+data:"Collected from consenting participants, or a public peer-assessment dataset. Ethics clearance required for collection.",
+methods:"Krippendorff's alpha, intraclass correlation, and item response theory models of rater severity.",
+ext:"Model rater severity and leniency explicitly, and test whether adjusting for it changes the rankings.",
+bar:"Reliability reported with confidence intervals, and an honest verdict on whether peer scores are fit to contribute to marks."},
+
+{id:"C18", t:"Uncertainty-Aware Prediction Dashboard", area:"Visualisation and ML", lvl:"Foundation",
+brief:"Uncertainty that nobody understands is uncertainty that does not exist. Build an interface that communicates a range rather than a number, then test with real users whether it changes their decisions.",
+data:"Predictions from any model in this track, with a small user study for evaluation.",
+methods:"Interactive visualisation, with a controlled study comparing point-estimate against interval presentations.",
+ext:"Measure whether the interval presentation actually changes user decisions, or only their stated confidence.",
+bar:"A user study with a real outcome measure. A dashboard that looks clear but changes no decision has not achieved anything."}
+];
+
+var TRACK_D_TOPICS = [
+{id:"D1", t:"A-Star Search for Smart City Traffic Navigation", area:"Search Algorithms", lvl:"Foundation",
+brief:"Find shortest paths across a real city road network under time-varying traffic costs. The heuristic is where the engineering lives: a better one expands fewer nodes without ever overestimating.",
+data:"Road networks from OpenStreetMap via OSMnx, with synthetic or published traffic-speed profiles.",
+methods:"A-star with an admissible heuristic, compared against Dijkstra and uniform cost search.",
+ext:"Compare against Dijkstra and UCS on nodes expanded, runtime and path quality.",
+bar:"Nodes expanded reported alongside runtime. If A-star finds the same paths as Dijkstra while expanding far fewer nodes, your heuristic is doing real work."},
+
+{id:"D2", t:"Intelligent Maze-Solving Robot using Search Algorithms", area:"Search Algorithms", lvl:"Foundation",
+brief:"Navigate a grid or physical maze from start to goal. The interesting version is partial observability, where the robot discovers walls as it moves and must replan rather than solve once.",
+data:"Generated mazes across a range of sizes and branching factors, plus standard maze benchmark sets.",
+methods:"BFS, DFS, A-star and D-star Lite for the replanning case.",
+ext:"Compare multiple search strategies on optimality, memory and replanning cost under partial observability.",
+bar:"Memory usage measured, not just runtime. BFS optimality becomes unaffordable quickly, and showing where is the point."},
+
+{id:"D3", t:"Genetic Algorithm for University Timetable Scheduling", area:"Evolutionary Computing", lvl:"Intermediate",
+brief:"Assign courses to rooms and slots without clashing faculty, students or rooms. Your own department timetable is the natural test case, and its real constraints are messier than any textbook instance.",
+data:"Anonymised departmental course and room data, or the standard ITC timetabling competition instances.",
+methods:"Genetic algorithm with constraint-aware repair operators and penalty-based fitness.",
+ext:"Multi-objective optimisation: hard constraints satisfied, soft preferences maximised, and the trade-off made visible.",
+bar:"A clear separation of hard from soft constraints. A timetable that violates a hard constraint is not a worse solution, it is not a solution."},
+
+{id:"D4", t:"Genetic Algorithm for Vehicle Routing in Logistics", area:"Evolutionary Computing", lvl:"Intermediate",
+brief:"Multiple vehicles, one depot, many delivery points, limited capacity. Minimise total distance while respecting every load limit. The canonical combinatorial optimisation problem in logistics.",
+data:"Standard CVRP benchmark instances with published best-known solutions.",
+methods:"Genetic algorithm with route-preserving crossover, against a savings-algorithm baseline.",
+ext:"Add capacity constraints and analyse how solution quality degrades as capacity tightens.",
+bar:"A gap to best-known solutions reported. Benchmark instances have published optima, so absolute quality is measurable rather than assumed."},
+
+{id:"D5", t:"Neural Network for Student Academic Performance Prediction", area:"Machine Learning", lvl:"Foundation",
+brief:"Predict academic outcomes from prior performance and background features. The modelling is standard; the harder question is which features are ethically usable in a system that might influence how a student is treated.",
+data:"The UCI Student Performance dataset, or anonymised institutional data with ethics clearance.",
+methods:"Feedforward neural network against logistic regression and gradient boosting baselines.",
+ext:"Feature importance analysis, with attention to which features are legitimate to act on.",
+bar:"A stated position on features such as family background: predictive power and ethical usability are different questions."},
+
+{id:"D6", t:"Credit Card Fraud Detection using ANN and Classical ML", area:"Machine Learning", lvl:"Foundation",
+brief:"Fraud is roughly one transaction in five hundred, so a model that flags nothing scores above 99 percent accuracy. Building the model is straightforward; evaluating it honestly is the actual exercise.",
+data:"The Kaggle Credit Card Fraud dataset, with its documented 0.17 percent positive rate.",
+methods:"Neural network against random forest and logistic regression, with resampling strategies compared.",
+ext:"Comparative study across model families under identical resampling and threshold policy.",
+bar:"Precision-recall curves and a cost-based threshold. Accuracy and ROC-AUC both flatter models on data this imbalanced."},
+
+{id:"D7", t:"Speech Emotion Recognition using Deep Neural Networks", area:"Deep Learning", lvl:"Advanced",
+brief:"Classify emotion from vocal audio. Acted emotion datasets are cleaner than real speech, so a model that performs well on them may collapse on spontaneous audio, and testing that gap is the interesting part.",
+data:"RAVDESS and TESS for acted speech, with IEMOCAP for a more naturalistic comparison.",
+methods:"Mel-spectrogram features into a CNN or CNN-LSTM hybrid, with augmentation.",
+ext:"Test cross-corpus and cross-language generalisation, training on one dataset and evaluating on another.",
+bar:"Speaker-independent splits. Sharing speakers between train and test inflates accuracy dramatically and is the standard mistake here."},
+
+{id:"D8", t:"Handwritten Digit Recognition using CNN and MLP", area:"Deep Learning", lvl:"Foundation",
+brief:"The reference problem of computer vision. Because it is close to solved, the meaningful work is comparative and diagnostic: what does convolution actually buy, and where do the last remaining errors come from?",
+data:"MNIST for the main study, with EMNIST or a small self-collected set for the robustness test.",
+methods:"CNN against MLP at matched parameter counts, with ablations on architecture choices.",
+ext:"Architecture comparison at matched parameters, plus a confusion analysis of the residual errors.",
+bar:"Evaluation on genuinely out-of-distribution digits. Above 99 percent on MNIST is table stakes; robustness beyond it is the finding."},
+
+{id:"D9", t:"Bayesian Medical Diagnosis Support System", area:"Probabilistic ML", lvl:"Advanced",
+brief:"Reason under uncertainty over symptoms and conditions using an explicit probabilistic model. Unlike a black-box classifier, a Bayesian network can show its reasoning, which matters enormously in a clinical setting.",
+data:"UCI medical datasets, or expert-elicited conditional probability tables with sources documented.",
+methods:"Bayesian network structure and parameter learning with pgmpy, plus exact and approximate inference.",
+ext:"Uncertainty analysis: how sensitive are the diagnoses to the prior probabilities you assumed?",
+bar:"Prominent statement that this is a decision-support prototype and not a diagnostic tool, plus sensitivity analysis over priors."},
+
+{id:"D10", t:"KNN Recommendation System for E-Commerce", area:"Machine Learning", lvl:"Foundation",
+brief:"Recommend items from the behaviour of similar users. Neighbourhood methods are simple and interpretable, and they expose the cold-start problem more clearly than any modern alternative.",
+data:"MovieLens for a clean start, or the Amazon Reviews dataset for a harder and sparser problem.",
+methods:"User-based and item-based collaborative filtering, against matrix factorisation.",
+ext:"Build a hybrid recommender that falls back to content features when collaborative signal is missing.",
+bar:"Coverage and diversity reported alongside accuracy. A recommender that only ever suggests bestsellers scores well and is useless."},
+
+{id:"D11", t:"Explainable Email Spam Detection", area:"Explainable AI", lvl:"Foundation",
+brief:"Classify spam, then explain each decision. A user who cannot see why a legitimate message was quarantined cannot correct the system, which makes explanation a functional requirement rather than a nicety.",
+data:"The Enron-Spam corpus or the SpamAssassin public corpus.",
+methods:"Naive Bayes and SVM baselines, with SHAP and LIME explanations over the feature space.",
+ext:"Compare SHAP against LIME on stability: do repeated runs give the same explanation for the same email?",
+bar:"Explanation stability tested. LIME explanations vary between runs, and an unstable explanation is not an explanation."},
+
+{id:"D12", t:"Rule-Based Expert System for Plant Disease Diagnosis", area:"Expert Systems", lvl:"Intermediate",
+brief:"Encode agricultural diagnostic knowledge as explicit rules with a forward-chaining engine, then set it against a learned model on the same task. The comparison is the point: one is auditable, the other is accurate.",
+data:"PlantVillage for the ML comparison, with rule bases built from published agricultural extension literature.",
+methods:"Forward-chaining inference in Experta or CLIPS, against a CNN classifier.",
+ext:"Direct comparison of expert system and learned model on accuracy, explainability and maintenance cost.",
+bar:"An honest verdict on which approach a farmer should actually use, and under what conditions each one fails."},
+
+{id:"D13", t:"Genetic Programming for Automated Feature Selection", area:"Evolutionary Computing", lvl:"Advanced",
+brief:"Evolve feature subsets, or entire feature expressions, rather than selecting from what you were given. Compare against dimensionality reduction and ask whether the evolved features mean anything a human can read.",
+data:"A high-dimensional benchmark such as a gene-expression or text classification dataset.",
+methods:"Genetic programming with DEAP, against PCA, recursive feature elimination and LASSO.",
+ext:"Compare against PCA on both predictive performance and interpretability of the resulting features.",
+bar:"Selection performed inside the cross-validation loop. Selecting features on the full dataset first leaks the test set and inflates every result."},
+
+{id:"D14", t:"Fake News Detection using NLP and Transformer Models", area:"Natural Language Processing", lvl:"Advanced",
+brief:"Classify misinformation from text. Models trained on one news era learn its vocabulary and topics rather than deception itself, so temporal generalisation is the real test and most published accuracies do not survive it.",
+data:"LIAR, FakeNewsNet or the ISOT dataset, with a temporally held-out evaluation split.",
+methods:"Fine-tuned BERT or RoBERTa, against TF-IDF with classical classifiers.",
+ext:"Explainability analysis: which tokens drive classification, and are they about content or about style?",
+bar:"Temporal splits rather than random splits, plus explicit discussion of the harm of false positives on legitimate journalism."},
+
+{id:"D15", t:"AI-Powered Resume Screening and Candidate Ranking", area:"AI Ethics", lvl:"Advanced",
+brief:"Build a ranking system, then audit it for bias. The well-documented failures of real deployed screening tools make this a study of how such systems go wrong, not a proposal to deploy one.",
+data:"A public resume dataset, or synthetic resumes constructed with controlled demographic variation to isolate bias.",
+methods:"Embedding-based ranking with a fairness audit across demographic parity and equal opportunity.",
+ext:"Bias and fairness evaluation, including attempted mitigation and honest reporting of what mitigation costs.",
+bar:"Testing with name-swapped and identical-content resumes. If ranking changes when only the name changes, you have found the result."}
+];
+
+/* ══════════════════════════════════════════════════════════════
+   CONFIG — edit before deploying
+   ══════════════════════════════════════════════════════════════
+
+   GAS_URL   Google Apps Script Web App URL. Must contain /macros/s/ and end in /exec.
+             Left unset, the page runs in DEMO MODE: the full flow works in the
+             browser but nothing is saved. Use it to preview.
+
+   Backend contract:
+     GET  ?action=get_state
+          -> { status:"ok", usedRolls:["231302002",...],
+               takenTopics:["A3","C7"], teamsCount:12 }
+     POST { type:"register_team", rolls:[...], names:[...], sections:[...] }
+          -> { status:"ok", teamNo:13 }
+     POST { type:"select_topic", teamNo:13, trackId:"A", topicId:"A3",
+            topicTitle:"...", rolls:[...], names:[...], sections:[...] }
+          -> { status:"ok" }   or   { status:"error", message:"..." }
+
+   Topics lock globally: one topic, one team, across all four sections.
+   ══════════════════════════════════════════════════════════════ */
+
+var GAS_URL = 'https://script.google.com/macros/s/AKfycbzoMantDzWPAUvQkj9Gu2w0oz5t_7052gmHapJPo9FZ1iDif04N98xtsdK1-uR_8Sbvpg/exec';
+
+var MIN_MEMBERS = 4;
+var MAX_MEMBERS = 5;
+
+/* 238 students at 4-5 per team = 59 teams (57 of four, 2 of five). */
+var MAX_TEAMS = 59;
+var TOTAL_STUDENTS = 238;
+
+/* false = every section sees all four tracks (default)
+   true  = a team may only pick the track matching its leader's section */
+var ENFORCE_SECTION_TRACKS = false;
+
+var TRACKS = [
+  { id:'A', code:'TRACK A', name:'Service as a Service',
+    tag:'Resource efficiency and shared utilisation. Routing, demand, pricing and fairness in on-demand service networks.',
+    accent:'#1F6F6B', topics: TRACK_A_TOPICS },
+  { id:'B', code:'TRACK B', name:'Sequence and Uncertainty',
+    tag:'Predicting outcomes from partial sequences, using the department T20 simulated-league dataset of 800+ matches.',
+    accent:'#2F6B3A', topics: TRACK_B_TOPICS },
+  { id:'C', code:'TRACK C', name:'Confidence and Calibration',
+    tag:'When a model says 90 percent, is it right 90 percent of the time? Uncertainty, calibration and learning analytics.',
+    accent:'#4A4E8C', topics: TRACK_C_TOPICS },
+  { id:'D', code:'TRACK D', name:'Foundations of AI',
+    tag:'The classical core: search, evolutionary computing, probabilistic reasoning, expert systems and applied deep learning.',
+    accent:'#8B3A3A', topics: TRACK_D_TOPICS }
+];
+
+/* ══════════════════ STATE ══════════════════ */
+var DEMO = false;
+var myTeam = null;            // { teamNo, rolls[], names[], sections[] }
+var usedRolls = [];
+var takenTopics = [];
+var teamsCount = 0;
+var selectedTrackId = null;
+var selectedTopicId = null;
+var modalTopicId = null;
+var lastFocused = null;
+
+function $(id){ return document.getElementById(id); }
+function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+function trackById(id){ for (var i=0;i<TRACKS.length;i++) if (TRACKS[i].id===id) return TRACKS[i]; return null; }
+function topicById(id){
+  for (var i=0;i<TRACKS.length;i++){
+    var ts = TRACKS[i].topics;
+    for (var j=0;j<ts.length;j++) if (ts[j].id===id) return { topic:ts[j], track:TRACKS[i] };
+  }
+  return null;
+}
+function totalTopics(){ var n=0; for (var i=0;i<TRACKS.length;i++) n += TRACKS[i].topics.length; return n; }
 
 function checkSheetUrl() {
-  if (GAS_URL.indexOf('PASTE_') === 0) return 'Setup incomplete: GAS_URL has not been set yet.';
-  if (GAS_URL.indexOf('/macros/library/') !== -1) return 'GAS_URL is a LIBRARY url, not a WEB APP url — get the correct one from Apps Script > Deploy > Manage Deployments.';
-  if (GAS_URL.indexOf('/macros/s/') === -1 || GAS_URL.indexOf('/exec') === -1) return 'GAS_URL does not look like a valid Web App URL.';
+  if (GAS_URL.indexOf('PASTE_') === 0) return 'demo';
+  if (GAS_URL.indexOf('/macros/library/') !== -1) return 'GAS_URL is a library URL. Use the Web App URL from Apps Script, under Deploy then Manage Deployments.';
+  if (GAS_URL.indexOf('/macros/s/') === -1 || GAS_URL.indexOf('/exec') === -1) return 'GAS_URL does not look like a Web App URL. It should contain /macros/s/ and end in /exec.';
   return null;
 }
 
-// ══════════════════ ROSTER (52 students) ══════════════════
-var ROSTER = {
-  "231302164":"Priyanshu", "231302165":"Purav Tanwar", "231302167":"Kislay Pandey", "231302169":"Arpit Pandey",
-  "231302174":"Vishav Garg", "231302176":"Sukhsham Sharma", "231302181":"Devesh Yadav", "231302182":"Aditya Vats",
-  "231302185":"Kunal Sharma", "231302189":"Saurav", "231302196":"Vrishank Sharma", "231302199":"Parteek",
-  "231302206":"Dharam Singh", "231302207":"Nikhil Kumar", "231302208":"Punyam", "231302210":"Pushpender Yadav",
-  "231302212":"Deepanshu", "231302223":"Anurag", "231302227":"Sandeep Singh", "231302228":"Khushi Singhal",
-  "231302231":"Tanvir Singh Wasir", "231302234":"Vanshika Bisht", "231302239":"Aanchal", "231302247":"Aakash Dagar",
-  "231302250":"Aakash", "231302251":"Himanshu Aggarwal", "231302255":"Anshika", "231302256":"Tanishk",
-  "231302266":"Dhawan Sawant", "241302032":"Arunava Chakraborty", "231302004":"Vivek Singh", "231302005":"Himanshi",
-  "231302008":"Aryan", "231302010":"Hiten", "231302011":"Muskan", "231302015":"Devanshu Shekhar",
-  "231302084":"Nirmit", "231302087":"Vikash Meena", "231302091":"Muskan", "231302092":"Yashika Janghu",
-  "231302124":"Harsh Vashisth", "231302145":"Rajat Mallick", "231302170":"Nikita Sengar", "231302183":"Ayush Yadav",
-  "231302184":"Ayush Gulia", "231302197":"Uday Pratap Singh", "231302219":"Manish Kumar", "231302229":"Prikshit",
-  "231302246":"Saket", "231302248":"Sambhav", "231302254":"Tushar Singh Tanwar", "231302264":"Katrine Alice Daniel"
-};
-
-// ══════════════════ TOPICS (15) ══════════════════
-var TOPICS = [
-  {id:1, title:"A* Search for Smart City Traffic Navigation", area:"Search Algorithms"},
-  {id:2, title:"Intelligent Maze Solving Robot using Search Algorithms", area:"Search Algorithms"},
-  {id:3, title:"Genetic Algorithm for University Timetable Scheduling", area:"Evolutionary Computing"},
-  {id:4, title:"Genetic Algorithm for Vehicle Routing in Logistics", area:"Evolutionary Computing"},
-  {id:5, title:"Neural Network for Student Academic Performance Prediction", area:"Machine Learning"},
-  {id:6, title:"Credit Card Fraud Detection using ANN and Classical ML", area:"Machine Learning"},
-  {id:7, title:"Speech Emotion Recognition using Deep Neural Networks", area:"Deep Learning"},
-  {id:8, title:"Handwritten Digit Recognition using CNN and MLP", area:"Deep Learning"},
-  {id:9, title:"Bayesian Medical Diagnosis Support System", area:"Probabilistic ML"},
-  {id:10, title:"KNN Recommendation System for E-Commerce", area:"Machine Learning"},
-  {id:11, title:"Explainable Email Spam Detection", area:"Explainable AI"},
-  {id:12, title:"Rule-Based Expert System for Plant Disease Diagnosis", area:"Expert Systems"},
-  {id:13, title:"Genetic Programming for Automated Feature Selection", area:"Evolutionary Computing"},
-  {id:14, title:"Fake News Detection using NLP and Transformer Models", area:"NLP"},
-  {id:15, title:"AI-Powered Resume Screening and Candidate Ranking", area:"AI Ethics"}
-];
-
-// ══════════════════ STATE ══════════════════
-var myTeam = null; // {teamNo, rolls:[...], names:[...]}
-var usedRolls = [];  // rolls already in any registered/confirmed team
-var takenTopics = []; // topic ids already confirmed
-var teamsCount = 0;
-var selectedTopicId = null;
-
-function $(id){ return document.getElementById(id); }
-
-function showTab(name) {
-  document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('active'); });
-  document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
-  $('panel-' + name).classList.add('active');
-  event.target.classList.add('active');
-}
-
-function showErr(text) {
-  $('regErr').textContent = text;
-  $('regErr').style.display = 'block';
-  $('regSuccess').style.display = 'none';
-}
-function showOk(text) {
-  $('regSuccess').textContent = text;
-  $('regSuccess').style.display = 'block';
-  $('regErr').style.display = 'none';
-}
-function clearMsgs() {
-  $('regErr').style.display = 'none';
-  $('regSuccess').style.display = 'none';
-}
-
-// ══════════════════ ROLL AUTOFILL ══════════════════
-[0,1,2,3].forEach(function(i){
-  $('roll' + i).addEventListener('input', function(){
-    var roll = this.value.trim();
-    var box = $('name' + i);
-    if (roll.length < 9) { box.textContent = '—'; box.className = 'name-display'; return; }
-    if (!ROSTER.hasOwnProperty(roll)) {
-      box.textContent = 'Not found in roster'; box.className = 'name-display err'; return;
-    }
-    if (usedRolls.indexOf(roll) !== -1) {
-      box.textContent = ROSTER[roll] + ' — already in a team!'; box.className = 'name-display err'; return;
-    }
-    box.textContent = ROSTER[roll]; box.className = 'name-display ok';
+/* ══════════════════ TABS ══════════════════ */
+Array.prototype.forEach.call(document.querySelectorAll('.tab-btn'), function(btn){
+  btn.addEventListener('click', function(){
+    Array.prototype.forEach.call(document.querySelectorAll('.panel'), function(p){ p.classList.remove('active'); });
+    Array.prototype.forEach.call(document.querySelectorAll('.tab-btn'), function(b){ b.classList.remove('active'); });
+    $('panel-' + btn.getAttribute('data-tab')).classList.add('active');
+    btn.classList.add('active');
   });
 });
 
-// ══════════════════ STATE FETCH ══════════════════
-function refreshState() {
+/* ══════════════════ MESSAGES AND STEPS ══════════════════ */
+function showErr(t){ $('regErr').textContent = t; $('regErr').style.display='block'; $('regSuccess').style.display='none'; $('regErr').scrollIntoView({block:'nearest'}); }
+function showOk(t){ $('regSuccess').textContent = t; $('regSuccess').style.display='block'; $('regErr').style.display='none'; }
+function clearMsgs(){ $('regErr').style.display='none'; $('regSuccess').style.display='none'; }
+
+var STEP_LABELS = ['1 TEAM','2 TRACK','3 TOPIC','4 DONE'];
+function renderSteps(active){
+  $('steprail').innerHTML = STEP_LABELS.map(function(l,i){
+    var cls = i+1 === active ? 'on' : (i+1 < active ? 'done' : '');
+    return '<span class="' + cls + '">' + l + '</span>';
+  }).join('');
+}
+
+function goStep(n){
+  $('step-team').style.display  = n===1 ? 'block' : 'none';
+  $('step-track').style.display = n===2 ? 'block' : 'none';
+  $('step-topic').style.display = n===3 ? 'block' : 'none';
+  $('step-done').style.display  = n===4 ? 'block' : 'none';
+  renderSteps(n);
+}
+
+/* ══════════════════ STEP 1: MEMBER FIELDS ══════════════════ */
+function buildMemberFields(){
+  var html = '';
+  for (var i=0; i<MAX_MEMBERS; i++){
+    var optional = i >= MIN_MEMBERS;
+    var label = 'Student ' + (i+1)
+      + (i===0 ? ' — leader' : '')
+      + (optional ? ' <span class="optional-tag">optional</span>' : '');
+    html += '<div class="student-row">'
+      + '<div class="field"><label for="roll'+i+'">'+label+'</label>'
+      + '<input type="text" id="roll'+i+'" placeholder="Registration no." maxlength="9" inputmode="numeric" autocomplete="off"></div>'
+      + '<div class="field"><label>Name</label><div class="name-display" id="name'+i+'">—</div></div>'
+      + '</div>';
+  }
+  $('memberFields').innerHTML = html;
+
+  for (var k=0; k<MAX_MEMBERS; k++){
+    (function(idx){
+      $('roll'+idx).addEventListener('input', function(){
+        var roll = this.value.trim();
+        var box = $('name'+idx);
+        if (roll.length < 9){ box.textContent = '—'; box.className = 'name-display'; return; }
+        if (!Object.prototype.hasOwnProperty.call(ROSTER, roll)){
+          box.textContent = 'Not in the roster'; box.className = 'name-display err'; return;
+        }
+        if (usedRolls.indexOf(roll) !== -1){
+          box.textContent = ROSTER[roll][0] + ' is already in a team'; box.className = 'name-display err'; return;
+        }
+        box.className = 'name-display ok';
+        box.innerHTML = '<span class="sec-badge">7' + ROSTER[roll][1] + '</span> ' + esc(ROSTER[roll][0]);
+      });
+    })(k);
+  }
+}
+
+/* ══════════════════ STATE FETCH ══════════════════ */
+function renderStats(){
+  var chips = '';
+  if (DEMO) chips += '<div class="stat-chip" style="background:#f6efe0;color:#97722a">DEMO MODE — nothing is saved</div>';
+  chips += '<div class="stat-chip">' + teamsCount + ' / ' + MAX_TEAMS + ' teams formed</div>';
+  chips += '<div class="stat-chip">' + takenTopics.length + ' / ' + totalTopics() + ' topics taken</div>';
+  chips += '<div class="stat-chip">' + usedRolls.length + ' / ' + TOTAL_STUDENTS + ' students registered</div>';
+  $('stateStats').innerHTML = chips;
+}
+
+function refreshState(){
   var problem = checkSheetUrl();
-  if (problem) { $('stateStats').innerHTML = '<div class="stat-chip" style="color:#c0392b">' + problem + '</div>'; return; }
-  fetch(GAS_URL + '?action=get_state', {redirect:'follow'})
+  if (problem === 'demo'){ DEMO = true; renderStats(); return; }
+  if (problem){ $('stateStats').innerHTML = '<div class="stat-chip" style="color:#c0392b">' + esc(problem) + '</div>'; return; }
+  fetch(GAS_URL + '?action=get_state', { redirect:'follow' })
     .then(function(r){ return r.json(); })
     .then(function(j){
-      if (j.status !== 'ok') { $('stateStats').innerHTML = '<div class="stat-chip" style="color:#c0392b">' + (j.message||'Error loading state') + '</div>'; return; }
-      usedRolls = j.usedRolls || [];
+      if (j.status !== 'ok'){
+        $('stateStats').innerHTML = '<div class="stat-chip" style="color:#c0392b">' + esc(j.message || 'Could not load current state') + '</div>';
+        return;
+      }
+      usedRolls   = j.usedRolls || [];
       takenTopics = j.takenTopics || [];
-      teamsCount = j.teamsCount || 0;
+      teamsCount  = j.teamsCount || 0;
       renderStats();
-      if (document.getElementById('step-topic').style.display !== 'none') renderTopics();
+      if ($('step-track').style.display !== 'none') renderTracks();
+      if ($('step-topic').style.display !== 'none') renderTopics();
     })
     .catch(function(err){ console.warn(err); });
 }
 
-function renderStats() {
-  $('stateStats').innerHTML =
-    '<div class="stat-chip">' + teamsCount + ' / ' + MAX_TEAMS + ' teams formed</div>' +
-    '<div class="stat-chip">' + takenTopics.length + ' / ' + TOPICS.length + ' topics taken</div>' +
-    '<div class="stat-chip">' + usedRolls.length + ' / 52 students registered</div>';
-}
-
-// ══════════════════ STEP 1: REGISTER TEAM ══════════════════
-function registerTeam() {
+/* ══════════════════ STEP 1: REGISTER ══════════════════ */
+$('registerBtn').addEventListener('click', function(){
   clearMsgs();
   var problem = checkSheetUrl();
-  if (problem) { showErr(problem); return; }
+  if (problem && problem !== 'demo'){ showErr(problem); return; }
 
-  var rolls = [0,1,2,3].map(function(i){ return $('roll'+i).value.trim(); });
+  var rolls = [];
+  for (var i=0; i<MAX_MEMBERS; i++){
+    var v = $('roll'+i).value.trim();
+    if (v) rolls.push(v);
+  }
 
-  if (rolls.some(function(r){ return !r; })) { showErr('Please enter all 4 registration numbers.'); return; }
-  var unknown = rolls.filter(function(r){ return !ROSTER.hasOwnProperty(r); });
-  if (unknown.length) { showErr('Registration number(s) not found in roster: ' + unknown.join(', ')); return; }
-  var dup = rolls.filter(function(r, i){ return rolls.indexOf(r) !== i; });
-  if (dup.length) { showErr('The same student cannot be entered twice in one team.'); return; }
+  for (var m=0; m<MIN_MEMBERS; m++){
+    if (!$('roll'+m).value.trim()){ showErr('Enter registration numbers for at least four students.'); return; }
+  }
+  var unknown = rolls.filter(function(r){ return !Object.prototype.hasOwnProperty.call(ROSTER, r); });
+  if (unknown.length){ showErr('Not in the roster: ' + unknown.join(', ') + '. Check for a typo.'); return; }
+  var dup = rolls.filter(function(r,i){ return rolls.indexOf(r) !== i; });
+  if (dup.length){ showErr('The same student is entered twice: ' + dup.join(', ')); return; }
   var already = rolls.filter(function(r){ return usedRolls.indexOf(r) !== -1; });
-  if (already.length) { showErr('Already registered in another team: ' + already.map(function(r){ return ROSTER[r] + ' (' + r + ')'; }).join(', ')); return; }
-  if (teamsCount >= MAX_TEAMS) { showErr('All ' + MAX_TEAMS + ' teams have already been formed.'); return; }
+  if (already.length){ showErr('Already in another team: ' + already.map(function(r){ return ROSTER[r][0] + ' (' + r + ')'; }).join(', ')); return; }
+  if (teamsCount >= MAX_TEAMS){ showErr('All ' + MAX_TEAMS + ' teams have been formed. Speak to your faculty mentor.'); return; }
 
-  var btn = $('registerBtn');
+  var names    = rolls.map(function(r){ return ROSTER[r][0]; });
+  var sections = rolls.map(function(r){ return ROSTER[r][1]; });
+
+  var btn = this;
   btn.disabled = true;
-  btn.innerHTML = '<span class="spinner-inline"></span>Registering...';
+  btn.innerHTML = '<span class="spinner-inline"></span>Registering';
 
-  var names = rolls.map(function(r){ return ROSTER[r]; });
+  function onRegistered(teamNo){
+    myTeam = { teamNo: teamNo, rolls: rolls, names: names, sections: sections };
+    usedRolls = usedRolls.concat(rolls);
+    teamsCount++;
+    showOk('Team ' + teamNo + ' registered. Now choose your track.');
+    renderStats();
+    renderTracks();
+    goStep(2);
+    btn.disabled = false; btn.textContent = 'Register team';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  if (DEMO){ setTimeout(function(){ onRegistered(teamsCount + 1); }, 350); return; }
 
   fetch(GAS_URL, {
-    method: 'POST', redirect: 'follow', headers: {'Content-Type':'text/plain'},
-    body: JSON.stringify({type:'register_team', rolls: rolls, names: names})
+    method:'POST', redirect:'follow', headers:{'Content-Type':'text/plain'},
+    body: JSON.stringify({ type:'register_team', rolls: rolls, names: names, sections: sections })
   })
-  .then(function(res){ return res.json(); })
+  .then(function(r){ return r.json(); })
   .then(function(result){
-    if (result && result.status === 'ok') {
-      myTeam = { teamNo: result.teamNo, rolls: rolls, names: names };
-      showOk('Team ' + result.teamNo + ' registered — now select your topic below.');
-      $('step-team').style.display = 'none';
-      $('step-topic').style.display = 'block';
-      usedRolls = usedRolls.concat(rolls);
-      teamsCount++;
-      renderStats();
-      renderTopics();
-    } else {
-      showErr((result && result.message) || 'Registration failed — please try again.');
-    }
+    if (result && result.status === 'ok'){ onRegistered(result.teamNo); }
+    else { showErr((result && result.message) || 'Registration did not go through. Try again.'); btn.disabled=false; btn.textContent='Register team'; }
   })
   .catch(function(err){
     console.warn(err);
-    showErr('Network error — check your connection and try again.');
-  })
-  .finally(function(){
-    btn.disabled = false;
-    btn.textContent = 'Register Team →';
+    showErr('Could not reach the server. Check your connection and try again.');
+    btn.disabled = false; btn.textContent = 'Register team';
+  });
+});
+
+/* ══════════════════ STEP 2: TRACKS ══════════════════ */
+function trackAllowed(t){
+  if (!ENFORCE_SECTION_TRACKS) return true;
+  return myTeam && myTeam.sections[0] === t.id;
+}
+
+function renderTracks(){
+  $('trackGrid').innerHTML = TRACKS.map(function(t){
+    var allowed = trackAllowed(t);
+    var taken = takenTopics.filter(function(id){ return id.charAt(0) === t.id; }).length;
+    var free = t.topics.length - taken;
+    return '<button type="button" class="track-card' + (allowed ? '' : ' locked') + (selectedTrackId===t.id ? ' selected' : '') + '"'
+      + ' data-track="' + t.id + '"' + (allowed ? '' : ' disabled aria-disabled="true"') + '>'
+      + '<div class="track-code"><span class="track-dot" style="background:' + t.accent + ';color:' + t.accent + '"></span>' + t.code + '</div>'
+      + '<div class="track-name">' + esc(t.name) + '</div>'
+      + '<div class="track-tag">' + esc(t.tag) + '</div>'
+      + '<div class="track-meta"><span>' + t.topics.length + ' topics</span><span>'
+      + (allowed ? free + ' open' : 'Locked') + '</span></div>'
+      + '</button>';
+  }).join('');
+
+  Array.prototype.forEach.call($('trackGrid').querySelectorAll('.track-card'), function(card){
+    card.addEventListener('click', function(){
+      var t = trackById(card.getAttribute('data-track'));
+      if (!t || !trackAllowed(t)) return;
+      selectedTrackId = t.id;
+      selectedTopicId = null;
+      $('confirmTopicBtn').disabled = true;
+      renderTracks();
+      renderTopics();
+      goStep(3);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
   });
 }
 
-// ══════════════════ STEP 2: TOPIC SELECTION ══════════════════
-function renderTopics() {
-  var grid = $('topicsGrid');
-  grid.innerHTML = TOPICS.map(function(t){
-    var taken = takenTopics.indexOf(t.id) !== -1;
-    var sel = selectedTopicId === t.id;
-    return '<div class="topic-card ' + (taken ? 'unavailable' : '') + (sel ? ' selected' : '') + '" ' +
-      (taken ? '' : 'onclick="selectTopic(' + t.id + ')"') + '>' +
-      '<div class="topic-num">#' + t.id + '</div>' +
-      '<div class="topic-title">' + t.title + '</div>' +
-      '<div class="topic-area">' + t.area + '</div>' +
-      '<div class="topic-status ' + (taken ? 'taken' : 'avail') + '">' + (taken ? '\u274c Taken' : '\u2713 Available') + '</div>' +
-      '</div>';
-  }).join('');
-}
-function selectTopic(id) {
-  if (takenTopics.indexOf(id) !== -1) return;
-  selectedTopicId = id;
-  $('confirmTopicBtn').disabled = false;
-  renderTopics();
-}
-function refreshTopics() { refreshState(); }
+$('backToTeamBtn').addEventListener('click', function(){ goStep(1); });
+$('backToTrackBtn').addEventListener('click', function(){ renderTracks(); goStep(2); });
+$('refreshBtn').addEventListener('click', function(){ refreshState(); });
 
-function confirmTopic() {
+/* ══════════════════ STEP 3: TOPICS ══════════════════ */
+function renderTopics(){
+  var track = trackById(selectedTrackId);
+  if (!track) return;
+
+  $('trackBanner').innerHTML = '<div class="track-banner" style="border-left-color:' + track.accent + '">'
+    + '<strong style="color:' + track.accent + '">' + esc(track.name) + '</strong>'
+    + '<span>' + esc(track.tag) + '</span></div>';
+
+  $('topicsGrid').innerHTML = track.topics.map(function(tp){
+    var isTaken = takenTopics.indexOf(tp.id) !== -1;
+    return '<button type="button" class="topic-card' + (isTaken ? ' unavailable' : '') + (selectedTopicId===tp.id ? ' selected' : '') + '"'
+      + ' data-topic="' + tp.id + '"' + (isTaken ? ' disabled aria-disabled="true"' : '') + '>'
+      + '<div class="topic-top"><span class="topic-num">' + tp.id + '</span><span class="lvl ' + tp.lvl + '">' + tp.lvl + '</span></div>'
+      + '<div class="topic-title">' + esc(tp.t) + '</div>'
+      + '<div class="topic-area">' + esc(tp.area) + '</div>'
+      + '<div class="topic-status ' + (isTaken ? 'taken' : 'avail') + '">' + (isTaken ? 'Taken' : 'Open — tap to read') + '</div>'
+      + '</button>';
+  }).join('');
+
+  Array.prototype.forEach.call($('topicsGrid').querySelectorAll('.topic-card'), function(card){
+    card.addEventListener('click', function(){
+      if (card.classList.contains('unavailable')) return;
+      openTopic(card.getAttribute('data-topic'));
+    });
+  });
+}
+
+/* ══════════════════ TOPIC DETAIL MODAL ══════════════════ */
+function openTopic(id){
+  var found = topicById(id);
+  if (!found) return;
+  var tp = found.topic, tr = found.track;
+  modalTopicId = id;
+  lastFocused = document.activeElement;
+
+  $('modalHead').style.background = 'linear-gradient(135deg,' + tr.accent + ',' + shade(tr.accent, -22) + ')';
+  $('modalId').textContent      = tr.code + ' · ' + tp.id;
+  $('modalTitle').textContent   = tp.t;
+  $('modalMeta').textContent    = tp.area + '  ·  ' + tp.lvl;
+  $('modalBrief').textContent   = tp.brief;
+  $('modalData').textContent    = tp.data;
+  $('modalMethods').textContent = tp.methods;
+  $('modalExt').textContent     = tp.ext;
+  $('modalBar').textContent     = tp.bar;
+
+  var taken = takenTopics.indexOf(id) !== -1;
+  $('modalPick').disabled = taken;
+  $('modalPick').textContent = taken ? 'Already taken' : 'Choose this topic';
+  $('modalNote').textContent = taken ? 'Another team confirmed this topic.' : 'This does not confirm. You confirm on the next screen.';
+
+  $('modalBack').classList.add('open');
+  $('modalClose').focus();
+}
+
+function closeModal(){
+  $('modalBack').classList.remove('open');
+  modalTopicId = null;
+  if (lastFocused && lastFocused.focus) lastFocused.focus();
+}
+
+function shade(hex, pct){
+  var n = parseInt(hex.slice(1), 16);
+  var r = Math.max(0, Math.min(255, (n >> 16) + Math.round(255 * pct / 100)));
+  var g = Math.max(0, Math.min(255, ((n >> 8) & 255) + Math.round(255 * pct / 100)));
+  var b = Math.max(0, Math.min(255, (n & 255) + Math.round(255 * pct / 100)));
+  return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+}
+
+$('modalClose').addEventListener('click', closeModal);
+$('modalCancel').addEventListener('click', closeModal);
+$('modalBack').addEventListener('click', function(e){ if (e.target === $('modalBack')) closeModal(); });
+document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && $('modalBack').classList.contains('open')) closeModal(); });
+
+$('modalPick').addEventListener('click', function(){
+  if (!modalTopicId) return;
+  selectedTopicId = modalTopicId;
+  $('confirmTopicBtn').disabled = false;
+  closeModal();
+  renderTopics();
+  var found = topicById(selectedTopicId);
+  showOk('Selected ' + selectedTopicId + ' — ' + found.topic.t + '. Confirm below to lock it.');
+  $('confirmTopicBtn').scrollIntoView({ block:'center', behavior:'smooth' });
+});
+
+/* ══════════════════ CONFIRM ══════════════════ */
+$('confirmTopicBtn').addEventListener('click', function(){
   if (!selectedTopicId || !myTeam) return;
   var problem = checkSheetUrl();
-  if (problem) { showErr(problem); return; }
+  if (problem && problem !== 'demo'){ showErr(problem); return; }
 
-  var btn = $('confirmTopicBtn');
+  var found = topicById(selectedTopicId);
+  var btn = this;
   btn.disabled = true;
-  btn.innerHTML = '<span class="spinner-inline"></span>Confirming...';
+  btn.innerHTML = '<span class="spinner-inline"></span>Confirming';
+
+  function onConfirmed(){
+    takenTopics = takenTopics.concat([selectedTopicId]);
+    $('doneTeamNo').textContent    = 'Team ' + myTeam.teamNo;
+    $('doneTrack').textContent     = found.track.code + ' — ' + found.track.name.toUpperCase() + ' · ' + selectedTopicId;
+    $('doneTopicName').textContent = found.topic.t;
+    $('doneMembers').innerHTML = myTeam.rolls.map(function(r,i){
+      return '<div><span class="sec-badge">7' + myTeam.sections[i] + '</span> '
+        + esc(myTeam.names[i]) + ' · ' + r + (i===0 ? ' — leader' : '') + '</div>';
+    }).join('');
+    clearMsgs();
+    renderStats();
+    goStep(4);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  if (DEMO){ setTimeout(onConfirmed, 350); return; }
 
   fetch(GAS_URL, {
-    method: 'POST', redirect: 'follow', headers: {'Content-Type':'text/plain'},
+    method:'POST', redirect:'follow', headers:{'Content-Type':'text/plain'},
     body: JSON.stringify({
-      type: 'select_topic', teamNo: myTeam.teamNo, topicId: selectedTopicId,
-      rolls: myTeam.rolls, names: myTeam.names
+      type:'select_topic', teamNo: myTeam.teamNo,
+      trackId: selectedTrackId, topicId: selectedTopicId, topicTitle: found.topic.t,
+      rolls: myTeam.rolls, names: myTeam.names, sections: myTeam.sections
     })
   })
-  .then(function(res){ return res.json(); })
+  .then(function(r){ return r.json(); })
   .then(function(result){
-    if (result && result.status === 'ok') {
-      var topic = TOPICS.find(function(t){ return t.id === selectedTopicId; });
-      $('doneTeamNo').textContent = 'Team ' + myTeam.teamNo;
-      $('doneTopicName').textContent = topic.title;
-      $('doneMembers').innerHTML = myTeam.rolls.map(function(r, i){
-        return '<div>' + (i === 0 ? '\ud83c\udfc5 ' : '') + myTeam.names[i] + ' \u2014 ' + r + (i === 0 ? ' (Leader)' : '') + '</div>';
-      }).join('');
-      $('step-topic').style.display = 'none';
-      $('step-done').style.display = 'block';
-      clearMsgs();
-    } else {
-      showErr((result && result.message) || 'Topic selection failed — someone may have taken it first. Refreshing...');
-      refreshTopics();
-      btn.disabled = false;
-      btn.textContent = 'Confirm Topic Selection';
+    if (result && result.status === 'ok'){ onConfirmed(); }
+    else {
+      showErr((result && result.message) || 'That topic was just taken. The list has been refreshed.');
+      selectedTopicId = null;
+      refreshState(); renderTopics();
+      btn.disabled = true; btn.textContent = 'Confirm topic';
     }
   })
   .catch(function(err){
     console.warn(err);
-    showErr('Network error — check your connection and try again.');
-    btn.disabled = false;
-    btn.textContent = 'Confirm Topic Selection';
+    showErr('Could not reach the server. Check your connection and try again.');
+    btn.disabled = false; btn.textContent = 'Confirm topic';
   });
-}
+});
 
-// ══════════════════ INIT ══════════════════
+/* ══════════════════ BROCHURE TABLE ══════════════════ */
+(function(){
+  var rows = '';
+  for (var i=0; i<TRACKS.length; i++){
+    var t = TRACKS[i];
+    rows += '<tr><td>' + t.code + '</td><td><strong>' + esc(t.name) + '</strong><br><span style="font-size:12px;color:#6b6258">'
+         + esc(t.tag) + '</span></td><td>' + t.topics.length + '</td></tr>';
+  }
+  $('brochureSections').innerHTML = rows;
+})();
+
+/* ══════════════════ INIT ══════════════════ */
+buildMemberFields();
+renderSteps(1);
 refreshState();
 setInterval(refreshState, 20000);
 </script>
