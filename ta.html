@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI & ML Innovation Project — Team Registration</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+    font-family: 'Georgia', 'Garamond', serif;
+    background: linear-gradient(135deg, #f5f1e8 0%, #e8e3d8 100%);
+    color: #2c2c2c;
+    line-height: 1.6;
+}
+.container { max-width: 900px; margin: 0 auto; padding: 20px; }
+
+.header {
+    background: linear-gradient(135deg, #8B3A3A 0%, #6B2D2D 100%);
+    color: white;
+    padding: 30px;
+    border-radius: 8px;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.header-logo { width: 70px; height: 70px; border-radius: 50%; background: rgba(255,255,255,0.1); overflow: hidden; flex-shrink: 0; border: 2px solid rgba(255,255,255,0.3); }
+.header-logo img { width: 100%; height: 100%; object-fit: cover; }
+.header-content h1 { font-size: 24px; font-weight: bold; margin-bottom: 4px; }
+.header-content p { font-size: 13px; opacity: 0.95; }
+.header-content a { color: #ffd89b; text-decoration: none; font-size: 12px; margin-top: 6px; display: inline-block; border: 1px solid rgba(255,216,155,.4); padding: 3px 10px; border-radius: 4px; }
+.header-content a:hover { background: rgba(255,216,155,.15); }
+
+.tabbar { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+.tab-btn {
+    background: #fff; border: 1.5px solid #d0c2ae; color: #6b6258;
+    padding: 10px 18px; border-radius: 20px; font-family: inherit; font-size: 13.5px;
+    font-weight: 600; cursor: pointer; transition: all .2s;
+}
+.tab-btn.active { background: #8B3A3A; color: #fff; border-color: #8B3A3A; }
+.tab-btn:hover:not(.active) { border-color: #8B3A3A; color: #8B3A3A; }
+
+.panel { display: none; background: #fff; border-radius: 10px; padding: 28px 30px; box-shadow: 0 3px 14px rgba(139,58,58,.08); margin-bottom: 30px; }
+.panel.active { display: block; }
+
+.panel h2 { font-family: 'Georgia', serif; color: #8B3A3A; font-size: 20px; margin-bottom: 14px; border-bottom: 2px solid #8B3A3A; padding-bottom: 8px; }
+.panel h3 { color: #6B2D2D; font-size: 15px; margin: 18px 0 8px; }
+
+.info-box { background: #f5ede8; border-left: 4px solid #8B3A3A; padding: 14px 18px; border-radius: 0 8px 8px 0; margin-bottom: 18px; font-size: 13.5px; }
+.info-box strong { display: block; margin-bottom: 4px; color: #8B3A3A; }
+
+.err-msg { display:none; background: #fbeaea; color: #c0392b; padding: 10px 14px; border-radius: 8px; font-size: 13px; margin-bottom: 14px; }
+.success-msg { display:none; background: #e3f2ef; color: #2e7d6b; padding: 10px 14px; border-radius: 8px; font-size: 13px; margin-bottom: 14px; }
+
+.stats-row { display: flex; gap: 12px; margin-bottom: 18px; flex-wrap: wrap; }
+.stat-chip { background: #f5ede8; border-radius: 16px; padding: 6px 14px; font-size: 12px; color: #8B3A3A; font-weight: 600; font-family: 'Courier New', monospace; }
+
+.student-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; align-items: end; }
+@media(max-width:600px){ .student-row{ grid-template-columns: 1fr; } }
+.field label { display: block; font-size: 12px; font-weight: 700; color: #6b6258; margin-bottom: 5px; }
+.field input { width: 100%; padding: 10px 12px; border: 1.5px solid #d0c2ae; border-radius: 6px; font-size: 14px; font-family: inherit; background: #fafafa; }
+.field input:focus { outline: none; border-color: #8B3A3A; background: #fff; }
+.name-display { background: #f0ebe0; border: 1px solid #c8b89a; border-radius: 6px; padding: 10px 12px; font-size: 13.5px; font-weight: 600; color: #5a3a1a; min-height: 40px; display: flex; align-items: center; }
+.name-display.ok { color: #1a5c2a; }
+.name-display.err { color: #7c1c24; }
+
+.btn { padding: 12px 26px; background: #8B3A3A; color: #fff; border: none; border-radius: 8px; font-family: inherit; font-size: 15px; font-weight: 700; cursor: pointer; transition: all .2s; }
+.btn:hover { background: #6B2D2D; }
+.btn:disabled { background: #bbb; cursor: not-allowed; }
+.btn.secondary { background: #f5ede8; color: #8B3A3A; }
+.btn.secondary:hover { background: #ecdfd3; }
+
+.topics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin: 16px 0 20px; }
+.topic-card { background: #faf7f0; border: 1.5px solid #d0c2ae; border-radius: 8px; padding: 14px; cursor: pointer; transition: all .2s; }
+.topic-card:hover:not(.unavailable) { border-color: #8B3A3A; box-shadow: 0 2px 8px rgba(139,58,58,.12); }
+.topic-card.selected { background: #f5ede8; border-color: #8B3A3A; box-shadow: 0 0 0 2px rgba(139,58,58,.15); }
+.topic-card.unavailable { opacity: .45; cursor: not-allowed; }
+.topic-num { font-family: 'Courier New', monospace; font-size: 11px; color: #8B3A3A; font-weight: 700; }
+.topic-title { font-size: 13px; font-weight: 600; margin: 4px 0; line-height: 1.4; }
+.topic-area { font-size: 11px; color: #6b6258; }
+.topic-status { font-size: 10.5px; margin-top: 6px; font-weight: 700; }
+.topic-status.avail { color: #2e7d6b; }
+.topic-status.taken { color: #c0392b; }
+
+.confirm-box { background: linear-gradient(135deg,#8B3A3A,#6B2D2D); color: #fff; border-radius: 10px; padding: 24px 26px; text-align: center; }
+.confirm-box .team-no { font-size: 30px; font-weight: bold; margin-bottom: 8px; }
+.confirm-box .topic-name { font-size: 16px; margin-bottom: 12px; }
+.confirm-box .members { font-size: 13px; opacity: .9; text-align: left; margin-top: 14px; background: rgba(255,255,255,.1); border-radius: 8px; padding: 12px 16px; }
+.confirm-box .members div { padding: 4px 0; }
+
+table { width: 100%; border-collapse: collapse; margin: 12px 0 20px; font-size: 13px; }
+th { background: #8B3A3A; color: #fff; padding: 9px 12px; text-align: left; }
+td { padding: 8px 12px; border-bottom: 1px solid #e5dccf; }
+tr:nth-child(even) td { background: #faf7f0; }
+
+.check-list { list-style: none; margin: 10px 0 18px; }
+.check-list li { padding: 5px 0 5px 26px; position: relative; font-size: 13.5px; }
+.check-list li::before { content: "✓"; position: absolute; left: 0; color: #2e7d6b; font-weight: bold; }
+.check-list.no li::before { content: "✗"; color: #c0392b; }
+
+.faq-item { margin-bottom: 14px; }
+.faq-q { font-weight: 700; color: #8B3A3A; font-size: 13.5px; margin-bottom: 4px; }
+.faq-a { font-size: 13.5px; color: #444; }
+
+.spinner-inline { display:inline-block; width:14px; height:14px; border:2px solid #ddd; border-top-color:#8B3A3A; border-radius:50%; animation: spin .7s linear infinite; margin-right:6px; vertical-align:-2px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- NAV -->
+  <div class="header">
+    <div class="header-logo">
+      <img src="KP_Singh.png" alt="KP Singh" onerror="this.style.display='none'">
+    </div>
+    <div class="header-content">
+      <h1>BTech 7th Semester</h1>
+      <p>AI &amp; Machine Learning Course — Innovation Project</p>
+      <a href="https://kpsingh.in" target="_blank">🌐 kpsingh.in</a>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabbar">
+    <button class="tab-btn active" onclick="showTab('register')">📝 Register Team</button>
+    <button class="tab-btn" onclick="showTab('brochure')">📋 Project Brochure</button>
+    <button class="tab-btn" onclick="showTab('handbook')">📖 Student Handbook</button>
+  </div>
+
+  <!-- ══════════ REGISTER TAB ══════════ -->
+  <div class="panel active" id="panel-register">
+
+    <div id="stateStats" class="stats-row"></div>
+    <div id="regErr" class="err-msg"></div>
+    <div id="regSuccess" class="success-msg"></div>
+
+    <!-- STEP 1: Team formation -->
+    <div id="step-team">
+      <h2>Step 1 — Form Your Team</h2>
+      <div class="info-box">
+        <strong>Rules</strong>
+        Exactly 4 students per team. Student 1 is the team Leader and will select the topic in Step 2.
+        A student already in a registered team cannot join another team. Enter each registration number —
+        the name fills in automatically from the class roster.
+      </div>
+
+      <div class="student-row">
+        <div class="field"><label>Student 1 — Reg. No. (Leader)</label><input type="text" id="roll0" placeholder="e.g. 231302164" maxlength="9" inputmode="numeric"></div>
+        <div class="field"><label>Name (auto-filled)</label><div class="name-display" id="name0">—</div></div>
+      </div>
+      <div class="student-row">
+        <div class="field"><label>Student 2 — Reg. No.</label><input type="text" id="roll1" placeholder="e.g. 231302165" maxlength="9" inputmode="numeric"></div>
+        <div class="field"><label>Name (auto-filled)</label><div class="name-display" id="name1">—</div></div>
+      </div>
+      <div class="student-row">
+        <div class="field"><label>Student 3 — Reg. No.</label><input type="text" id="roll2" placeholder="e.g. 231302167" maxlength="9" inputmode="numeric"></div>
+        <div class="field"><label>Name (auto-filled)</label><div class="name-display" id="name2">—</div></div>
+      </div>
+      <div class="student-row">
+        <div class="field"><label>Student 4 — Reg. No.</label><input type="text" id="roll3" placeholder="e.g. 231302169" maxlength="9" inputmode="numeric"></div>
+        <div class="field"><label>Name (auto-filled)</label><div class="name-display" id="name3">—</div></div>
+      </div>
+
+      <button class="btn" id="registerBtn" onclick="registerTeam()">Register Team →</button>
+    </div>
+
+    <!-- STEP 2: Topic selection -->
+    <div id="step-topic" style="display:none">
+      <h2>Step 2 — Select Your Topic (Leader only)</h2>
+      <div class="info-box">
+        <strong>First-Come-First-Served</strong>
+        Pick one topic below. As soon as you confirm, it locks immediately — no other team can select it.
+        Once confirmed, your team's details are saved and cannot be changed.
+      </div>
+      <div id="topicsGrid" class="topics-grid"></div>
+      <button class="btn" id="confirmTopicBtn" onclick="confirmTopic()" disabled>Confirm Topic Selection</button>
+      <button class="btn secondary" onclick="refreshTopics()" style="margin-left:8px">🔄 Refresh Availability</button>
+    </div>
+
+    <!-- STEP 3: Confirmation -->
+    <div id="step-done" style="display:none">
+      <div class="confirm-box">
+        <div class="team-no" id="doneTeamNo">Team —</div>
+        <div class="topic-name" id="doneTopicName">—</div>
+        <div class="members" id="doneMembers"></div>
+      </div>
+      <p style="text-align:center; margin-top:16px; font-size:13px; color:#6b6258">
+        ✅ Registration complete. Your team and topic are saved. Show this screen to faculty if asked to confirm.
+      </p>
+    </div>
+  </div>
+
+  <!-- ══════════ BROCHURE TAB ══════════ -->
+  <div class="panel" id="panel-brochure">
+    <h2>Project Brochure</h2>
+    <div class="info-box">
+      <strong>Overview</strong>
+      A 15-week team project where you solve a real-world AI/ML problem — build a working system, write a technical
+      paper, and defend your work in a viva. This becomes a genuine portfolio piece.
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-chip">15 weeks</div>
+      <div class="stat-chip">4 students/team</div>
+      <div class="stat-chip">13 teams</div>
+      <div class="stat-chip">15 topics</div>
+      <div class="stat-chip">40 marks total</div>
+    </div>
+
+    <h3>Timeline</h3>
+    <table>
+      <tr><th>Week</th><th>Milestone</th></tr>
+      <tr><td>1</td><td>Team formation &amp; topic selection (this page)</td></tr>
+      <tr><td>2–3</td><td>Literature review, finalize dataset &amp; methodology</td></tr>
+      <tr><td>4–6</td><td>Data prep &amp; baseline model</td></tr>
+      <tr><td>7–8</td><td>Mid-term check-in — demo working prototype</td></tr>
+      <tr><td>9–12</td><td>Experiments &amp; optimization</td></tr>
+      <tr><td>13–14</td><td>Write paper (IEEE format), prepare slides</td></tr>
+      <tr><td>15</td><td>Final presentation + viva (10 min demo, 5 min viva/student)</td></tr>
+    </table>
+
+    <h3>The 15 Topics</h3>
+    <table>
+      <tr><th>#</th><th>Topic</th><th>Focus Area</th></tr>
+      <tr><td>1</td><td>A* Search for Smart City Traffic Navigation</td><td>Search Algorithms</td></tr>
+      <tr><td>2</td><td>Intelligent Maze Solving Robot using Search Algorithms</td><td>Search Algorithms</td></tr>
+      <tr><td>3</td><td>Genetic Algorithm for University Timetable Scheduling</td><td>Evolutionary Computing</td></tr>
+      <tr><td>4</td><td>Genetic Algorithm for Vehicle Routing in Logistics</td><td>Evolutionary Computing</td></tr>
+      <tr><td>5</td><td>Neural Network for Student Academic Performance Prediction</td><td>Machine Learning</td></tr>
+      <tr><td>6</td><td>Credit Card Fraud Detection using ANN and Classical ML</td><td>Machine Learning</td></tr>
+      <tr><td>7</td><td>Speech Emotion Recognition using Deep Neural Networks</td><td>Deep Learning</td></tr>
+      <tr><td>8</td><td>Handwritten Digit Recognition using CNN and MLP</td><td>Deep Learning</td></tr>
+      <tr><td>9</td><td>Bayesian Medical Diagnosis Support System</td><td>Probabilistic ML</td></tr>
+      <tr><td>10</td><td>KNN Recommendation System for E-Commerce</td><td>Machine Learning</td></tr>
+      <tr><td>11</td><td>Explainable Email Spam Detection</td><td>Explainable AI</td></tr>
+      <tr><td>12</td><td>Rule-Based Expert System for Plant Disease Diagnosis</td><td>Expert Systems</td></tr>
+      <tr><td>13</td><td>Genetic Programming for Automated Feature Selection</td><td>Evolutionary Computing</td></tr>
+      <tr><td>14</td><td>Fake News Detection using NLP and Transformer Models</td><td>NLP</td></tr>
+      <tr><td>15</td><td>AI-Powered Resume Screening and Candidate Ranking</td><td>AI Ethics</td></tr>
+    </table>
+
+    <h3>Key Rules</h3>
+    <ul class="check-list">
+      <li>Exactly 4 students per team, one leader</li>
+      <li>No mid-semester team changes</li>
+      <li>Leader only selects the topic — first-come-first-served</li>
+      <li>One topic per team — duplicates not allowed</li>
+      <li>All 4 members explain their individual contribution at viva</li>
+      <li>All members must attend the final presentation</li>
+    </ul>
+
+    <h3>Evaluation Scheme (40 Marks)</h3>
+    <table>
+      <tr><th>Component</th><th>Marks</th></tr>
+      <tr><td>Problem Understanding</td><td>5</td></tr>
+      <tr><td>Literature Review</td><td>5</td></tr>
+      <tr><td>Methodology &amp; Implementation</td><td>10</td></tr>
+      <tr><td>Experimental Results</td><td>5</td></tr>
+      <tr><td>GitHub Repository</td><td>5</td></tr>
+      <tr><td>Technical Paper</td><td>5</td></tr>
+      <tr><td>Presentation &amp; Viva</td><td>5</td></tr>
+    </table>
+    <p style="font-size:12px;color:#6b6258;margin-bottom:18px">Converted to a 30-mark UA scale as per assessment policy.</p>
+
+    <h3>FAQs</h3>
+    <div class="faq-item"><div class="faq-q">Can we change topic after selecting?</div><div class="faq-a">No. Discuss with your team before confirming.</div></div>
+    <div class="faq-item"><div class="faq-q">Can we use ChatGPT/Claude?</div><div class="faq-a">Yes for learning and brainstorming — but you must understand and be able to explain every line during viva. Blind copying = automatic fail.</div></div>
+    <div class="faq-item"><div class="faq-q">Can we use a public dataset (Kaggle etc.)?</div><div class="faq-a">Yes — just cite the source and explain why you chose it.</div></div>
+  </div>
+
+  <!-- ══════════ HANDBOOK TAB ══════════ -->
+  <!-- ══════════ HANDBOOK TAB ══════════ -->
+  <div class="panel" id="panel-handbook">
+    <h2>Student Handbook</h2>
+    <div class="info-box">
+      <strong>Welcome</strong>
+      This is your chance to build a real AI/ML application from start to finish — a working system, a technical
+      paper, and a defended viva. This handbook explains what's expected, how to stay organized, and how to succeed.
+    </div>
+
+    <h3>Your Responsibilities</h3>
+    <p style="font-size:13px;font-weight:700;color:#6b6258;margin-bottom:4px">As a Team Member</p>
+    <ul class="check-list">
+      <li>Show up to team meetings (online or in-person)</li>
+      <li>Contribute your part of the code and documentation</li>
+      <li>Understand the entire project, not just your piece</li>
+      <li>Be honest at viva — explain what you personally did</li>
+      <li>Follow academic integrity rules</li>
+    </ul>
+    <p style="font-size:13px;font-weight:700;color:#6b6258;margin:10px 0 4px">As Team Leader (only the leader)</p>
+    <ul class="check-list">
+      <li>Select the project topic during Week 1 registration</li>
+      <li>Represent the team in all communications with faculty</li>
+      <li>Ensure the team stays on schedule and submits on time</li>
+      <li>Handle conflicts, or escalate to faculty if needed</li>
+    </ul>
+
+    <h3>What You Must Deliver</h3>
+    <table>
+      <tr><th>Deliverable</th><th>Key requirements</th></tr>
+      <tr><td>Working Code (GitHub)</td><td>Runs without errors on faculty's machine; requirements.txt lists all dependencies; clear data pipeline; meaningful commit messages (not "fix", "final")</td></tr>
+      <tr><td>Technical Paper</td><td>6–8 pages, IEEE format. Title, Abstract (150 words), Keywords, Intro, Lit Review (8–10 papers), Methodology, Results &amp; Discussion, Conclusion, 10+ References</td></tr>
+      <tr><td>Presentation</td><td>10–12 slides, font ≥18pt, one main point per slide, 10–12 min total including Q&amp;A</td></tr>
+      <tr><td>Live Demo</td><td>3–5 minutes; real-time predictions on new data, or a video backup if live demo is risky</td></tr>
+    </table>
+
+    <p style="font-size:12.5px;color:#6b6258;margin-bottom:6px"><strong>Suggested repo structure:</strong></p>
+    <div style="background:#faf7f0;border:1px solid #e5dccf;border-radius:6px;padding:10px 14px;font-family:'Courier New',monospace;font-size:11.5px;color:#444;margin-bottom:18px;line-height:1.7">
+      README.md · requirements.txt · .gitignore<br>
+      src/ (data_loader.py, model.py, train.py, evaluate.py)<br>
+      notebooks/ · data/raw/ · data/processed/ · results/ · paper/
+    </div>
+
+    <h3>AI Tool Usage Policy</h3>
+    <p style="font-size:13px;font-weight:700;color:#2e7d6b;margin-bottom:4px">You can</p>
+    <ul class="check-list">
+      <li>Use AI for learning &amp; brainstorming ("Explain how convolutional layers work")</li>
+      <li>Use AI for boilerplate code ("Generate a Flask app template with 3 routes")</li>
+      <li>Use AI to debug ("Why does my model return NaN during training?")</li>
+    </ul>
+    <p style="font-size:13px;font-weight:700;color:#c0392b;margin:10px 0 4px">You can't</p>
+    <ul class="check-list no">
+      <li>Copy code blocks and submit as-is without understanding every line</li>
+      <li>Ask AI to write your entire training script, then submit it unchanged</li>
+      <li>Use AI-generated paper text without rewriting it in your own words</li>
+      <li>Rely on AI to do your thinking — you must understand your own results</li>
+    </ul>
+    <p style="font-size:12.5px;color:#6b6258;margin-bottom:18px">At viva you must explain: every algorithm you used and why, every major code function, what your results mean, and your individual contribution. <strong>If you can't explain it, don't submit it.</strong> Turnitin target: &lt;20% similarity, with proper citations — if you use an AI tool, acknowledge it in the paper.</p>
+
+    <h3>Timeline &amp; Deadlines</h3>
+    <table>
+      <tr><th>Week</th><th>Milestone</th><th>Deliverable</th></tr>
+      <tr><td>1</td><td>Team registration &amp; topic selection</td><td>Team list + topic assigned</td></tr>
+      <tr><td>3</td><td>Literature review + dataset validation</td><td>8–10 papers, data sample</td></tr>
+      <tr><td>8</td><td>Mid-term check-in</td><td>Working prototype + progress report</td></tr>
+      <tr><td>13</td><td>Paper draft (optional, for feedback)</td><td>First draft of technical paper</td></tr>
+      <tr><td>15</td><td>Final submission + presentation &amp; viva</td><td>Code + GitHub + Paper + Slides; 10 min demo + 5 min viva/student</td></tr>
+    </table>
+    <p style="font-size:12px;color:#6b6258;margin-bottom:18px">Late: 10% penalty/day for 1–2 days; 3+ days late caps that component at 50%. Medical/emergency extensions need faculty approval + documentation.</p>
+
+    <h3>Week-by-Week Success Tips</h3>
+    <ul class="check-list">
+      <li>Weeks 1–2: Lock in team and topic early; start reading papers immediately</li>
+      <li>Weeks 2–4: Understand your dataset inside-out — clean, visualize, summarize</li>
+      <li>Weeks 4–6: Build a baseline model fast. Aim for "working," not "perfect" — you'll iterate</li>
+      <li>Weeks 7–8: Mid-term — you should have results, even imperfect ones</li>
+      <li>Weeks 9–12: Experiment with algorithms/hyperparameters/features; document every run</li>
+      <li>Weeks 13–14: Start writing the paper — draft one section per day, don't wait for Week 15</li>
+      <li>Week 15: Polish presentation, rehearse the demo, know your project inside-out</li>
+    </ul>
+
+    <h3>Frequently Asked Questions</h3>
+    <div class="faq-item"><div class="faq-q">What if I don't know Python well?</div><div class="faq-a">Learn as you go — tutorials, peers, and faculty office hours are all there to help.</div></div>
+    <div class="faq-item"><div class="faq-q">Can we change our topic after Week 1?</div><div class="faq-a">No. Choose wisely. If you truly dislike your topic, talk to faculty early (Week 2–3).</div></div>
+    <div class="faq-item"><div class="faq-q">Our accuracy is only 60% — will we fail?</div><div class="faq-a">Not necessarily. A 60% model with deep analysis of why it fails beats an 85% model with no analysis.</div></div>
+    <div class="faq-item"><div class="faq-q">Can we use a pre-trained model like BERT or ResNet?</div><div class="faq-a">Yes — transfer learning is valid. Document what you changed and what you trained from scratch.</div></div>
+    <div class="faq-item"><div class="faq-q">Is it OK to adapt a solution we found on GitHub?</div><div class="faq-a">You can study and adapt it — never copy-paste. You must understand and modify every line.</div></div>
+    <div class="faq-item"><div class="faq-q">What if one teammate does nothing?</div><div class="faq-a">At viva, each student is asked individually what they did. If someone can't explain their part, they're marked down individually.</div></div>
+
+    <h3>Pre-Submission Checklist</h3>
+    <ul class="check-list">
+      <li>Code runs end-to-end without errors; requirements.txt complete; commits are meaningful</li>
+      <li>Paper: 6–8 pages IEEE format, 10+ references, all cited, &lt;20% Turnitin</li>
+      <li>Slides: 10–12, font ≥18pt, demo script or video backup ready</li>
+      <li>Every team member can explain their individual contribution</li>
+      <li>Faculty has repository access (shared if private)</li>
+    </ul>
+  </div>
+
+
+</div>
+
+<script>
+'use strict';
+
+// ══════════════════ CONFIG ══════════════════
+var GAS_URL = 'https://script.google.com/macros/s/AKfycby4qwOxnm1ASrxkd86I4ti-WmHx8lxw8olUVRq2orPTkp5WhvTw9j29fcKKNnoNU-aTsw/exec'; // must contain /macros/s/ and end in /exec
+var MAX_TEAMS = 13;
+
+function checkSheetUrl() {
+  if (GAS_URL.indexOf('PASTE_') === 0) return 'Setup incomplete: GAS_URL has not been set yet.';
+  if (GAS_URL.indexOf('/macros/library/') !== -1) return 'GAS_URL is a LIBRARY url, not a WEB APP url — get the correct one from Apps Script > Deploy > Manage Deployments.';
+  if (GAS_URL.indexOf('/macros/s/') === -1 || GAS_URL.indexOf('/exec') === -1) return 'GAS_URL does not look like a valid Web App URL.';
+  return null;
+}
+
+// ══════════════════ ROSTER (52 students) ══════════════════
+var ROSTER = {
+  "231302164":"Priyanshu", "231302165":"Purav Tanwar", "231302167":"Kislay Pandey", "231302169":"Arpit Pandey",
+  "231302174":"Vishav Garg", "231302176":"Sukhsham Sharma", "231302181":"Devesh Yadav", "231302182":"Aditya Vats",
+  "231302185":"Kunal Sharma", "231302189":"Saurav", "231302196":"Vrishank Sharma", "231302199":"Parteek",
+  "231302206":"Dharam Singh", "231302207":"Nikhil Kumar", "231302208":"Punyam", "231302210":"Pushpender Yadav",
+  "231302212":"Deepanshu", "231302223":"Anurag", "231302227":"Sandeep Singh", "231302228":"Khushi Singhal",
+  "231302231":"Tanvir Singh Wasir", "231302234":"Vanshika Bisht", "231302239":"Aanchal", "231302247":"Aakash Dagar",
+  "231302250":"Aakash", "231302251":"Himanshu Aggarwal", "231302255":"Anshika", "231302256":"Tanishk",
+  "231302266":"Dhawan Sawant", "241302032":"Arunava Chakraborty", "231302004":"Vivek Singh", "231302005":"Himanshi",
+  "231302008":"Aryan", "231302010":"Hiten", "231302011":"Muskan", "231302015":"Devanshu Shekhar",
+  "231302084":"Nirmit", "231302087":"Vikash Meena", "231302091":"Muskan", "231302092":"Yashika Janghu",
+  "231302124":"Harsh Vashisth", "231302145":"Rajat Mallick", "231302170":"Nikita Sengar", "231302183":"Ayush Yadav",
+  "231302184":"Ayush Gulia", "231302197":"Uday Pratap Singh", "231302219":"Manish Kumar", "231302229":"Prikshit",
+  "231302246":"Saket", "231302248":"Sambhav", "231302254":"Tushar Singh Tanwar", "231302264":"Katrine Alice Daniel"
+};
+
+// ══════════════════ TOPICS (15) ══════════════════
+var TOPICS = [
+  {id:1, title:"A* Search for Smart City Traffic Navigation", area:"Search Algorithms"},
+  {id:2, title:"Intelligent Maze Solving Robot using Search Algorithms", area:"Search Algorithms"},
+  {id:3, title:"Genetic Algorithm for University Timetable Scheduling", area:"Evolutionary Computing"},
+  {id:4, title:"Genetic Algorithm for Vehicle Routing in Logistics", area:"Evolutionary Computing"},
+  {id:5, title:"Neural Network for Student Academic Performance Prediction", area:"Machine Learning"},
+  {id:6, title:"Credit Card Fraud Detection using ANN and Classical ML", area:"Machine Learning"},
+  {id:7, title:"Speech Emotion Recognition using Deep Neural Networks", area:"Deep Learning"},
+  {id:8, title:"Handwritten Digit Recognition using CNN and MLP", area:"Deep Learning"},
+  {id:9, title:"Bayesian Medical Diagnosis Support System", area:"Probabilistic ML"},
+  {id:10, title:"KNN Recommendation System for E-Commerce", area:"Machine Learning"},
+  {id:11, title:"Explainable Email Spam Detection", area:"Explainable AI"},
+  {id:12, title:"Rule-Based Expert System for Plant Disease Diagnosis", area:"Expert Systems"},
+  {id:13, title:"Genetic Programming for Automated Feature Selection", area:"Evolutionary Computing"},
+  {id:14, title:"Fake News Detection using NLP and Transformer Models", area:"NLP"},
+  {id:15, title:"AI-Powered Resume Screening and Candidate Ranking", area:"AI Ethics"}
+];
+
+// ══════════════════ STATE ══════════════════
+var myTeam = null; // {teamNo, rolls:[...], names:[...]}
+var usedRolls = [];  // rolls already in any registered/confirmed team
+var takenTopics = []; // topic ids already confirmed
+var teamsCount = 0;
+var selectedTopicId = null;
+
+function $(id){ return document.getElementById(id); }
+
+function showTab(name) {
+  document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
+  $('panel-' + name).classList.add('active');
+  event.target.classList.add('active');
+}
+
+function showErr(text) {
+  $('regErr').textContent = text;
+  $('regErr').style.display = 'block';
+  $('regSuccess').style.display = 'none';
+}
+function showOk(text) {
+  $('regSuccess').textContent = text;
+  $('regSuccess').style.display = 'block';
+  $('regErr').style.display = 'none';
+}
+function clearMsgs() {
+  $('regErr').style.display = 'none';
+  $('regSuccess').style.display = 'none';
+}
+
+// ══════════════════ ROLL AUTOFILL ══════════════════
+[0,1,2,3].forEach(function(i){
+  $('roll' + i).addEventListener('input', function(){
+    var roll = this.value.trim();
+    var box = $('name' + i);
+    if (roll.length < 9) { box.textContent = '—'; box.className = 'name-display'; return; }
+    if (!ROSTER.hasOwnProperty(roll)) {
+      box.textContent = 'Not found in roster'; box.className = 'name-display err'; return;
+    }
+    if (usedRolls.indexOf(roll) !== -1) {
+      box.textContent = ROSTER[roll] + ' — already in a team!'; box.className = 'name-display err'; return;
+    }
+    box.textContent = ROSTER[roll]; box.className = 'name-display ok';
+  });
+});
+
+// ══════════════════ STATE FETCH ══════════════════
+function refreshState() {
+  var problem = checkSheetUrl();
+  if (problem) { $('stateStats').innerHTML = '<div class="stat-chip" style="color:#c0392b">' + problem + '</div>'; return; }
+  fetch(GAS_URL + '?action=get_state', {redirect:'follow'})
+    .then(function(r){ return r.json(); })
+    .then(function(j){
+      if (j.status !== 'ok') { $('stateStats').innerHTML = '<div class="stat-chip" style="color:#c0392b">' + (j.message||'Error loading state') + '</div>'; return; }
+      usedRolls = j.usedRolls || [];
+      takenTopics = j.takenTopics || [];
+      teamsCount = j.teamsCount || 0;
+      renderStats();
+      if (document.getElementById('step-topic').style.display !== 'none') renderTopics();
+    })
+    .catch(function(err){ console.warn(err); });
+}
+
+function renderStats() {
+  $('stateStats').innerHTML =
+    '<div class="stat-chip">' + teamsCount + ' / ' + MAX_TEAMS + ' teams formed</div>' +
+    '<div class="stat-chip">' + takenTopics.length + ' / ' + TOPICS.length + ' topics taken</div>' +
+    '<div class="stat-chip">' + usedRolls.length + ' / 52 students registered</div>';
+}
+
+// ══════════════════ STEP 1: REGISTER TEAM ══════════════════
+function registerTeam() {
+  clearMsgs();
+  var problem = checkSheetUrl();
+  if (problem) { showErr(problem); return; }
+
+  var rolls = [0,1,2,3].map(function(i){ return $('roll'+i).value.trim(); });
+
+  if (rolls.some(function(r){ return !r; })) { showErr('Please enter all 4 registration numbers.'); return; }
+  var unknown = rolls.filter(function(r){ return !ROSTER.hasOwnProperty(r); });
+  if (unknown.length) { showErr('Registration number(s) not found in roster: ' + unknown.join(', ')); return; }
+  var dup = rolls.filter(function(r, i){ return rolls.indexOf(r) !== i; });
+  if (dup.length) { showErr('The same student cannot be entered twice in one team.'); return; }
+  var already = rolls.filter(function(r){ return usedRolls.indexOf(r) !== -1; });
+  if (already.length) { showErr('Already registered in another team: ' + already.map(function(r){ return ROSTER[r] + ' (' + r + ')'; }).join(', ')); return; }
+  if (teamsCount >= MAX_TEAMS) { showErr('All ' + MAX_TEAMS + ' teams have already been formed.'); return; }
+
+  var btn = $('registerBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner-inline"></span>Registering...';
+
+  var names = rolls.map(function(r){ return ROSTER[r]; });
+
+  fetch(GAS_URL, {
+    method: 'POST', redirect: 'follow', headers: {'Content-Type':'text/plain'},
+    body: JSON.stringify({type:'register_team', rolls: rolls, names: names})
+  })
+  .then(function(res){ return res.json(); })
+  .then(function(result){
+    if (result && result.status === 'ok') {
+      myTeam = { teamNo: result.teamNo, rolls: rolls, names: names };
+      showOk('Team ' + result.teamNo + ' registered — now select your topic below.');
+      $('step-team').style.display = 'none';
+      $('step-topic').style.display = 'block';
+      usedRolls = usedRolls.concat(rolls);
+      teamsCount++;
+      renderStats();
+      renderTopics();
+    } else {
+      showErr((result && result.message) || 'Registration failed — please try again.');
+    }
+  })
+  .catch(function(err){
+    console.warn(err);
+    showErr('Network error — check your connection and try again.');
+  })
+  .finally(function(){
+    btn.disabled = false;
+    btn.textContent = 'Register Team →';
+  });
+}
+
+// ══════════════════ STEP 2: TOPIC SELECTION ══════════════════
+function renderTopics() {
+  var grid = $('topicsGrid');
+  grid.innerHTML = TOPICS.map(function(t){
+    var taken = takenTopics.indexOf(t.id) !== -1;
+    var sel = selectedTopicId === t.id;
+    return '<div class="topic-card ' + (taken ? 'unavailable' : '') + (sel ? ' selected' : '') + '" ' +
+      (taken ? '' : 'onclick="selectTopic(' + t.id + ')"') + '>' +
+      '<div class="topic-num">#' + t.id + '</div>' +
+      '<div class="topic-title">' + t.title + '</div>' +
+      '<div class="topic-area">' + t.area + '</div>' +
+      '<div class="topic-status ' + (taken ? 'taken' : 'avail') + '">' + (taken ? '\u274c Taken' : '\u2713 Available') + '</div>' +
+      '</div>';
+  }).join('');
+}
+function selectTopic(id) {
+  if (takenTopics.indexOf(id) !== -1) return;
+  selectedTopicId = id;
+  $('confirmTopicBtn').disabled = false;
+  renderTopics();
+}
+function refreshTopics() { refreshState(); }
+
+function confirmTopic() {
+  if (!selectedTopicId || !myTeam) return;
+  var problem = checkSheetUrl();
+  if (problem) { showErr(problem); return; }
+
+  var btn = $('confirmTopicBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner-inline"></span>Confirming...';
+
+  fetch(GAS_URL, {
+    method: 'POST', redirect: 'follow', headers: {'Content-Type':'text/plain'},
+    body: JSON.stringify({
+      type: 'select_topic', teamNo: myTeam.teamNo, topicId: selectedTopicId,
+      rolls: myTeam.rolls, names: myTeam.names
+    })
+  })
+  .then(function(res){ return res.json(); })
+  .then(function(result){
+    if (result && result.status === 'ok') {
+      var topic = TOPICS.find(function(t){ return t.id === selectedTopicId; });
+      $('doneTeamNo').textContent = 'Team ' + myTeam.teamNo;
+      $('doneTopicName').textContent = topic.title;
+      $('doneMembers').innerHTML = myTeam.rolls.map(function(r, i){
+        return '<div>' + (i === 0 ? '\ud83c\udfc5 ' : '') + myTeam.names[i] + ' \u2014 ' + r + (i === 0 ? ' (Leader)' : '') + '</div>';
+      }).join('');
+      $('step-topic').style.display = 'none';
+      $('step-done').style.display = 'block';
+      clearMsgs();
+    } else {
+      showErr((result && result.message) || 'Topic selection failed — someone may have taken it first. Refreshing...');
+      refreshTopics();
+      btn.disabled = false;
+      btn.textContent = 'Confirm Topic Selection';
+    }
+  })
+  .catch(function(err){
+    console.warn(err);
+    showErr('Network error — check your connection and try again.');
+    btn.disabled = false;
+    btn.textContent = 'Confirm Topic Selection';
+  });
+}
+
+// ══════════════════ INIT ══════════════════
+refreshState();
+setInterval(refreshState, 20000);
+</script>
+</body>
+</html>
