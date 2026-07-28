@@ -224,6 +224,15 @@ tr:nth-child(even) td { background: #faf7f0; }
     <!-- STEP 1 -->
     <div id="step-team">
 
+      <div class="info-box" id="localResume" style="display:none;border-left-color:#2e7d6b;background:#e9f4f1">
+        <strong style="color:#2e7d6b">Unfinished registration on this device</strong>
+        <span id="localResumeText"></span>
+        <div class="resume-row">
+          <button class="btn" id="localResumeGo">Continue</button>
+          <button class="btn ghost" id="localResumeDrop">Not my team</button>
+        </div>
+      </div>
+
       <div class="info-box" id="resumeBox">
         <strong>Already registered but did not pick a topic?</strong>
         Do not register again. Team leader enters their registration number here to continue where the team left off.
@@ -261,6 +270,7 @@ tr:nth-child(even) td { background: #faf7f0; }
         <div class="track-grid" id="trackGrid"></div>
       </div>
       <button class="btn secondary" id="backToTeamBtn">Back</button>
+      <button class="btn ghost" id="exitTeamBtn" style="margin-left:8px">Not my team — start over</button>
     </div>
 
     <!-- STEP 3 -->
@@ -275,6 +285,7 @@ tr:nth-child(even) td { background: #faf7f0; }
       <button class="btn" id="confirmTopicBtn" disabled>Confirm topic</button>
       <button class="btn secondary" id="refreshBtn" style="margin-left:8px">Refresh availability</button>
       <button class="btn ghost" id="backToTrackBtn" style="margin-left:8px">Change track</button>
+      <button class="btn ghost" id="exitTeamBtn2" style="margin-left:8px">Not my team</button>
     </div>
 
     <!-- STEP 4 -->
@@ -1585,13 +1596,41 @@ renderSteps(1);
 refreshState();
 setInterval(refreshState, 20000);
 
-/* If this device has an unfinished registration, pick it up automatically. */
+/* ══════════════════ EXIT / START OVER ══════════════════ */
+function exitTeam(){
+  myTeam = null;
+  selectedTrackId = null;
+  selectedTopicId = null;
+  clearTeamLocal();
+  $('localResume').style.display = 'none';
+  $('resumeRoll').value = '';
+  $('confirmTopicBtn').disabled = true;
+  clearMsgs();
+  goStep(1);
+  refreshState();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+$('exitTeamBtn').addEventListener('click', exitTeam);
+$('exitTeamBtn2').addEventListener('click', exitTeam);
+$('localResumeDrop').addEventListener('click', exitTeam);
+
+/* If this device has an unfinished registration, OFFER to pick it up.
+   Never jump automatically — a shared or borrowed device would trap the
+   next user inside somebody else's team with no way back. */
 (function(){
   var saved = loadTeamLocal();
-  if (saved && saved.teamNo && saved.rolls && saved.rolls.length){
+  if (!saved || !saved.teamNo || !saved.rolls || !saved.rolls.length) return;
+
+  $('localResumeText').textContent =
+    'Team ' + saved.teamNo + ' (leader ' + saved.names[0] + ', ' + saved.rolls[0] +
+    ') was registered on this device but never picked a topic.';
+  $('localResume').style.display = 'block';
+
+  $('localResumeGo').addEventListener('click', function(){
     myTeam = saved;
-    enterTrackStep('Resumed Team ' + saved.teamNo + '. You had not selected a topic yet — choose your track.');
-  }
+    $('localResume').style.display = 'none';
+    enterTrackStep('Continuing as Team ' + saved.teamNo + '. Choose your track.');
+  });
 })();
 </script>
 </body>
