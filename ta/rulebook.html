@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Rulebook — AI &amp; ML Thematic Assessment · BTech 7th Semester</title>
+<style>
+:root{
+  --maroon:#8B3A3A;
+  --maroon-deep:#6B2D2D;
+  --parchment:#faf6f0;
+  --parchment-2:#f0ebe0;
+  --ink:#2c2c2c;
+  --ink-soft:#6b6258;
+  --rule:#e5dccf;
+  --green:#2e7d6b;
+  --amber:#97722a;
+  --red:#c0392b;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:96px}
+body{
+  font-family:'Georgia','Garamond',serif;
+  background:var(--parchment);
+  color:var(--ink);
+  line-height:1.65;
+  -webkit-text-size-adjust:100%;
+}
+
+/* ══ NAV (required template) ══ */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:50;
+  display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:10px 20px;
+  background:rgba(250,246,240,.82);
+  -webkit-backdrop-filter:blur(14px) saturate(140%);
+  backdrop-filter:blur(14px) saturate(140%);
+  border-bottom:1px solid var(--rule);
+}
+.nav-brand{display:flex;align-items:center;gap:11px;min-width:0}
+.nav-logo{width:38px;height:38px;border-radius:50%;object-fit:cover;border:1.5px solid var(--maroon);flex-shrink:0;background:var(--parchment-2)}
+.nav-name{font-size:15px;font-weight:bold;color:var(--maroon);line-height:1.2}
+.nav-sub{font-family:'Courier New',monospace;font-size:10.5px;color:var(--ink-soft);letter-spacing:.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nav-cta{font-family:'Courier New',monospace;font-size:11.5px;color:var(--maroon);text-decoration:none;border:1px solid var(--maroon);padding:6px 12px;border-radius:4px;white-space:nowrap;flex-shrink:0}
+.nav-cta:hover{background:var(--maroon);color:#fff}
+
+.wrap{max-width:860px;margin:0 auto;padding:0 22px 90px}
+
+/* ══ HERO ══ */
+.hero{padding:112px 0 34px}
+.eyebrow{font-family:'Courier New',monospace;font-size:11px;letter-spacing:.2em;color:var(--maroon);text-transform:uppercase;margin-bottom:14px}
+.hero h1{font-size:clamp(38px,8vw,62px);line-height:1.02;letter-spacing:-.02em;margin-bottom:22px;font-weight:normal}
+.hero h1 em{font-style:italic;color:var(--maroon)}
+.thesis{
+  border-left:5px solid var(--maroon);
+  padding:16px 0 16px 20px;
+  font-size:clamp(17px,3.4vw,21px);
+  line-height:1.5;
+  max-width:60ch;
+}
+.hero-meta{margin-top:26px;display:flex;gap:8px;flex-wrap:wrap}
+.chip{font-family:'Courier New',monospace;font-size:11.5px;background:var(--parchment-2);color:var(--maroon);padding:6px 13px;border-radius:15px;font-weight:bold}
+
+/* ══ JUMP BAR ══ */
+.jump{display:flex;gap:7px;flex-wrap:wrap;padding:22px 0 6px;border-top:1px solid var(--rule);margin-top:34px}
+.jump a{font-family:'Courier New',monospace;font-size:11.5px;text-decoration:none;color:var(--ink-soft);border:1px solid var(--rule);padding:5px 11px;border-radius:14px;background:#fff}
+.jump a:hover{border-color:var(--maroon);color:var(--maroon)}
+.jump a:focus-visible{outline:2px solid var(--maroon);outline-offset:2px}
+
+/* ══ SECTIONS ══ */
+section{padding:52px 0 8px;border-top:1px solid var(--rule);margin-top:44px}
+.sec-num{font-family:'Courier New',monospace;font-size:11px;letter-spacing:.18em;color:var(--maroon);margin-bottom:9px}
+h2{font-size:clamp(25px,5vw,34px);line-height:1.15;letter-spacing:-.01em;margin-bottom:8px;font-weight:normal}
+.sec-lede{font-size:16.5px;color:var(--ink-soft);max-width:62ch;margin-bottom:26px}
+h3{font-size:19px;color:var(--maroon-deep);margin:32px 0 9px}
+h4{font-family:'Courier New',monospace;font-size:11.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--maroon);margin:24px 0 7px}
+p{margin-bottom:14px;max-width:66ch}
+strong{color:var(--maroon-deep)}
+
+ul,ol{margin:0 0 16px;padding-left:0;list-style:none;max-width:66ch}
+li{position:relative;padding:4px 0 4px 22px}
+li::before{content:"—";position:absolute;left:0;color:var(--maroon);opacity:.55}
+ol{counter-reset:n}
+ol li{counter-increment:n;padding-left:30px}
+ol li::before{content:counter(n);font-family:'Courier New',monospace;font-size:11.5px;font-weight:bold;opacity:1;top:6px}
+
+/* ══ NUMBERED RULES — numbers are referenced in feedback, so they are load-bearing ══ */
+.rule{display:grid;grid-template-columns:58px 1fr;gap:18px;padding:24px 0;border-top:1px dotted var(--rule)}
+.rule:first-of-type{border-top:none}
+.rule-n{
+  font-family:'Courier New',monospace;font-size:12px;font-weight:bold;
+  color:#fff;background:var(--maroon);border-radius:6px;
+  height:34px;display:flex;align-items:center;justify-content:center;letter-spacing:.05em;
+}
+.rule h3{margin:2px 0 8px;font-size:18.5px;color:var(--ink)}
+.rule p:last-child{margin-bottom:0}
+@media(max-width:560px){
+  .rule{grid-template-columns:1fr;gap:10px}
+  .rule-n{width:58px}
+}
+
+/* ══ DONE-WHEN — the signature device ══ */
+.done{
+  display:flex;gap:11px;align-items:flex-start;
+  background:#fff;border:1px solid var(--rule);border-left:4px solid var(--green);
+  padding:11px 15px;border-radius:0 7px 7px 0;margin:12px 0 4px;max-width:66ch;
+}
+.done .mark{font-family:'Courier New',monospace;font-size:10px;letter-spacing:.14em;color:var(--green);font-weight:bold;padding-top:3px;flex-shrink:0}
+.done .txt{font-size:14.5px;line-height:1.55}
+
+.note{background:var(--parchment-2);border-left:4px solid var(--maroon);padding:15px 19px;border-radius:0 8px 8px 0;margin:18px 0;max-width:66ch;font-size:15px}
+.note strong{display:block;margin-bottom:5px}
+.warn{background:#fbeaea;border-left-color:var(--red)}
+.warn strong{color:var(--red)}
+.good{background:#e9f4f1;border-left-color:var(--green)}
+.good strong{color:var(--green)}
+
+table{width:100%;border-collapse:collapse;margin:18px 0 22px;font-size:14px}
+th{background:var(--maroon);color:#fff;padding:10px 13px;text-align:left;font-weight:normal;font-family:'Courier New',monospace;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase}
+td{padding:10px 13px;border-bottom:1px solid var(--rule);vertical-align:top}
+tr:nth-child(even) td{background:#fff}
+td.num{font-family:'Courier New',monospace;font-weight:bold;color:var(--maroon);white-space:nowrap}
+.tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+
+pre{
+  background:#2f2723;color:#f2ece2;border-radius:8px;padding:15px 17px;
+  font-family:'Courier New',monospace;font-size:12.5px;line-height:1.62;
+  overflow-x:auto;margin:12px 0 20px;
+}
+code{font-family:'Courier New',monospace;font-size:.92em;background:var(--parchment-2);padding:1px 5px;border-radius:3px}
+pre code{background:none;padding:0;font-size:inherit;color:inherit}
+
+.week{padding:19px 0;border-top:1px dotted var(--rule)}
+.week-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:7px}
+.week-n{font-family:'Courier New',monospace;font-size:11px;letter-spacing:.12em;color:#fff;background:var(--maroon-deep);padding:3px 9px;border-radius:4px}
+.week-t{font-size:18px;color:var(--ink)}
+.week.pivot .week-n{background:var(--amber)}
+
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0 22px}
+@media(max-width:620px){.pair{grid-template-columns:1fr}}
+.card{background:#fff;border:1px solid var(--rule);border-radius:9px;padding:17px 19px}
+.card h4{margin-top:0}
+.card ul{margin-bottom:0}
+.card li{font-size:14.5px}
+
+/* ══ START HERE ══ */
+.startbox{background:#fff;border:2px solid var(--maroon);border-radius:11px;padding:26px 28px;margin:6px 0 10px}
+.startbox h2{font-size:clamp(21px,4vw,27px);margin-bottom:6px}
+.startbox .sub{font-size:15px;color:var(--ink-soft);margin-bottom:20px}
+.ten{counter-reset:t;margin:0;max-width:none}
+.ten li{counter-increment:t;padding:9px 0 9px 42px;border-top:1px solid var(--rule);font-size:15.5px;line-height:1.5}
+.ten li:first-child{border-top:none}
+.ten li::before{
+  content:counter(t,decimal-leading-zero);
+  font-family:'Courier New',monospace;font-size:11px;font-weight:bold;
+  color:var(--maroon);opacity:1;top:12px;letter-spacing:.05em;
+}
+.when{
+  display:inline-block;font-family:'Courier New',monospace;font-size:10px;letter-spacing:.13em;
+  text-transform:uppercase;padding:4px 10px;border-radius:12px;vertical-align:middle;
+  margin-left:2px;background:var(--parchment-2);color:var(--ink-soft);
+}
+.when.now{background:var(--maroon);color:#fff}
+.when.later{background:#fff;border:1px solid var(--rule);color:var(--ink-soft)}
+.sec-head{display:flex;align-items:baseline;gap:11px;flex-wrap:wrap;margin-bottom:8px}
+.sec-head h2{margin-bottom:0}
+
+footer{border-top:2px solid var(--maroon);margin-top:60px;padding:34px 0 0;text-align:center}
+footer .last{font-size:19px;max-width:52ch;margin:0 auto 16px;line-height:1.5}
+footer .sig{font-family:'Courier New',monospace;font-size:11.5px;color:var(--ink-soft);letter-spacing:.06em}
+
+@media print{
+  .nav,.jump{display:none}
+  body{background:#fff;font-size:11pt}
+  .hero{padding-top:0}
+  section{break-inside:avoid;page-break-inside:avoid}
+  pre{background:#f4f4f4;color:#000;border:1px solid #ccc}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<nav class="nav"><div class="nav-brand"><img class="nav-logo" src="KP_Singh.png" alt="K.P. Singh"/><div><div class="nav-name">K.P. Singh</div><div class="nav-sub">SGT University · AI &amp; ML · BTech 7th Sem</div></div></div><a class="nav-cta" href="https://kpsingh.in" target="_blank">kpsingh.in ↗</a></nav>
+
+<div class="wrap">
+
+  <header class="hero">
+    <div class="eyebrow">Thematic Assessment · Cohort Rulebook</div>
+    <h1>Every team follows<br>the <em>same rules</em>.<br>Only the problem differs.</h1>
+    <div class="thesis">
+      Build one real thing properly, prove it works with honest numbers, and be able to defend
+      every line of it on your own.
+    </div>
+    <div class="hero-meta">
+      <span class="chip">15 weeks</span>
+      <span class="chip">4 tracks</span>
+      <span class="chip">69 topics</span>
+      <span class="chip">238 students</span>
+      <span class="chip">40 marks</span>
+    </div>
+
+    <nav class="jump" aria-label="Jump to section">
+      <a href="#start">Start here</a>
+      <a href="#docs">Three documents</a>
+      <a href="#teams">Teams &amp; the fifth member</a>
+      <a href="#rules">Six ground rules</a>
+      <a href="#weeks">The 15 weeks</a>
+      <a href="#submit">What you submit</a>
+      <a href="#marks">How you are marked</a>
+      <a href="#ai">AI tools</a>
+      <a href="#ethics">Ethics</a>
+      <a href="#deadlines">Deadlines</a>
+      <a href="#templates">Templates</a>
+      <a href="#faq">Questions</a>
+    </nav>
+  </header>
+
+  <!-- ══════════════ START HERE ══════════════ -->
+  <section id="start" style="border-top:none;padding-top:14px;margin-top:10px">
+    <div class="startbox">
+      <h2>The whole thing in ten lines</h2>
+      <p class="sub">If you read nothing else this week, read this. Everything below is the detail behind it.</p>
+      <ol class="ten">
+        <li>Teams are <strong>four people</strong>. Two teams of five already exist and no more are allowed.</li>
+        <li>Your topic is <strong>locked to your team</strong>. One topic, one team, no swaps, no exceptions.</li>
+        <li>In <strong>Week 4</strong> you build the stupidest thing that works. That is your baseline, and every later claim is measured against it.</li>
+        <li>Never report a number without saying <strong>what you compared it to</strong>.</li>
+        <li>Anything with randomness in it runs <strong>ten times</strong>. Report the spread, not your best run.</li>
+        <li>Write every run into <code>experiments.csv</code> <strong>the day you run it</strong>, not in Week 13.</li>
+        <li>AI tools are allowed for learning, boilerplate and debugging. <strong>Code you cannot explain is not.</strong></li>
+        <li>Anything involving people needs <strong>written consent and ethics clearance before you collect a single response</strong>.</li>
+        <li>In <strong>Week 12 you stop building.</strong> Weeks 13 and 14 are for writing the paper.</li>
+        <li>At the viva you are questioned <strong>alone, about your own work</strong>. "I did the data part" is not an answer.</li>
+      </ol>
+    </div>
+
+    <h3>What to read, and when</h3>
+    <p>This page is part instruction and part reference. You do not need all of it in Week 1.</p>
+
+    <div class="tbl-scroll">
+    <table>
+      <tr><th>When</th><th>Read</th><th>Why then</th></tr>
+      <tr><td class="num">Week 1</td><td>The ten lines above, plus Sections 1, 2 and 6</td><td>Team size, the six rules you will be judged against, and the AI policy</td></tr>
+      <tr><td class="num">Week 2</td><td>Section 7 — ethics</td><td>Consent and clearance must be in place <em>before</em> you collect anything</td></tr>
+      <tr><td class="num">Every week</td><td>Your row in Section 3</td><td>One week, one job, one test of whether it is finished</td></tr>
+      <tr><td class="num">Week 8</td><td>Section 5 — marking</td><td>Read it the week before the mid-term, so feedback lands on something</td></tr>
+      <tr><td class="num">Weeks 12–14</td><td>Sections 4 and 9</td><td>What to submit, and the templates to copy</td></tr>
+      <tr><td class="num">When stuck</td><td>Section 10</td><td>Most questions teams ask are already answered there</td></tr>
+    </table>
+    </div>
+  </section>
+
+  <!-- ══════════════ 0 · DOCUMENTS ══════════════ -->
+  <section id="docs">
+    <div class="sec-num">SECTION 0</div>
+    <div class="sec-head"><h2>Three documents, and which one answers your question</h2><span class="when now">Week 1</span></div>
+    <p class="sec-lede">Read this one first. It applies to all 59 teams regardless of what you chose.</p>
+
+    <div class="tbl-scroll">
+    <table>
+      <tr><th>Document</th><th>Covers</th><th>Applies to</th></tr>
+      <tr><td><strong>The Rulebook</strong><br>this page</td><td>Team rules, ground rules, the weekly rhythm, marking, ethics, deadlines, templates</td><td>All 59 teams</td></tr>
+      <tr><td><strong>Track charter</strong></td><td>What your track is about, the shared data your track uses, which teams depend on which</td><td>Your track only</td></tr>
+      <tr><td><strong>Module page</strong></td><td>Your specific problem, your roadmap, what you hand over, what is easy to get wrong</td><td>Your team only</td></tr>
+    </table>
+    </div>
+
+    <p><strong>Track A</strong> teams start at <a href="track-a.html" style="color:var(--maroon)">the Track A charter</a>, which links to all twenty module pages. Charters for Tracks B, C and D follow.</p>
+
+    <p>When two documents disagree, the more specific one wins: module page over track charter, track charter over this page. If the contradiction looks like a mistake rather than a deliberate exception, tell me and I will fix it rather than let two versions circulate.</p>
+  </section>
+
+  <!-- ══════════════ 1 · TEAMS ══════════════ -->
+  <section id="teams">
+    <div class="sec-num">SECTION 1</div>
+    <div class="sec-head"><h2>Teams, and what the fifth member owns</h2><span class="when now">Week 1</span></div>
+    <p class="sec-lede">Four students is the standard team. Five is allowed but limited, and it is not a lighter share of the same work.</p>
+
+    <h3>Size</h3>
+    <p>238 students do not divide evenly into teams of four: 59 teams of four leaves two students with nobody to join. The cohort therefore runs exactly two five-member teams, which makes 2&nbsp;&times;&nbsp;5 plus 57&nbsp;&times;&nbsp;4 = 238, and nobody is stranded.</p>
+
+    <div class="tbl-scroll">
+    <table>
+      <tr><th>Rule</th><th>Detail</th></tr>
+      <tr><td class="num">4</td><td>Standard team size. No approval needed.</td></tr>
+      <tr><td class="num">5</td><td>Allowed, but <strong>capped at 2 such teams across the whole cohort</strong>, first come first served. One already exists, so exactly one place remains. Once it is taken the registration page accepts fours only.</td></tr>
+      <tr><td class="num">3</td><td>Not permitted. If your team falls to three because someone withdraws, tell me immediately — I will merge or reassign, and you will not be penalised for it.</td></tr>
+      <tr><td class="num">6+</td><td>Not permitted under any circumstances.</td></tr>
+    </table>
+    </div>
+
+    <p>Members may come from any section. Teams cannot be changed after Week 2.</p>
+
+    <h3>What the fifth member owns</h3>
+    <p>A fifth person with no defined territory becomes a passenger by Week 6, and the viva will expose it in front of everyone. So the fifth slot has a named job, and it is the job most teams skip:</p>
+
+    <ul>
+      <li><strong>The baseline.</strong> Implement and own the simple comparison method your module brief names. Every claim your team makes is measured against this.</li>
+      <li><strong>The spread.</strong> Run every stochastic result across ten seeds and produce the ranges. Nobody else on the team reports a bare number again.</li>
+      <li><strong>The failure analysis.</strong> Find where the system breaks, characterise it, and explain why. This becomes the discussion section of the paper.</li>
+      <li><strong>The experiment log.</strong> Own <code>experiments.csv</code> and keep it current from Week 4, not reconstructed in Week 13.</li>
+    </ul>
+
+    <div class="note good">
+      <strong>Why this is a real job, not a consolation prize</strong>
+      These four things account for most of the marks in <em>Experimental results</em> and most of what earns credit in <em>Discussion</em>. They also cannot be faked at the viva, because the questions are simply "what was your baseline, and how far ahead of it did you finish?" and "show me your variance across seeds."
+    </div>
+
+    <h3>Three rules that follow from this</h3>
+
+    <div class="rule">
+      <div class="rule-n">5·1</div>
+      <div>
+        <h3>Every paper carries a contribution table</h3>
+        <p>One row per member, naming which of the seven marked components that person owned. It sits immediately before the references. All members sign it before submission — a typed name is fine, but every member must have read it.</p>
+        <p>This is not bureaucracy. It is the document I hold you to at the viva, and it is your protection if a teammate disappears in Week 10.</p>
+      </div>
+    </div>
+
+    <div class="rule">
+      <div class="rule-n">5·2</div>
+      <div>
+        <h3>Five-member teams must deliver the required extension</h3>
+        <p>Your module brief names one extension. For a team of four it is expected but assessed with some latitude. For a team of five it is a <strong>hard deliverable</strong>: no extension, no marks in <em>Experimental results</em> beyond the baseline comparison.</p>
+        <p>The extension is where the interesting work is. Five people is enough to reach it.</p>
+      </div>
+    </div>
+
+    <div class="rule">
+      <div class="rule-n">5·3</div>
+      <div>
+        <h3>Viva time scales with the team</h3>
+        <p>Ten minutes of demo plus five minutes of individual questioning per member. A four-member team occupies 30 minutes; a five-member team occupies 35. Plan your Week 15 slot accordingly — the schedule will be published in Week 12 and will not flex on the day.</p>
+      </div>
+    </div>
+
+    <div class="note">
+      <strong>Marks do not change with team size</strong>
+      Both sizes are marked out of 40 on the same rubric. A fifth member means the work goes deeper, not that each person does less. If marks scaled with size, every team would suddenly be five people.
+    </div>
+  </section>
+
+  <!-- ══════════════ 2 · GROUND RULES ══════════════ -->
+  <section id="rules">
+    <div class="sec-num">SECTION 2</div>
+    <div class="sec-head"><h2>Six ground rules</h2><span class="when now">Week 1 · live with it</span></div>
+    <p class="sec-lede">These are referenced by number in feedback and at the mid-term review. "You have a Rule 4 problem" should mean something to you.</p>
+
+    <div class="rule">
+      <div class="rule-n">1</div>
+      <div>
+        <h3>Follow your track's data contract</h3>
+        <p>Your track charter defines the files, column names and units your track shares. Read them, write them, and never change them unilaterally — another team's code looks up your columns by name.</p>
+        <ul>
+          <li>Never rename a column. Add new ones at the end only.</li>
+          <li>Dates <code>YYYY-MM-DD</code>, times <code>HH:MM</code> in 24-hour form.</li>
+          <li>State units once and keep them: km, litres, rupees.</li>
+          <li>A missing value is an empty cell. Never <code>NA</code>, never <code>-1</code>, never <code>0</code> — zero means zero.</li>
+          <li>Keep ID prefixes and padding: <code>BK00042</code>, not <code>42</code>.</li>
+        </ul>
+        <p>Some modules stand alone and have no shared contract — your track charter says which. Rules 2 to 6 still apply to you in full.</p>
+      </div>
+    </div>
+
+    <div class="rule">
+      <div class="rule-n">2</div>
+      <div>
+        <h3>Your output is a product, not a by-product</h3>
+        <p>Whatever your module produces goes in <code>results/</code> with a README beside it stating three things: what each column means with its units, the exact command that regenerates it, and what must be true for the numbers to hold.</p>
+        <p>If another team cannot use your output without messaging you, it is not finished.</p>
+      </div>
+    </div>
+
+    <div class="rule">
+      <div class="rule-n">3</div>
+      <div>
+        <h3>Every repository looks the same</h3>
+        <pre><code>&lt;track&gt;-&lt;module&gt;-&lt;short-name&gt;/
+├── README.md
+├── requirements.txt
+├── .gitignore
+├── experiments.csv
+├── data/
+│   ├── raw/          (never edit anything in here)
+│   └── processed/
+├── src/              (data_loader.py, model.py, train.py, evaluate.py)
+├── notebooks/
+├── results/
+└── paper/</code></pre>
+        <p>Lowercase, hyphens, no spaces. Commit messages describe what changed: <code>add water usage regression, R2 = 0.71</code>. "fix", "final", "update" and "asdf" are not commit messages, and I read the history.</p>
+      </div>
+    </div>
+
+    <div class="rule">
+      <div class="rule-n">4</div>
+      <div>
+        <h3>Set your seed, report the spread</h3>
+        <pre><code>import random, numpy as np
+SEED = 42
+random.seed(SEED)
+np.random.seed(SEED)</code></pre>
+        <p>Anything involving randomness — a genetic algorithm, a neural network, a train/test split — runs at least ten times with different seeds, and you report the average and the spread.</p>
+        <ul>
+          <li><strong>Wrong:</strong> Our GA found a route of 84.2 km.</li>
+          <li><strong>Right:</strong> Our GA averaged 86.1 km over 10 seeds; best 84.2, worst 89.7, standard deviation 1.8.</li>
+        </ul>
+        <p>One run is not a result. It is an anecdote.</p>
+      </div>
+    </div>
+
+    <div class="rule">
+      <div class="rule-n">5</div>
+      <div>
+        <h3>Every number needs a comparison and a range</h3>
+        <p>Two questions cost more marks than anything else in this project. Ask them of every number you write down.</p>
+        <p><strong>Compared to what?</strong> 87% means nothing alone. Compared to guessing the most common answer? Compared to what a person currently does by hand? Name your baseline before you name your result.</p>
+        <p><strong>How sure are you?</strong> Two models at 85% and 87% are often the same model wearing different hats. Report a range, and never claim an improvement you cannot defend.</p>
+        <p>A team reporting 71% with a proper baseline and honest error bars scores above a team reporting 94% with neither. That is not a technicality — it is the main thing this module is teaching you.</p>
+      </div>
+    </div>
+
+    <div class="rule">
+      <div class="rule-n">6</div>
+      <div>
+        <h3>Keep an experiment log</h3>
+        <p>One file, <code>experiments.csv</code>, in the repository root. One row per run, written the moment you run it.</p>
+        <pre><code>run_id, date, who, what_changed, main_metric, value, seed, notes
+R014, 2026-09-12, Priya, added weather features, MAE, 4.21, 42, better on weekends</code></pre>
+        <p>In Week 13 you will be writing the paper and trying to remember why run 14 beat run 11. This file is the answer. Teams that skip it lose about two days.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════ 3 · WEEKS ══════════════ -->
+  <section id="weeks">
+    <div class="sec-num">SECTION 3</div>
+    <div class="sec-head"><h2>The 15 weeks</h2><span class="when now">Every week</span></div>
+    <p class="sec-lede">Every team in every track follows this rhythm, applied to its own problem. That is deliberate: it means your mentor can help any team in any week, and it means you always know what "behind" looks like.</p>
+
+    <div class="week">
+      <div class="week-head"><span class="week-n">WEEK 1</span><span class="week-t">Set up</span></div>
+      <ul>
+        <li>Read the rulebook, your track charter and your module page together, as a team</li>
+        <li>Create the repository using the structure in Rule 3</li>
+        <li>Everyone installs Python, clones the repo, and pushes one commit</li>
+        <li>Split the work: data, model, evaluation, writing — and for teams of five, assign the baseline-and-spread role</li>
+      </ul>
+      <div class="done"><span class="mark">DONE WHEN</span><span class="txt">The repository exists, there is one commit from every member, and roles are written in the README.</span></div>
+    </div>
+
+    <div class="week">
+      <div class="week-head"><span class="week-n">WEEK 2</span><span class="week-t">Understand the data</span></div>
+      <p>Build nothing this week. Just look. Load your data, print shapes and types, count missing values in every column, plot every distribution, and write down what surprises you.</p>
+      <div class="done"><span class="mark">DONE WHEN</span><span class="txt"><code>notebooks/01_exploration.ipynb</code> exists and five surprises are recorded in the README.</span></div>
+      <p style="font-size:14px;color:var(--ink-soft)">Teams rush this week and pay for it in Week 9, when a data problem they never noticed breaks the model.</p>
+    </div>
+
+    <div class="week">
+      <div class="week-head"><span class="week-n">WEEK 3</span><span class="week-t">Read what others have done</span></div>
+      <ul>
+        <li>Find 8–10 papers on your problem: Google Scholar, arXiv, Papers with Code</li>
+        <li>For each, three lines: what they did, what data, what you can borrow</li>
+        <li>Find two public datasets related to your problem as backup</li>
+        <li>Decide which methods you will actually try, and why</li>
+      </ul>
+      <div class="done"><span class="mark">DONE WHEN</span><span class="txt">A literature table with 8–10 rows exists. This becomes Section 2 of your paper almost unchanged.</span></div>
+    </div>
+
+    <div class="week pivot">
+      <div class="week-head"><span class="week-n">WEEK 4</span><span class="week-t">Build the stupidest thing that works</span></div>
+      <p>The most important week, and the one teams most want to skip. Build the simplest possible solution — not a good one, a working one. Then measure it properly.</p>
+      <div class="done"><span class="mark">DONE WHEN</span><span class="txt">A baseline runs end to end and its score is in <code>experiments.csv</code>.</span></div>
+      <p style="font-size:14px;color:var(--ink-soft)">This number is your opponent for eight weeks. Without it you cannot prove anything you build later is any good.</p>
+    </div>
+
+    <div class="week pivot">
+      <div class="week-head"><span class="week-n">WEEK 5</span><span class="week-t">Publish your output format</span></div>
+      <p>The integration handshake, for tracks whose modules feed one another. Publish what your module will produce <em>before</em> building it: exact columns, a dummy file with five fake rows, confirmed with the teams who depend on you. Your track charter names those teams; if it names none, see the note below.</p>
+      <div class="done"><span class="mark">DONE WHEN</span><span class="txt">A dummy output file is in your repo and the teams you depend on have confirmed theirs.</span></div>
+      <p style="font-size:14px;color:var(--ink-soft)">Teams that skip this week are the ones whose modules do not fit in Week 14. <strong>If your track charter does not name any team you exchange files with</strong>, your module stands alone — use this week to freeze your evaluation protocol instead: the exact metric, the exact split, and the exact baseline you will be judged against for the remaining ten weeks.</p>
+    </div>
+
+    <div class="week">
+      <div class="week-head"><span class="week-n">WEEK 6</span><span class="week-t">Build the real version</span></div>
+      <p>Implement the main method from your roadmap. Get it running end to end even if it performs badly, then compare it against the Week 4 baseline and log the result.</p>
+      <div class="done"><span class="mark">DONE WHEN</span><span class="txt">Your real method runs, and you know whether it beats the baseline yet.</span></div>
+    </div>
+
+    <div class="week">
+      <div class="week-head"><span class="week-n">WEEK 7</span><span class="week-t">Measure it honestly</span></div>
+      <ul>
+        <li>Choose the right metric — accuracy is wrong on imbalanced data, RMSE is wrong when large errors are catastrophic</li>
+        <li>Run ten seeds, report average and spread</li>
+        <li>Split data properly: by date for time series, by group where groups exist</li>
+        <li>Look at your failure cases one by one</li>
+      </ul>
+      <div class="done"><span class="mark">DONE WHEN</span><span class="txt">A results table shows baseline, your method, and error bars on both.</span></div>
+    </div>
+
+    <div class="week pivot">
+      <div class="week-head"><span class="week-n">WEEK 8</span><span class="week-t">Mid-term review</span></div>
+      <ul>
+        <li>Ten-minute demo: problem, baseline, method, numbers</li>
+        <li>Show one thing that is not working — every team has one, and hiding it wastes the review</li>
+        <li>Bring <code>experiments.csv</code>. You will be asked for it</li>
+      </ul>
+      <div class="done"><span class="mark">DONE WHEN</span><span class="txt">Demo delivered, feedback written down, plan for Weeks 9–12 updated.</span></div>
+    </div>
+
+    <div class="week">
+      <div class="week-head"><span class="week-n">WEEK 9</span><span class="week-t">Improve, and test the joins</span></div>
+      <p>Two jobs. Improve what the mid-term exposed, and load another team's real output file and run your code against it.</p>
+      <div class="done"><span class="mark">DONE WHEN</span><span class="txt">Your code runs on a real file from another team. Bugs found now cost hours; found in Week 14 they cost the grade.</span></div>
+    </div>
+
+    <div class="week">
+      <div class="week-head"><span class="week-n">WEEK 10</span><span class="week-t">The required extension</span></div>
+      <p>Your module brief names one. This is the week for it, and it is what separates a working assignment from a project worth reading. For five-member teams this is a hard deliverable — see Rule 5·2.</p>
+      <div class="done"><span class="mark">DONE WHEN</span><span class="txt">The extension is implemented and its results are logged.</span></div>
+    </div>
+
+    <div class="week">
+      <div class="week-head"><span class="week-n">WEEK 11</span><span class="week-t">Break your own work</span></div>
+      <ul>
+        <li>What happens with half the data? A tenth?</li>
+        <li>What about messy inputs — missing values, wrong units, wild outliers?</li>
+        <li>Where does it fail, and can you explain why?</li>
+        <li>If it is slow, how slow, on what hardware?</li>
+      </ul>
+      <div class="done"><span class="mark">DONE WHEN</span><span class="txt">You have a written list of your module's limits. This becomes your discussion section, and it is where the real marks live.</span></div>
+    </div>
+
+    <div class="week pivot">
+      <div class="week-head"><span class="week-n">WEEK 12</span><span class="week-t">Freeze</span></div>
+      <ul>
+        <li>Stop building. Genuinely stop</li>
+        <li>Final run of everything, all seeds, all logged</li>
+        <li>Produce every figure and table the paper needs</li>
+        <li>Clean the repo: no dead code, no stray notebooks, complete <code>requirements.txt</code></li>
+        <li>Someone outside the team clones it fresh and runs it. Fix whatever breaks</li>
+      </ul>
+      <div class="done"><span class="mark">DONE WHEN</span><span class="txt">Results are frozen, the repo is clean, and a stranger can run it.</span></div>
+    </div>
+
+    <div class="week">
+      <div class="week-head"><span class="week-n">WEEK 13</span><span class="week-t">Write the first half</span></div>
+      <p>One section per day. Mon: abstract and introduction. Tue: literature review, mostly done in Week 3. Wed: methodology. Thu: experimental setup. Fri: rewrite Monday's abstract, which will be wrong by now.</p>
+      <div class="done"><span class="mark">DONE WHEN</span><span class="txt">Sections 1–5 are drafted.</span></div>
+    </div>
+
+    <div class="week">
+      <div class="week-head"><span class="week-n">WEEK 14</span><span class="week-t">Write the second half</span></div>
+      <ul>
+        <li>Results, discussion, conclusion, references</li>
+        <li>Every figure gets a caption, axis labels, and a mention in the text</li>
+        <li>Build slides: 10–12, one point each, 18pt or larger</li>
+        <li>Write <code>INTEGRATION.md</code> and the contribution table</li>
+        <li>Run Turnitin, target under 20%</li>
+      </ul>
+      <div class="done"><span class="mark">DONE WHEN</span><span class="txt">Full paper drafted, slides built, integration note and contribution table written.</span></div>
+    </div>
+
+    <div class="week pivot">
+      <div class="week-head"><span class="week-n">WEEK 15</span><span class="week-t">Present</span></div>
+      <ul>
+        <li>Rehearse the demo three times. Time it</li>
+        <li>Record a backup video in case the live demo fails</li>
+        <li>Each member prepares to answer: what did you build, and how does it work?</li>
+        <li>Submit everything</li>
+      </ul>
+      <div class="done"><span class="mark">DONE WHEN</span><span class="txt">Submitted, presented, and every member has answered for their own work.</span></div>
+      <div class="note warn">
+        <strong>Viva reality check</strong>
+        Each of you is questioned individually. "I did the data part" is not an answer. Know your own code line by line, and roughly what everyone else's does.
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════ 4 · SUBMIT ══════════════ -->
+  <section id="submit">
+    <div class="sec-num">SECTION 4</div>
+    <div class="sec-head"><h2>What you submit</h2><span class="when later">Week 12</span></div>
+
+    <div class="tbl-scroll">
+    <table>
+      <tr><th>Deliverable</th><th>Requirements</th></tr>
+      <tr><td><strong>Code</strong><br>GitHub</td><td>Runs without errors on a machine that is not yours. Complete <code>requirements.txt</code>. Structure per Rule 3. Meaningful commit history. Faculty has access, shared if private.</td></tr>
+      <tr><td><strong>Technical paper</strong></td><td>6–8 pages, IEEE format. Title, abstract (150 words), keywords, introduction, literature review (8–10 papers), methodology, results and discussion, conclusion, 10+ references, contribution table.</td></tr>
+      <tr><td><strong>Slides</strong></td><td>10–12 slides, 18pt or larger, one main point per slide.</td></tr>
+      <tr><td><strong>Live demo</strong></td><td>3–5 minutes on data the model has not seen, with a recorded backup if the live run is risky.</td></tr>
+      <tr><td><strong>Integration note</strong></td><td>One page, <code>INTEGRATION.md</code>: what you produce, what you consume, what you assumed. Teams whose module stands alone document the frozen evaluation protocol instead.</td></tr>
+    </table>
+    </div>
+  </section>
+
+  <!-- ══════════════ 5 · MARKS ══════════════ -->
+  <section id="marks">
+    <div class="sec-num">SECTION 5</div>
+    <div class="sec-head"><h2>How you are marked</h2><span class="when later">Week 8</span></div>
+    <p class="sec-lede">40 marks, converted to the 30-mark UA scale as per assessment policy. Same rubric for teams of four and five.</p>
+
+    <div class="tbl-scroll">
+    <table>
+      <tr><th>Component</th><th>Marks</th><th>What actually earns them</th></tr>
+      <tr><td>Problem understanding</td><td class="num">5</td><td>You can explain why the problem matters and what existed before your work</td></tr>
+      <tr><td>Literature review</td><td class="num">5</td><td>8–10 papers connected to your work, synthesised rather than listed</td></tr>
+      <tr><td>Methodology and implementation</td><td class="num">10</td><td>Code runs, is organised, and anyone can reproduce your results</td></tr>
+      <tr><td>Experimental results</td><td class="num">5</td><td>Baseline named, ranges reported, failure cases analysed</td></tr>
+      <tr><td>GitHub repository</td><td class="num">5</td><td>Structure followed, README clear, commit history real</td></tr>
+      <tr><td>Technical paper</td><td class="num">5</td><td>IEEE format, 6–8 pages, complete, contribution table present</td></tr>
+      <tr><td>Presentation and viva</td><td class="num">5</td><td>Clear demo, and each member defends their own contribution</td></tr>
+    </table>
+    </div>
+
+    <div class="pair">
+      <div class="card">
+        <h4>Reliably loses marks</h4>
+        <ul>
+          <li>A number with no baseline — "we got 89%" invites "compared to what?"</li>
+          <li>A single run of anything random</li>
+          <li>A repository that will not run on another machine</li>
+          <li>A member who cannot explain their own contribution</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>Reliably gains them</h4>
+        <ul>
+          <li>Honesty about what did not work, and why</li>
+          <li>A failure analysis with specific examples</li>
+          <li>An unexpected result, checked carefully and reported rather than buried</li>
+          <li>Numbers a reader could reproduce from your repo alone</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="note">
+      <strong>Depth beats accuracy</strong>
+      A 60% model with genuine insight scores above an 85% model with none. This is the single most reliable way to do well here, and every year some teams do not believe it until the marks come back.
+    </div>
+  </section>
+
+  <!-- ══════════════ 6 · AI ══════════════ -->
+  <section id="ai">
+    <div class="sec-num">SECTION 6</div>
+    <div class="sec-head"><h2>AI tools</h2><span class="when now">Week 1</span></div>
+    <p class="sec-lede">Permitted, expected even, with one condition that is absolute.</p>
+
+    <div class="pair">
+      <div class="card">
+        <h4 style="color:var(--green)">You can</h4>
+        <ul>
+          <li>Learn and brainstorm — "explain how convolutional layers work"</li>
+          <li>Generate boilerplate — "a Flask template with three routes"</li>
+          <li>Debug — "why does my model return NaN during training?"</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4 style="color:var(--red)">You cannot</h4>
+        <ul>
+          <li>Submit code you cannot explain line by line</li>
+          <li>Have AI write your training script and submit it unchanged</li>
+          <li>Submit AI-written paper text without rewriting it in your own words</li>
+          <li>Let AI do your thinking — you must understand your own results</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="note warn">
+      <strong>If you cannot explain it, do not submit it</strong>
+      At the viva you will be asked to explain every algorithm and why you chose it, every major function, what your results mean, and what you personally did. Acknowledge any AI tool you used in the paper. Turnitin target is under 20% with proper citation.
+    </div>
+  </section>
+
+  <!-- ══════════════ 7 · ETHICS ══════════════ -->
+  <section id="ethics">
+    <div class="sec-num">SECTION 7</div>
+    <div class="sec-head"><h2>Research ethics</h2><span class="when now">Week 2 · before collecting</span></div>
+    <p class="sec-lede">Several topics involve human participants or institutional data. These rules are not negotiable and they cost you nothing if you plan for them in Week 2 rather than Week 12.</p>
+
+    <ul>
+      <li>Human participants require <strong>written informed consent and institutional ethics clearance before any collection begins</strong>. Not after. Not retrospectively.</li>
+      <li>Participants may withdraw at any point, and their data goes with them.</li>
+      <li>Institutional data must be anonymised before modelling: hashed identifiers, contact and medical fields removed.</li>
+      <li>State dataset provenance plainly, including when data is simulated rather than observed.</li>
+      <li>Any system that touches people needs a written account of who is harmed when it is wrong.</li>
+    </ul>
+
+    <div class="note warn">
+      <strong>No fabricated data. Ever.</strong>
+      Inventing results, padding a dataset, or reporting a run that never happened ends the project and goes to the department. If your numbers are disappointing, report the disappointing numbers — that path leads to a good mark, and the other one leads nowhere.
+    </div>
+  </section>
+
+  <!-- ══════════════ 8 · DEADLINES ══════════════ -->
+  <section id="deadlines">
+    <div class="sec-num">SECTION 8</div>
+    <div class="sec-head"><h2>Deadlines</h2><span class="when now">Week 1 · pin it up</span></div>
+
+    <div class="tbl-scroll">
+    <table>
+      <tr><th>Week</th><th>Milestone</th><th>Deliverable</th></tr>
+      <tr><td class="num">1</td><td>Team registration and topic selection</td><td>Team list, track and topic assigned</td></tr>
+      <tr><td class="num">3</td><td>Literature review, dataset validation, ethics clearance where required</td><td>8–10 papers, data sample, approval on file</td></tr>
+      <tr><td class="num">5</td><td>Integration handshake, or frozen evaluation protocol</td><td>Published output format and dummy file, or a written protocol</td></tr>
+      <tr><td class="num">8</td><td>Mid-term check-in</td><td>Working prototype, <code>experiments.csv</code>, progress report</td></tr>
+      <tr><td class="num">13</td><td>Paper draft, optional, for feedback</td><td>First draft of the technical paper</td></tr>
+      <tr><td class="num">15</td><td>Final submission, presentation and viva</td><td>Code, repository, paper, slides, demo</td></tr>
+    </table>
+    </div>
+
+    <p><strong>Late work:</strong> 10% penalty per day for the first two days. Three days or more caps that component at 50%. Medical and emergency extensions need faculty approval and documentation — ask early, not on the deadline.</p>
+  </section>
+
+  <!-- ══════════════ 9 · TEMPLATES ══════════════ -->
+  <section id="templates">
+    <div class="sec-num">SECTION 9</div>
+    <div class="sec-head"><h2>Templates</h2><span class="when later">Weeks 13–14 · copy from here</span></div>
+
+    <h3>Contribution table — goes in the paper, before the references</h3>
+    <div class="tbl-scroll">
+    <table>
+      <tr><th>Member</th><th>Reg no.</th><th>Components owned</th><th>Signed</th></tr>
+      <tr><td>Name (lead)</td><td>2313020xx</td><td>Methodology and implementation; presentation</td><td>✓</td></tr>
+      <tr><td>Name</td><td>2313020xx</td><td>Problem understanding; literature review</td><td>✓</td></tr>
+      <tr><td>Name</td><td>2313020xx</td><td>GitHub repository; technical paper</td><td>✓</td></tr>
+      <tr><td>Name</td><td>2313020xx</td><td>Experimental results</td><td>✓</td></tr>
+      <tr><td>Name <em>(5th, where applicable)</em></td><td>2313020xx</td><td>Baseline, seed variance, failure analysis, experiment log</td><td>✓</td></tr>
+    </table>
+    </div>
+
+    <h3>README.md</h3>
+    <pre><code># &lt;Module ID&gt; — &lt;Module name&gt;
+
+## What this module does
+One paragraph in plain English.
+
+## Team
+- Name (lead): what they built
+- Name: what they built
+
+## How to run
+git clone ...
+pip install -r requirements.txt
+python src/train.py
+
+## Results
+Baseline: ...
+Ours: ... (mean over 10 seeds, sd ...)
+
+## What we found surprising
+Five things from Week 2.</code></pre>
+
+    <h3>INTEGRATION.md — one page, Week 14</h3>
+    <pre><code># Integration note — &lt;Module ID&gt;
+
+## What I produce
+File, columns, units, how often it updates.
+
+## What I consume
+Which team's file, which columns, what I assume about them.
+
+## What breaks if their format changes
+Named, specifically.
+
+## What I assumed that may not be true
+The honest list.</code></pre>
+
+    <h3>experiments.csv</h3>
+    <pre><code>run_id, date, who, what_changed, main_metric, value, seed, notes</code></pre>
+  </section>
+
+  <!-- ══════════════ 10 · FAQ ══════════════ -->
+  <section id="faq">
+    <div class="sec-num">SECTION 10</div>
+    <div class="sec-head"><h2>Questions teams ask</h2><span class="when later">When stuck</span></div>
+
+    <h4>Our accuracy is only 65%. Are we failing?</h4>
+    <p>No. A 65% model with a proper baseline, honest error bars and real failure analysis scores above an 85% model with none.</p>
+
+    <h4>Can our team have five members?</h4>
+    <p>Only two teams in the entire cohort may have five members, and one of those places is already taken. The registration page shows whether the last place is still free. Read Section 1 before you decide — the fifth slot is a defined job, not a spare seat.</p>
+
+    <h4>Someone in our team has stopped responding.</h4>
+    <p>Tell me in the week it happens, not in Week 14. Each student is questioned individually at the viva and marked on their own contribution, so you are not carrying their marks — but you may be carrying their work, and that is fixable if I know early.</p>
+
+    <h4>A team we depend on is behind.</h4>
+    <p>Build against your Week 5 dummy file and keep going. Tell your mentor. Never let another team's delay stop your work.</p>
+
+    <h4>Can we use a pre-trained model such as BERT or ResNet?</h4>
+    <p>Yes, transfer learning is valid. Document what you changed and what you trained yourself.</p>
+
+    <h4>Can we adapt a solution found on GitHub?</h4>
+    <p>Study and adapt, never copy-paste. You must be able to modify every line, which means you must understand every line.</p>
+
+    <h4>Do all of us need to write code?</h4>
+    <p>Ideally yes, and roles can still differ. But everyone must understand the full pipeline, because everyone is asked about it.</p>
+
+    <h4>Our results contradict the paper we based this on.</h4>
+    <p>Excellent. Check carefully, and if it holds, that is a genuine finding. Write it up rather than bury it.</p>
+
+    <h4>We finished early.</h4>
+    <p>Do the extension properly. Then break your own work — less data, messier data, different assumptions. Then help a team that is behind.</p>
+  </section>
+
+  <footer>
+    <p class="last">Build one real part properly, prove it works with honest numbers, and make sure it fits with everyone else's.</p>
+    <p class="sig">K.P. SINGH · DEPARTMENT OF CSE (AI/ML) · SGT UNIVERSITY</p>
+  </footer>
+
+</div>
+</body>
+</html>
