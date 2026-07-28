@@ -50,6 +50,11 @@ body {
 .stats-row { display: flex; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; }
 .stat-chip { background: #f5ede8; border-radius: 16px; padding: 6px 14px; font-size: 12px; color: #8B3A3A; font-weight: 600; font-family: 'Courier New', monospace; }
 
+/* ══ RESUME BOX ══ */
+.resume-row { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+.resume-row input { padding: 10px 12px; border: 1.5px solid #d0c2ae; border-radius: 6px; font-family: 'Courier New', monospace; font-size: 14px; background: #fff; flex: 1; min-width: 190px; }
+.resume-row input:focus-visible { outline: 2px solid #8B3A3A; outline-offset: 1px; border-color: #8B3A3A; }
+
 /* ══ STEP RAIL ══ */
 .steprail { display: flex; gap: 6px; margin-bottom: 20px; flex-wrap: wrap; font-family: 'Courier New', monospace; font-size: 11px; }
 .steprail span { padding: 4px 12px; border-radius: 12px; background: #f0ebe0; color: #9a8f80; letter-spacing: .04em; }
@@ -218,6 +223,17 @@ tr:nth-child(even) td { background: #faf7f0; }
 
     <!-- STEP 1 -->
     <div id="step-team">
+
+      <div class="info-box" id="resumeBox">
+        <strong>Already registered but did not pick a topic?</strong>
+        Do not register again. Team leader enters their registration number here to continue where the team left off.
+        <div class="resume-row">
+          <input type="text" id="resumeRoll" maxlength="9" inputmode="numeric" autocomplete="off"
+                 placeholder="Leader's registration no." aria-label="Team leader registration number">
+          <button class="btn secondary" id="resumeBtn">Continue</button>
+        </div>
+      </div>
+
       <h2>Step 1 — Form your team</h2>
       <div class="info-box">
         <strong>Rules</strong>
@@ -339,6 +355,7 @@ tr:nth-child(even) td { background: #faf7f0; }
 
     <h3>FAQs</h3>
     <div class="faq-item"><div class="faq-q">Can our team mix sections?</div><div class="faq-a">Yes. Any four or five students from 7A, 7B, 7C or 7D can register together.</div></div>
+    <div class="faq-item"><div class="faq-q">We registered but the page closed before we picked a topic. What now?</div><div class="faq-a">Use the Continue box at the top of the Register tab. The leader enters their registration number and the team goes straight back to track selection.</div></div>
     <div class="faq-item"><div class="faq-q">Can we change topic after confirming?</div><div class="faq-a">No. Read the full topic brief before you confirm — that is what the detail view is for.</div></div>
     <div class="faq-item"><div class="faq-q">Can two teams take the same topic?</div><div class="faq-a">No. All 69 topics are unique across the cohort, so once a topic is confirmed it is gone for everyone.</div></div>
     <div class="faq-item"><div class="faq-q">Can we use ChatGPT or Claude?</div><div class="faq-a">Yes, for learning and brainstorming. You must understand and be able to explain every line at the viva. Blind copying is an automatic fail.</div></div>
@@ -1071,6 +1088,10 @@ bar:"Testing with name-swapped and identical-content resumes. If ranking changes
      GET  ?action=get_state
           -> { status:"ok", usedRolls:["231302002",...],
                takenTopics:["A3","C7"], teamsCount:12 }
+     GET  ?action=resume&roll=231302050
+          -> { status:"ok", teamNo:1, teamStatus:"REGISTERED",
+               trackId:"", topicId:"", topicTitle:"",
+               rolls:[...], names:[...], sections:[...] }
      POST { type:"register_team", rolls:[...], names:[...], sections:[...] }
           -> { status:"ok", teamNo:13 }
      POST { type:"select_topic", teamNo:13, trackId:"A", topicId:"A3",
@@ -1092,6 +1113,9 @@ var TOTAL_STUDENTS = 238;
 /* false = every section sees all four tracks (default)
    true  = a team may only pick the track matching its leader's section */
 var ENFORCE_SECTION_TRACKS = false;
+
+/* key used to remember an unfinished registration on this device */
+var LS_KEY = 'aiml_ta_team';
 
 var TRACKS = [
   { id:'A', code:'TRACK A', name:'Service as a Service',
@@ -1137,6 +1161,18 @@ function checkSheetUrl() {
   if (GAS_URL.indexOf('/macros/s/') === -1 || GAS_URL.indexOf('/exec') === -1) return 'GAS_URL does not look like a Web App URL. It should contain /macros/s/ and end in /exec.';
   return null;
 }
+
+/* ══════════════════ LOCAL SAVE ══════════════════ */
+function saveTeamLocal(t){
+  try { localStorage.setItem(LS_KEY, JSON.stringify(t)); } catch(e){}
+}
+function clearTeamLocal(){
+  try { localStorage.removeItem(LS_KEY); } catch(e){}
+}
+function loadTeamLocal(){
+  try { return JSON.parse(localStorage.getItem(LS_KEY) || 'null'); } catch(e){ return null; }
+}
+function setTeam(t){ myTeam = t; saveTeamLocal(t); }
 
 /* ══════════════════ TABS ══════════════════ */
 Array.prototype.forEach.call(document.querySelectorAll('.tab-btn'), function(btn){
@@ -1235,6 +1271,74 @@ function refreshState(){
     .catch(function(err){ console.warn(err); });
 }
 
+/* ══════════════════ RESUME AN UNFINISHED TEAM ══════════════════ */
+function enterTrackStep(msg){
+  selectedTrackId = null;
+  selectedTopicId = null;
+  $('confirmTopicBtn').disabled = true;
+  renderTracks();
+  goStep(2);
+  if (msg) showOk(msg);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function showDoneScreen(trackId, topicId, topicTitle){
+  var found = topicById(topicId);
+  var trackLabel = found ? (found.track.code + ' — ' + found.track.name.toUpperCase() + ' · ' + topicId)
+                         : ('TRACK ' + trackId + ' · ' + topicId);
+  $('doneTeamNo').textContent    = 'Team ' + myTeam.teamNo;
+  $('doneTrack').textContent     = trackLabel;
+  $('doneTopicName').textContent = topicTitle || (found ? found.topic.t : '');
+  $('doneMembers').innerHTML = myTeam.rolls.map(function(r,i){
+    return '<div><span class="sec-badge">7' + myTeam.sections[i] + '</span> '
+      + esc(myTeam.names[i]) + ' · ' + r + (i===0 ? ' — leader' : '') + '</div>';
+  }).join('');
+  goStep(4);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+$('resumeBtn').addEventListener('click', function(){
+  clearMsgs();
+  var problem = checkSheetUrl();
+  if (problem && problem !== 'demo'){ showErr(problem); return; }
+
+  var roll = $('resumeRoll').value.trim();
+  if (!roll){ showErr('Enter the team leader registration number to continue.'); return; }
+  if (!Object.prototype.hasOwnProperty.call(ROSTER, roll)){ showErr('That registration number is not in the roster. Check for a typo.'); return; }
+  if (DEMO){ showErr('Resume needs the live backend. It does not work in demo mode.'); return; }
+
+  var btn = this;
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner-inline"></span>Checking';
+
+  fetch(GAS_URL + '?action=resume&roll=' + encodeURIComponent(roll), { redirect:'follow' })
+    .then(function(r){ return r.json(); })
+    .then(function(j){
+      btn.disabled = false; btn.textContent = 'Continue';
+      if (!j || j.status !== 'ok'){
+        showErr((j && j.message) || 'No registered team found for that number.');
+        return;
+      }
+      setTeam({ teamNo:j.teamNo, rolls:j.rolls, names:j.names, sections:j.sections });
+      if (String(j.teamStatus).toUpperCase() === 'CONFIRMED'){
+        clearTeamLocal();
+        clearMsgs();
+        showDoneScreen(j.trackId, j.topicId, j.topicTitle);
+        return;
+      }
+      enterTrackStep('Welcome back, Team ' + j.teamNo + '. Your team is already registered — now choose your track.');
+    })
+    .catch(function(err){
+      console.warn(err);
+      btn.disabled = false; btn.textContent = 'Continue';
+      showErr('Could not reach the server. Check your connection and try again.');
+    });
+});
+
+$('resumeRoll').addEventListener('keydown', function(e){
+  if (e.key === 'Enter'){ e.preventDefault(); $('resumeBtn').click(); }
+});
+
 /* ══════════════════ STEP 1: REGISTER ══════════════════ */
 $('registerBtn').addEventListener('click', function(){
   clearMsgs();
@@ -1255,7 +1359,7 @@ $('registerBtn').addEventListener('click', function(){
   var dup = rolls.filter(function(r,i){ return rolls.indexOf(r) !== i; });
   if (dup.length){ showErr('The same student is entered twice: ' + dup.join(', ')); return; }
   var already = rolls.filter(function(r){ return usedRolls.indexOf(r) !== -1; });
-  if (already.length){ showErr('Already in another team: ' + already.map(function(r){ return ROSTER[r][0] + ' (' + r + ')'; }).join(', ')); return; }
+  if (already.length){ showErr('Already in another team: ' + already.map(function(r){ return ROSTER[r][0] + ' (' + r + ')'; }).join(', ') + '. If this is your own team, use the Continue box above instead.'); return; }
   if (teamsCount >= MAX_TEAMS){ showErr('All ' + MAX_TEAMS + ' teams have been formed. Speak to your faculty mentor.'); return; }
 
   var names    = rolls.map(function(r){ return ROSTER[r][0]; });
@@ -1266,15 +1370,12 @@ $('registerBtn').addEventListener('click', function(){
   btn.innerHTML = '<span class="spinner-inline"></span>Registering';
 
   function onRegistered(teamNo){
-    myTeam = { teamNo: teamNo, rolls: rolls, names: names, sections: sections };
+    setTeam({ teamNo: teamNo, rolls: rolls, names: names, sections: sections });
     usedRolls = usedRolls.concat(rolls);
     teamsCount++;
-    showOk('Team ' + teamNo + ' registered. Now choose your track.');
     renderStats();
-    renderTracks();
-    goStep(2);
+    enterTrackStep('Team ' + teamNo + ' registered. Now choose your track. If you leave this page, come back and use the Continue box with the leader number.');
     btn.disabled = false; btn.textContent = 'Register team';
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   if (DEMO){ setTimeout(function(){ onRegistered(teamsCount + 1); }, 350); return; }
@@ -1433,17 +1534,11 @@ $('confirmTopicBtn').addEventListener('click', function(){
 
   function onConfirmed(){
     takenTopics = takenTopics.concat([selectedTopicId]);
-    $('doneTeamNo').textContent    = 'Team ' + myTeam.teamNo;
-    $('doneTrack').textContent     = found.track.code + ' — ' + found.track.name.toUpperCase() + ' · ' + selectedTopicId;
-    $('doneTopicName').textContent = found.topic.t;
-    $('doneMembers').innerHTML = myTeam.rolls.map(function(r,i){
-      return '<div><span class="sec-badge">7' + myTeam.sections[i] + '</span> '
-        + esc(myTeam.names[i]) + ' · ' + r + (i===0 ? ' — leader' : '') + '</div>';
-    }).join('');
+    clearTeamLocal();
     clearMsgs();
     renderStats();
-    goStep(4);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    showDoneScreen(selectedTrackId, selectedTopicId, found.topic.t);
+    btn.disabled = false; btn.textContent = 'Confirm topic';
   }
 
   if (DEMO){ setTimeout(onConfirmed, 350); return; }
@@ -1489,6 +1584,15 @@ buildMemberFields();
 renderSteps(1);
 refreshState();
 setInterval(refreshState, 20000);
+
+/* If this device has an unfinished registration, pick it up automatically. */
+(function(){
+  var saved = loadTeamLocal();
+  if (saved && saved.teamNo && saved.rolls && saved.rolls.length){
+    myTeam = saved;
+    enterTrackStep('Resumed Team ' + saved.teamNo + '. You had not selected a topic yet — choose your track.');
+  }
+})();
 </script>
 </body>
 </html>
