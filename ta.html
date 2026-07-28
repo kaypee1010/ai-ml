@@ -1113,13 +1113,15 @@ bar:"Testing with name-swapped and identical-content resumes. If ranking changes
    ══════════════════════════════════════════════════════════════ */
 
 var GAS_URL = 'https://script.google.com/macros/s/AKfycbzoMantDzWPAUvQkj9Gu2w0oz5t_7052gmHapJPo9FZ1iDif04N98xtsdK1-uR_8Sbvpg/exec';
-
 var MIN_MEMBERS = 4;
 var MAX_MEMBERS = 5;
 
 /* 238 students at 4-5 per team = 59 teams (57 of four, 2 of five). */
 var MAX_TEAMS = 59;
 var TOTAL_STUDENTS = 238;
+
+/* Cohort-wide cap on five-member teams: 2 x 5 + 57 x 4 = 238 students exactly. */
+var MAX_FIVES = 2;
 
 /* false = every section sees all four tracks (default)
    true  = a team may only pick the track matching its leader's section */
@@ -1149,6 +1151,7 @@ var myTeam = null;            // { teamNo, rolls[], names[], sections[] }
 var usedRolls = [];
 var takenTopics = [];
 var teamsCount = 0;
+var fivesCount = 0;
 var selectedTrackId = null;
 var selectedTopicId = null;
 var modalTopicId = null;
@@ -1223,7 +1226,7 @@ function buildMemberFields(){
     var optional = i >= MIN_MEMBERS;
     var label = 'Student ' + (i+1)
       + (i===0 ? ' — leader' : '')
-      + (optional ? ' <span class="optional-tag">optional</span>' : '');
+      + (optional ? ' <span class="optional-tag" id="fifthNote">optional</span>' : '');
     html += '<div class="student-row">'
       + '<div class="field"><label for="roll'+i+'">'+label+'</label>'
       + '<input type="text" id="roll'+i+'" placeholder="Registration no." maxlength="9" inputmode="numeric" autocomplete="off"></div>'
@@ -1251,6 +1254,27 @@ function buildMemberFields(){
   }
 }
 
+/* ══════════════════ FIFTH-SLOT GATE ══════════════════ */
+function updateFifthSlot(){
+  var note = $('fifthNote'), input = $('roll' + (MAX_MEMBERS - 1));
+  if (!note || !input) return;
+  var left = MAX_FIVES - fivesCount;
+  if (left <= 0){
+    input.value = '';
+    input.disabled = true;
+    input.placeholder = 'Teams of four only';
+    $('name' + (MAX_MEMBERS - 1)).textContent = '—';
+    $('name' + (MAX_MEMBERS - 1)).className = 'name-display';
+    note.textContent = 'closed — both five-member places are taken';
+    note.style.color = '#c0392b';
+  } else {
+    input.disabled = false;
+    input.placeholder = 'Registration no.';
+    note.textContent = 'optional — ' + left + ' five-member team place left in the whole cohort';
+    note.style.color = '#97722a';
+  }
+}
+
 /* ══════════════════ STATE FETCH ══════════════════ */
 function renderStats(){
   var chips = '';
@@ -1258,6 +1282,8 @@ function renderStats(){
   chips += '<div class="stat-chip">' + teamsCount + ' / ' + MAX_TEAMS + ' teams formed</div>';
   chips += '<div class="stat-chip">' + takenTopics.length + ' / ' + totalTopics() + ' topics taken</div>';
   chips += '<div class="stat-chip">' + usedRolls.length + ' / ' + TOTAL_STUDENTS + ' students registered</div>';
+  chips += '<div class="stat-chip"' + (fivesCount >= MAX_FIVES ? ' style="background:#f6e6e6;color:#a03a3a"' : '') + '>'
+        + fivesCount + ' / ' + MAX_FIVES + ' five-member teams</div>';
   $('stateStats').innerHTML = chips;
 }
 
@@ -1275,7 +1301,10 @@ function refreshState(){
       usedRolls   = j.usedRolls || [];
       takenTopics = j.takenTopics || [];
       teamsCount  = j.teamsCount || 0;
+      fivesCount  = j.fivesCount || 0;
+      if (typeof j.maxFives === 'number') MAX_FIVES = j.maxFives;
       renderStats();
+      updateFifthSlot();
       if ($('step-track').style.display !== 'none') renderTracks();
       if ($('step-topic').style.display !== 'none') renderTopics();
     })
@@ -1372,6 +1401,10 @@ $('registerBtn').addEventListener('click', function(){
   var already = rolls.filter(function(r){ return usedRolls.indexOf(r) !== -1; });
   if (already.length){ showErr('Already in another team: ' + already.map(function(r){ return ROSTER[r][0] + ' (' + r + ')'; }).join(', ') + '. If this is your own team, use the Continue box above instead.'); return; }
   if (teamsCount >= MAX_TEAMS){ showErr('All ' + MAX_TEAMS + ' teams have been formed. Speak to your faculty mentor.'); return; }
+  if (rolls.length === 5 && fivesCount >= MAX_FIVES){
+    showErr('Only ' + MAX_FIVES + ' five-member teams are allowed across the whole cohort, and both places are taken. Register as a team of four.');
+    return;
+  }
 
   var names    = rolls.map(function(r){ return ROSTER[r][0]; });
   var sections = rolls.map(function(r){ return ROSTER[r][1]; });
@@ -1384,7 +1417,9 @@ $('registerBtn').addEventListener('click', function(){
     setTeam({ teamNo: teamNo, rolls: rolls, names: names, sections: sections });
     usedRolls = usedRolls.concat(rolls);
     teamsCount++;
+    if (rolls.length >= 5) fivesCount++;
     renderStats();
+    updateFifthSlot();
     enterTrackStep('Team ' + teamNo + ' registered. Now choose your track. If you leave this page, come back and use the Continue box with the leader number.');
     btn.disabled = false; btn.textContent = 'Register team';
   }
@@ -1592,6 +1627,7 @@ $('confirmTopicBtn').addEventListener('click', function(){
 
 /* ══════════════════ INIT ══════════════════ */
 buildMemberFields();
+updateFifthSlot();
 renderSteps(1);
 refreshState();
 setInterval(refreshState, 20000);
