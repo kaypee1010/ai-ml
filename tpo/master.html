@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SGT University | T&P Cell Data Collection</title>
+<style>
+  :root{
+    --navy:#0b2545; --navy2:#123163; --gold:#c8a13a; --bg:#f4f6fa;
+    --card:#ffffff; --text:#1c2333; --muted:#667085; --danger:#c0392b;
+    --ok:#1e8f4e; --border:#dfe4ee; --radius:14px;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:'Segoe UI',Roboto,Arial,sans-serif;background:var(--bg);color:var(--text);}
+  header{background:linear-gradient(120deg,var(--navy),var(--navy2));color:#fff;padding:22px 18px;text-align:center;}
+  header h1{margin:0;font-size:19px;letter-spacing:.3px;}
+  header p{margin:4px 0 0;font-size:12.5px;opacity:.85;}
+  .wrap{max-width:640px;margin:0 auto;padding:16px 14px 60px;}
+  .progress{display:flex;gap:4px;margin:16px 0;}
+  .progress div{flex:1;height:5px;border-radius:4px;background:#dfe4ee;}
+  .progress div.done{background:var(--gold);}
+  .card{background:var(--card);border-radius:var(--radius);padding:20px 18px;box-shadow:0 2px 14px rgba(15,30,60,.06);margin-bottom:14px;}
+  .step{display:none;} .step.active{display:block;animation:fade .25s ease;}
+  @keyframes fade{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:translateY(0);}}
+  h2.stitle{font-size:16px;margin:0 0 4px;color:var(--navy);}
+  .sub{font-size:12.5px;color:var(--muted);margin:0 0 16px;}
+  label{display:block;font-size:12.5px;font-weight:600;margin:12px 0 5px;color:#2c3550;}
+  .hint{font-size:11px;color:var(--muted);font-weight:400;margin-top:3px;}
+  input[type=text],input[type=email],input[type=tel],input[type=number],input[type=date],select,textarea{
+    width:100%;padding:11px 12px;border:1.5px solid var(--border);border-radius:9px;font-size:14px;background:#fbfcfe;color:var(--text);
+  }
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--navy2);background:#fff;}
+  .err{border-color:var(--danger) !important;background:#fff5f4 !important;}
+  .errtext{color:var(--danger);font-size:11.5px;margin-top:4px;display:none;}
+  .phone-row{display:flex;gap:8px;}
+  .phone-row .prefix{flex:0 0 62px;display:flex;align-items:center;justify-content:center;background:#eef1f8;border:1.5px solid var(--border);border-radius:9px;font-weight:600;color:var(--navy);}
+  .row2{display:flex;gap:10px;} .row2>div{flex:1;}
+  .toggle{display:flex;gap:8px;margin-top:2px;flex-wrap:wrap;}
+  .toggle label{display:flex;align-items:center;gap:6px;font-weight:500;font-size:12px;background:#eef1f8;padding:7px 11px;border-radius:20px;cursor:pointer;margin:0;border:1.5px solid transparent;}
+  .toggle input{width:auto;}
+  .toggle label.on{background:var(--navy);color:#fff;}
+  .grid4{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .lookupBox{display:flex;gap:8px;}
+  .lookupBox input{flex:1;}
+  .lookupBox button{flex:0 0 auto;padding:0 16px;border:none;border-radius:9px;background:var(--navy);color:#fff;font-weight:600;font-size:13px;cursor:pointer;}
+  .autofill{background:#eef7f0;border:1px solid #cfe9d6;border-radius:10px;padding:12px 14px;margin-top:12px;font-size:13px;display:none;}
+  .autofill b{color:var(--navy);}
+  .badge{display:inline-block;background:var(--ok);color:#fff;font-size:11px;padding:2px 8px;border-radius:10px;margin-left:6px;}
+  .navbtns{display:flex;justify-content:space-between;margin-top:22px;gap:10px;}
+  button.nav{padding:12px 20px;border:none;border-radius:9px;font-weight:600;font-size:14px;cursor:pointer;}
+  .btn-next{background:var(--navy);color:#fff;flex:1;}
+  .btn-back{background:#eef1f8;color:var(--navy);}
+  .btn-submit{background:var(--gold);color:#2a2205;flex:1;}
+  .banner{display:none;padding:12px 14px;border-radius:10px;font-size:13px;margin-bottom:14px;}
+  .banner.info{background:#eaf2ff;color:#0b3d91;border:1px solid #cfe0fb;}
+  .cfgwarn{background:#fff3cd;color:#7a5b00;padding:10px 16px;font-size:13px;text-align:center;}
+  .conditional{border-left:3px solid var(--gold);padding-left:14px;margin-top:10px;}
+  fieldset{border:1.5px solid var(--border);border-radius:10px;padding:10px 14px 4px;margin-top:14px;}
+  legend{font-size:12.5px;font-weight:700;color:var(--navy);padding:0 6px;}
+  .radio-row{display:flex;gap:16px;flex-wrap:wrap;margin:6px 0;}
+  .radio-row label{display:flex;align-items:center;gap:6px;font-weight:500;font-size:13px;margin:0;}
+  .radio-row input{width:auto;}
+  .reviewTable{width:100%;border-collapse:collapse;font-size:13px;}
+  .reviewTable td{padding:6px 4px;border-bottom:1px solid var(--border);}
+  .reviewTable td:first-child{color:var(--muted);width:46%;}
+  .final{text-align:center;padding:40px 10px;}
+  .final svg{width:56px;height:56px;}
+  .spinner{display:inline-block;width:16px;height:16px;border:2px solid #fff;border-top-color:transparent;border-radius:50%;animation:spin .7s linear infinite;vertical-align:-3px;margin-right:6px;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .checkline{display:flex;gap:10px;align-items:flex-start;margin-top:16px;font-size:12.5px;color:var(--text);}
+  .checkline input{width:auto;margin-top:3px;}
+  .obtot{display:flex;gap:8px;align-items:center;}
+  .obtot span{color:var(--muted);font-size:13px;}
+  footer{text-align:center;font-size:11px;color:var(--muted);padding:10px 0 30px;}
+</style>
+</head>
+<body>
+
+<!-- =====================================================================
+     PASTE YOUR APPS SCRIPT WEB APP URL BELOW (the one ending in /exec)
+     This is the ONLY thing you need to edit in this file.
+     ===================================================================== -->
+<script>
+const WEB_APP_URL = "PASTE_YOUR_WEB_APP_EXEC_URL_HERE";
+</script>
+<div class="cfgwarn" id="cfgwarn" style="display:none;">⚠️ WEB_APP_URL is not set — edit the top of this file and paste your Apps Script deployment URL before going live.</div>
+
+<header>
+  <h1>School of Engineering &amp; Technology — Training &amp; Placement Cell</h1>
+  <p>Student Data Collection Portal · Semester V &amp; VII · Academic Session 2026–2027</p>
+</header>
+
+<div class="wrap">
+  <div class="progress" id="progressBar"></div>
+
+  <form id="tpoForm" onsubmit="return false;">
+
+    <!-- STEP 0: LOOKUP -->
+    <div class="card step active" data-step="0">
+      <h2 class="stitle">Step 1 · Find Your Record</h2>
+      <p class="sub">Enter your Registration Number as printed on your ID card. Your name, section and semester will be auto-filled from the official roster.</p>
+      <label>Registration Number *</label>
+      <div class="lookupBox">
+        <input type="text" id="regNo" placeholder="e.g. 241302003" inputmode="numeric">
+        <button type="button" onclick="lookupStudent()">Find Me</button>
+      </div>
+      <div class="errtext" id="err-regNo">Registration number not found in roster. Please check and re-enter, or contact the T&amp;P Cell.</div>
+
+      <div class="autofill" id="autofillBox">
+        <div><b>Name:</b> <span id="af-name"></span></div>
+        <div><b>Program:</b> <span id="af-program"></span> &nbsp; <b>Section:</b> <span id="af-section"></span> &nbsp; <b>Semester:</b> <span id="af-sem"></span></div>
+        <div style="margin-top:6px;"><span class="badge">Verified against roster</span></div>
+      </div>
+
+      <label>Specialization / Branch *</label>
+      <select id="specialization">
+        <option value="">Select</option>
+        <option>Computer Science &amp; Engineering (CSE)</option>
+        <option>Computer Engineering (CE)</option>
+        <option>Mechanical Engineering (ME)</option>
+        <option>Electronics &amp; Communication Engineering (ECE)</option>
+        <option>Computer Applications (CA)</option>
+        <option>Other</option>
+      </select>
+
+      <div class="navbtns">
+        <span></span>
+        <button class="nav btn-next" onclick="goStep(1)">Continue →</button>
+      </div>
+    </div>
+
+    <!-- STEP 1: CONTACT -->
+    <div class="card step" data-step="1">
+      <h2 class="stitle">Step 2 · Contact &amp; Identity Details</h2>
+      <p class="sub">Used for placement notices, verification and official records.</p>
+
+      <label>Mobile Number (WhatsApp preferred) *</label>
+      <div class="phone-row">
+        <div class="prefix">+91</div>
+        <input type="tel" id="phone" maxlength="10" inputmode="numeric" placeholder="10-digit mobile number">
+      </div>
+      <div class="errtext" id="err-phone">Enter a valid 10-digit Indian mobile number (starts with 6-9).</div>
+
+      <label>Parent / Guardian Contact Number <span style="font-weight:400;color:var(--muted);">(optional)</span></label>
+      <div class="phone-row">
+        <div class="prefix">+91</div>
+        <input type="tel" id="parentPhone" maxlength="10" inputmode="numeric" placeholder="10-digit number">
+      </div>
+      <div class="errtext" id="err-parentPhone">Enter a valid 10-digit number, or leave blank.</div>
+
+      <label>Email ID *</label>
+      <input type="email" id="email" placeholder="you@example.com">
+      <div class="errtext" id="err-email">Enter a valid email address.</div>
+
+      <label>Aadhaar Number *</label>
+      <input type="text" id="aadhaar" maxlength="12" inputmode="numeric" placeholder="12-digit Aadhaar number">
+      <div class="hint">Checked locally using the standard Aadhaar checksum format (Verhoeff algorithm). This confirms the number is well-formed — it is not a government identity verification.</div>
+      <div class="errtext" id="err-aadhaar">This does not look like a valid 12-digit Aadhaar number. Please re-check.</div>
+
+      <label>Other Govt. ID — PAN / Passport <span style="font-weight:400;color:var(--muted);">(required only if you can't provide Aadhaar; else optional)</span></label>
+      <input type="text" id="otherId" placeholder="PAN or Passport number, if available">
+
+      <div class="navbtns">
+        <button class="nav btn-back" onclick="goStep(0)">← Back</button>
+        <button class="nav btn-next" onclick="validateStep1() && goStep(2)">Continue →</button>
+      </div>
+    </div>
+
+    <!-- STEP 2: ACADEMICS -->
+    <div class="card step" data-step="2">
+      <h2 class="stitle">Step 3 · Academic Record</h2>
+      <p class="sub">Enter marks in whichever format your marksheet uses.</p>
+
+      <fieldset>
+        <legend>Class 10th</legend>
+        <label>Scale</label>
+        <div class="toggle" id="tenthType">
+          <label><input type="radio" name="tenthType" value="Percentage" checked onchange="renderTenth()"> Percentage</label>
+          <label><input type="radio" name="tenthType" value="CGPA10" onchange="renderTenth()"> CGPA (out of 10)</label>
+          <label><input type="radio" name="tenthType" value="CGPA9" onchange="renderTenth()"> CGPA (out of 9)</label>
+          <label><input type="radio" name="tenthType" value="ObtainedTotal" onchange="renderTenth()"> Marks Obtained / Total</label>
+        </div>
+        <div id="tenthSingleWrap">
+          <label>Value *</label>
+          <input type="number" step="0.01" id="tenthValue" placeholder="e.g. 88.4 or 9.2">
+        </div>
+        <div id="tenthObtotWrap" style="display:none;">
+          <label>Marks Obtained &amp; Total *</label>
+          <div class="obtot">
+            <input type="number" step="0.01" id="tenthObtained" placeholder="Obtained e.g. 442">
+            <span>/</span>
+            <input type="number" step="0.01" id="tenthTotal" placeholder="Total e.g. 500">
+          </div>
+        </div>
+        <div class="errtext" id="err-tenthValue">Enter a valid value within range for the selected scale.</div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Class 12th</legend>
+        <label>Scale</label>
+        <div class="toggle" id="twelfthType">
+          <label><input type="radio" name="twelfthType" value="Percentage" checked onchange="renderTwelfth()"> Percentage</label>
+          <label><input type="radio" name="twelfthType" value="CGPA10" onchange="renderTwelfth()"> CGPA (out of 10)</label>
+          <label><input type="radio" name="twelfthType" value="CGPA9" onchange="renderTwelfth()"> CGPA (out of 9)</label>
+          <label><input type="radio" name="twelfthType" value="ObtainedTotal" onchange="renderTwelfth()"> Marks Obtained / Total</label>
+        </div>
+        <div id="twelfthSingleWrap">
+          <label>Value *</label>
+          <input type="number" step="0.01" id="twelfthValue" placeholder="e.g. 91.2 or 9.4">
+        </div>
+        <div id="twelfthObtotWrap" style="display:none;">
+          <label>Marks Obtained &amp; Total *</label>
+          <div class="obtot">
+            <input type="number" step="0.01" id="twelfthObtained" placeholder="Obtained e.g. 456">
+            <span>/</span>
+            <input type="number" step="0.01" id="twelfthTotal" placeholder="Total e.g. 500">
+          </div>
+        </div>
+        <div class="errtext" id="err-twelfthValue">Enter a valid value within range for the selected scale.</div>
+      </fieldset>
+
+      <fieldset>
+        <legend>University Semester Marks</legend>
+        <label>Scale used for all semesters below</label>
+        <div class="toggle" id="semType">
+          <label><input type="radio" name="semType" value="Percentage" checked> Percentage</label>
+          <label><input type="radio" name="semType" value="CGPA10"> CGPA / SGPA (out of 10)</label>
+        </div>
+        <div class="grid4" id="semMarksGrid"></div>
+      </fieldset>
+
+      <label>Current Overall CGPA / Percentage (till last declared semester) *</label>
+      <input type="text" id="overallCGPA" placeholder="e.g. 8.1 CGPA or 78%">
+
+      <div class="navbtns">
+        <button class="nav btn-back" onclick="goStep(1)">← Back</button>
+        <button class="nav btn-next" onclick="validateStep2() && goStepAfterAcademics()">Continue →</button>
+      </div>
+    </div>
+
+    <!-- STEP 3: INTERNSHIP (SEM VII ONLY) -->
+    <div class="card step" data-step="3">
+      <h2 class="stitle">Step 4 · Internship Status <span style="font-weight:400;color:var(--muted);font-size:12px;">(Semester VII only)</span></h2>
+      <p class="sub">Required for the T&amp;P Cell's Internship &amp; Syllabus Mapping approval process. Stored separately from your main record.</p>
+
+      <label>Current Internship Status *</label>
+      <select id="internshipStatus" onchange="toggleInternshipDetail()">
+        <option value="Not Opted">Not Opted — I am not doing an internship</option>
+        <option value="Planning">Planning / Actively Searching</option>
+        <option value="Ongoing">Currently Ongoing</option>
+        <option value="Completed">Already Completed</option>
+      </select>
+
+      <div class="conditional" id="internshipDetail" style="display:none;">
+        <label>Company / Organisation Name *</label>
+        <input type="text" id="companyName" placeholder="e.g. TCS, Infosys, local startup name">
+
+        <label>Company Address / Location <span style="font-weight:400;color:var(--muted);">(city is fine)</span></label>
+        <input type="text" id="companyAddress" placeholder="e.g. Gurugram, Haryana">
+
+        <label>Role Offered / Designation *</label>
+        <input type="text" id="roleOffered" placeholder="e.g. Software Engineering Intern">
+
+        <label>Paid or Unpaid *</label>
+        <div class="radio-row">
+          <label><input type="radio" name="paidUnpaid" value="Paid" checked onclick="toggleStipend()"> Paid</label>
+          <label><input type="radio" name="paidUnpaid" value="Unpaid" onclick="toggleStipend()"> Unpaid</label>
+        </div>
+
+        <div id="stipendBox">
+          <label>Remuneration (₹ per month) *</label>
+          <input type="number" id="remuneration" placeholder="e.g. 15000">
+        </div>
+
+        <label>Mode</label>
+        <select id="mode">
+          <option>Offline / On-site</option>
+          <option>Online / Remote</option>
+          <option>Hybrid</option>
+        </select>
+
+        <div class="row2">
+          <div>
+            <label>Start Date *</label>
+            <input type="date" id="startDate">
+          </div>
+          <div>
+            <label>End Date (planned or actual) *</label>
+            <input type="date" id="endDate">
+          </div>
+        </div>
+        <div class="errtext" id="err-dates">End date must be after start date.</div>
+
+        <label>HR / Supervisor Name <span style="font-weight:400;color:var(--muted);">(optional)</span></label>
+        <input type="text" id="hrName" placeholder="Point of contact at the company">
+
+        <label>HR / Supervisor Contact <span style="font-weight:400;color:var(--muted);">(optional)</span></label>
+        <input type="text" id="hrContact" placeholder="Phone or email">
+
+        <label>Faculty Mentor Assigned</label>
+        <input type="text" id="facultyMentor" placeholder="Name of faculty mentor, if assigned">
+
+        <label>Syllabus Mapping Status</label>
+        <select id="mappingStatus">
+          <option value="Not yet submitted">Not yet submitted</option>
+          <option value="Pending faculty approval">Pending faculty approval</option>
+          <option value="Approved (≥50% mapped)">Approved (≥50% mapped)</option>
+        </select>
+
+        <label>Approx. Syllabus Mapping % <span style="font-weight:400;color:var(--muted);">(min. 50% required per policy)</span></label>
+        <input type="number" id="mappingPercent" min="0" max="100" placeholder="e.g. 60">
+
+        <label>Offer Letter (Google Drive link) <span style="font-weight:400;color:var(--muted);">(optional, for verification)</span></label>
+        <input type="text" id="offerLetterLink" placeholder="https://drive.google.com/...">
+      </div>
+
+      <div class="navbtns">
+        <button class="nav btn-back" onclick="goStep(2)">← Back</button>
+        <button class="nav btn-next" onclick="validateStep3() && goStep(4)">Continue →</button>
+      </div>
+    </div>
+
+    <!-- STEP 4: WILLINGNESS -->
+    <div class="card step" data-step="4">
+      <h2 class="stitle">Step 5 · Placement Willingness Declaration</h2>
+      <p class="sub">As per the Training &amp; Placement Policy of the School of Engineering &amp; Technology.</p>
+
+      <label>Are you willing to participate in Campus Placement Drives? *</label>
+      <div class="radio-row">
+        <label><input type="radio" name="willing" value="Yes" checked onclick="toggleWithdrawal()"> Yes, I am interested</label>
+        <label><input type="radio" name="willing" value="No" onclick="toggleWithdrawal()"> No, I want to withdraw</label>
+      </div>
+
+      <div class="conditional" id="withdrawBox" style="display:none;">
+        <label>Reason for Withdrawal *</label>
+        <select id="withdrawReason">
+          <option value="">Select a reason</option>
+          <option>Higher Studies</option>
+          <option>Government Exam Preparation</option>
+          <option>Family Business</option>
+          <option>Entrepreneurship</option>
+          <option>Self-Arranged Job/Internship</option>
+          <option>Health Reasons</option>
+          <option>Personal Reasons</option>
+          <option>Other</option>
+        </select>
+        <div id="withdrawOtherBox" style="display:none;">
+          <label>Please specify</label>
+          <input type="text" id="withdrawOther">
+        </div>
+      </div>
+
+      <label style="margin-top:16px;">Documents (Google Drive links) <span style="font-weight:400;color:var(--muted);">(optional now, can add later)</span></label>
+      <div class="row2">
+        <div><input type="text" id="resumeLink" placeholder="Resume link"></div>
+        <div><input type="text" id="photoLink" placeholder="Photo link"></div>
+      </div>
+
+      <div class="checkline">
+        <input type="checkbox" id="declaration">
+        <label for="declaration" style="margin:0;font-weight:500;">I confirm the information above is accurate. I have understood the T&amp;P Cell policy, agree to check placement notices regularly, attend mandatory sessions, and maintain professional conduct during all placement activities. I understand I must inform the T&amp;P Cell of any change in my employment/internship status.</label>
+      </div>
+      <div class="errtext" id="err-declaration">Please accept the declaration to proceed.</div>
+
+      <div class="navbtns">
+        <button class="nav btn-back" onclick="goStep(3, true)">← Back</button>
+        <button class="nav btn-next" onclick="validateStep4() && buildReview()">Review →</button>
+      </div>
+    </div>
+
+    <!-- STEP 5: REVIEW -->
+    <div class="card step" data-step="5">
+      <h2 class="stitle">Step 6 · Review &amp; Submit</h2>
+      <p class="sub">Please check your details carefully before submitting. You can go back to edit any section.</p>
+      <table class="reviewTable" id="reviewTable"></table>
+
+      <div class="banner info" id="submitBanner"></div>
+
+      <div class="navbtns">
+        <button class="nav btn-back" onclick="goStep(4)">← Edit</button>
+        <button class="nav btn-submit" id="submitBtn" onclick="submitForm()">Submit</button>
+      </div>
+    </div>
+
+    <!-- FINAL -->
+    <div class="card step final" data-step="6">
+      <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" stroke="#1e8f4e" stroke-width="2"/><path d="M7 12.5l3 3 7-7" stroke="#1e8f4e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <h2 class="stitle" style="text-align:center;">Submitted Successfully</h2>
+      <p class="sub" style="text-align:center;">Your response has been recorded with the Training &amp; Placement Cell. You'll be contacted on the mobile number / email provided if further documents are required.</p>
+    </div>
+
+  </form>
+  <footer>School of Engineering &amp; Technology · SGT University, Gurugram, Haryana · Training &amp; Placement Cell</footer>
+</div>
+
+<script>
+if(!WEB_APP_URL || WEB_APP_URL.indexOf('PASTE_YOUR') === 0){
+  document.getElementById('cfgwarn').style.display = 'block';
+}
+
+/* text/plain avoids CORS preflight against Apps Script (can't answer OPTIONS) */
+function apiPost(action, data){
+  return fetch(WEB_APP_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify({ action, data })
+  }).then(r => r.json());
+}
+
+/* ============ ROSTER (embedded, read-only, used for autofill) ============
+   Regenerate this array each semester from roster_sem5_sem7.csv — see
+   SETUP_GUIDE.md "Where to keep the roster CSV" for the process. */
+const ROSTER = __ROSTER_JSON__;
+const ROSTER_MAP = {};
+ROSTER.forEach(r => ROSTER_MAP[r.reg] = r);
+
+let student = null;
+const TOTAL_STEPS_SEM5 = ['0','1','2','4','5','6'];
+const TOTAL_STEPS_SEM7 = ['0','1','2','3','4','5','6'];
+let currentStep = 0;
+
+function stepsForStudent(){ return (student && student.sem === 'VII') ? TOTAL_STEPS_SEM7 : TOTAL_STEPS_SEM5; }
+
+function renderProgress(){
+  const bar = document.getElementById('progressBar');
+  const steps = stepsForStudent().filter(s => s !== '6');
+  bar.innerHTML = '';
+  steps.forEach(s => {
+    const d = document.createElement('div');
+    if (parseInt(s) <= currentStep) d.className='done';
+    bar.appendChild(d);
+  });
+}
+
+function goStep(n, skippingBack){
+  if (skippingBack && student && student.sem !== 'VII') { n = 2; }
+  document.querySelectorAll('.step').forEach(el=>el.classList.remove('active'));
+  document.querySelector('.step[data-step="'+n+'"]').classList.add('active');
+  currentStep = n;
+  renderProgress();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function goStepAfterAcademics(){
+  if (student && student.sem === 'VII') goStep(3);
+  else goStep(4);
+}
+
+/* ============ STEP 0: LOOKUP ============ */
+function lookupStudent(){
+  const reg = document.getElementById('regNo').value.trim();
+  const err = document.getElementById('err-regNo');
+  const box = document.getElementById('autofillBox');
+  const rec = ROSTER_MAP[reg];
+  if(!rec){
+    err.style.display='block';
+    box.style.display='none';
+    student = null;
+    return;
+  }
+  err.style.display='none';
+  student = rec;
+  document.getElementById('af-name').textContent = rec.name;
+  document.getElementById('af-program').textContent = rec.program;
+  document.getElementById('af-section').textContent = rec.section;
+  document.getElementById('af-sem').textContent = rec.sem;
+  box.style.display='block';
+  buildSemMarksGrid();
+}
+
+document.getElementById('regNo').addEventListener('keydown', e=>{
+  if(e.key === 'Enter'){ e.preventDefault(); lookupStudent(); }
+});
+
+/* ============ SEM MARKS GRID (1-4 for Sem V, 1-6 for Sem VII) ============ */
+function buildSemMarksGrid(){
+  const grid = document.getElementById('semMarksGrid');
+  grid.innerHTML = '';
+  const upto = (student && student.sem === 'VII') ? 6 : 4;
+  for(let i=1;i<=upto;i++){
+    const wrap = document.createElement('div');
+    wrap.innerHTML = '<label style="margin-top:6px;">Semester '+i+' *</label><input type="number" step="0.01" id="sem'+i+'" placeholder="value">';
+    grid.appendChild(wrap);
+  }
+}
+
+/* ============ 10th/12th SCALE TOGGLES ============ */
+function renderTenth(){
+  const type = document.querySelector('input[name=tenthType]:checked').value;
+  document.getElementById('tenthObtotWrap').style.display = (type==='ObtainedTotal') ? 'block':'none';
+  document.getElementById('tenthSingleWrap').style.display = (type==='ObtainedTotal') ? 'none':'block';
+}
+function renderTwelfth(){
+  const type = document.querySelector('input[name=twelfthType]:checked').value;
+  document.getElementById('twelfthObtotWrap').style.display = (type==='ObtainedTotal') ? 'block':'none';
+  document.getElementById('twelfthSingleWrap').style.display = (type==='ObtainedTotal') ? 'none':'block';
+}
+
+/* ============ TOGGLE HIGHLIGHT FOR PILL RADIOS ============ */
+function refreshToggleUI(){
+  document.querySelectorAll('.toggle').forEach(g=>{
+    g.querySelectorAll('label').forEach(l=>{
+      const inp = l.querySelector('input');
+      l.classList.toggle('on', inp.checked);
+      inp.addEventListener('change', ()=>{
+        g.querySelectorAll('label').forEach(x=>x.classList.remove('on'));
+        l.classList.add('on');
+      });
+    });
+  });
+}
+refreshToggleUI();
+
+/* ============ VALIDATION HELPERS ============ */
+function showErr(id, show){
+  document.getElementById(id).style.display = show ? 'block':'none';
+  const field = document.getElementById(id.replace('err-',''));
+  if(field) field.classList.toggle('err', show);
+}
+
+function isValidPhone(v){ return /^[6-9][0-9]{9}$/.test(v); }
+function isValidEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
+
+// Verhoeff algorithm (public checksum standard used for Aadhaar validation)
+const vd = [
+ [0,1,2,3,4,5,6,7,8,9],[1,2,3,4,0,6,7,8,9,5],[2,3,4,0,1,7,8,9,5,6],
+ [3,4,0,1,2,8,9,5,6,7],[4,0,1,2,3,9,5,6,7,8],[5,9,8,7,6,0,4,3,2,1],
+ [6,5,9,8,7,1,0,4,3,2],[7,6,5,9,8,2,1,0,4,3],[8,7,6,5,9,3,2,1,0,4],
+ [9,8,7,6,5,4,3,2,1,0]];
+const vp = [
+ [0,1,2,3,4,5,6,7,8,9],[1,5,7,6,2,8,3,0,9,4],[5,8,0,3,7,9,6,1,4,2],
+ [8,9,1,6,0,4,3,5,2,7],[9,4,5,3,1,2,6,8,7,0],[4,2,8,6,5,7,3,9,0,1],
+ [2,7,9,3,8,0,6,4,1,5],[7,0,4,6,9,1,3,2,5,8]];
+function isValidAadhaar(num){
+  if(!/^[0-9]{12}$/.test(num)) return false;
+  if(/^0|^1/.test(num)) return false; // Aadhaar never starts with 0 or 1
+  let c = 0;
+  const arr = num.split('').map(Number).reverse();
+  for(let i=0;i<arr.length;i++){ c = vd[c][vp[i % 8][arr[i]]]; }
+  return c === 0;
+}
+
+function marksInRange(type, val){
+  if(isNaN(val)) return false;
+  if(type === 'Percentage') return val >= 0 && val <= 100;
+  if(type === 'CGPA10') return val >= 0 && val <= 10;
+  if(type === 'CGPA9') return val >= 0 && val <= 9;
+  return false;
+}
+
+/* ============ STEP VALIDATORS ============ */
+function validateStep1(){
+  let ok = true;
+  const phone = document.getElementById('phone').value.trim();
+  const pphone = document.getElementById('parentPhone').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const aadhaar = document.getElementById('aadhaar').value.trim();
+
+  showErr('err-phone', !isValidPhone(phone)); if(!isValidPhone(phone)) ok=false;
+  const pphoneOk = pphone === '' || isValidPhone(pphone);
+  showErr('err-parentPhone', !pphoneOk); if(!pphoneOk) ok=false;
+  showErr('err-email', !isValidEmail(email)); if(!isValidEmail(email)) ok=false;
+  showErr('err-aadhaar', !isValidAadhaar(aadhaar)); if(!isValidAadhaar(aadhaar)) ok=false;
+
+  if(!document.getElementById('specialization').value){ alert('Please select your specialization/branch on Step 1.'); ok=false; }
+  return ok;
+}
+
+function getTenthPayload(){
+  const type = document.querySelector('input[name=tenthType]:checked').value;
+  if(type === 'ObtainedTotal'){
+    const obtained = parseFloat(document.getElementById('tenthObtained').value);
+    const total = parseFloat(document.getElementById('tenthTotal').value);
+    const valid = !isNaN(obtained) && !isNaN(total) && total > 0 && obtained >= 0 && obtained <= total;
+    return { type, obtained, total, computedPercent: valid ? +(obtained/total*100).toFixed(2) : null, valid };
+  }
+  const val = parseFloat(document.getElementById('tenthValue').value);
+  return { type, value: val, valid: marksInRange(type, val) };
+}
+function getTwelfthPayload(){
+  const type = document.querySelector('input[name=twelfthType]:checked').value;
+  if(type === 'ObtainedTotal'){
+    const obtained = parseFloat(document.getElementById('twelfthObtained').value);
+    const total = parseFloat(document.getElementById('twelfthTotal').value);
+    const valid = !isNaN(obtained) && !isNaN(total) && total > 0 && obtained >= 0 && obtained <= total;
+    return { type, obtained, total, computedPercent: valid ? +(obtained/total*100).toFixed(2) : null, valid };
+  }
+  const val = parseFloat(document.getElementById('twelfthValue').value);
+  return { type, value: val, valid: marksInRange(type, val) };
+}
+
+function validateStep2(){
+  let ok = true;
+  const t = getTenthPayload();
+  showErr('err-tenthValue', !t.valid); if(!t.valid) ok=false;
+  const tw = getTwelfthPayload();
+  showErr('err-twelfthValue', !tw.valid); if(!tw.valid) ok=false;
+
+  const semType = document.querySelector('input[name=semType]:checked').value;
+  const upto = (student && student.sem === 'VII') ? 6 : 4;
+  for(let i=1;i<=upto;i++){
+    const v = parseFloat(document.getElementById('sem'+i).value);
+    if(!marksInRange(semType==='CGPA10'?'CGPA10':'Percentage', v)){
+      document.getElementById('sem'+i).classList.add('err');
+      ok = false;
+    } else {
+      document.getElementById('sem'+i).classList.remove('err');
+    }
+  }
+  if(!document.getElementById('overallCGPA').value.trim()){ ok=false; document.getElementById('overallCGPA').classList.add('err'); }
+  else document.getElementById('overallCGPA').classList.remove('err');
+
+  if(!ok) alert('Please correct the highlighted academic fields.');
+  return ok;
+}
+
+function toggleInternshipDetail(){
+  const v = document.getElementById('internshipStatus').value;
+  document.getElementById('internshipDetail').style.display = (v==='Not Opted') ? 'none':'block';
+}
+function toggleStipend(){
+  const v = document.querySelector('input[name=paidUnpaid]:checked').value;
+  document.getElementById('stipendBox').style.display = (v==='Paid') ? 'block':'none';
+}
+
+function validateStep3(){
+  if(!student || student.sem !== 'VII') return true;
+  const status = document.getElementById('internshipStatus').value;
+  if(status === 'Not Opted') return true;
+  let ok = true;
+  ['companyName','roleOffered'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(!el.value.trim()){ el.classList.add('err'); ok=false; } else el.classList.remove('err');
+  });
+  const paid = document.querySelector('input[name=paidUnpaid]:checked').value;
+  if(paid === 'Paid'){
+    const r = document.getElementById('remuneration');
+    if(!r.value || parseFloat(r.value) <= 0){ r.classList.add('err'); ok=false; } else r.classList.remove('err');
+  }
+  const sd = document.getElementById('startDate').value;
+  const ed = document.getElementById('endDate').value;
+  const datesOk = sd && ed && (new Date(ed) > new Date(sd));
+  showErr('err-dates', !datesOk); if(!datesOk) ok=false;
+  if(!ok) alert('Please complete the required internship fields.');
+  return ok;
+}
+
+function toggleWithdrawal(){
+  const v = document.querySelector('input[name=willing]:checked').value;
+  document.getElementById('withdrawBox').style.display = (v==='No') ? 'block':'none';
+}
+document.getElementById('withdrawReason').addEventListener('change', function(){
+  document.getElementById('withdrawOtherBox').style.display = (this.value==='Other') ? 'block':'none';
+});
+
+function validateStep4(){
+  let ok = true;
+  const willing = document.querySelector('input[name=willing]:checked').value;
+  if(willing === 'No'){
+    const reason = document.getElementById('withdrawReason').value;
+    if(!reason){ ok=false; alert('Please select a reason for withdrawal.'); }
+    if(reason === 'Other' && !document.getElementById('withdrawOther').value.trim()){ ok=false; alert('Please specify the "Other" reason.'); }
+  }
+  const decl = document.getElementById('declaration').checked;
+  showErr('err-declaration', !decl); if(!decl) ok=false;
+  return ok;
+}
+
+/* ============ REVIEW + SUBMIT ============ */
+function fmtMarks(p){
+  if(p.type === 'ObtainedTotal') return p.obtained+'/'+p.total+' ('+p.computedPercent+'%)';
+  const label = p.type==='Percentage' ? '%' : (p.type==='CGPA10' ? ' CGPA/10' : ' CGPA/9');
+  return p.value + label;
+}
+
+function collectPayload(){
+  const upto = (student && student.sem === 'VII') ? 6 : 4;
+  const semVals = {};
+  for(let i=1;i<=upto;i++) semVals['sem'+i] = document.getElementById('sem'+i).value;
+
+  const willing = document.querySelector('input[name=willing]:checked').value;
+  const status = student.sem === 'VII' ? document.getElementById('internshipStatus').value : 'Not Applicable';
+  const hasInternshipDetail = student.sem === 'VII' && status !== 'Not Opted';
+
+  return {
+    RegistrationNo: student.reg, Name: student.name, Program: student.program,
+    Section: student.section, Semester: student.sem,
+    Specialization: document.getElementById('specialization').value,
+    MobileNo: '+91' + document.getElementById('phone').value.trim(),
+    ParentContactNo: document.getElementById('parentPhone').value.trim() ? '+91' + document.getElementById('parentPhone').value.trim() : '',
+    Email: document.getElementById('email').value.trim(),
+    AadharNo: document.getElementById('aadhaar').value.trim(),
+    OtherGovtID: document.getElementById('otherId').value.trim(),
+    Tenth: getTenthPayload(),
+    Twelfth: getTwelfthPayload(),
+    SemMarksType: document.querySelector('input[name=semType]:checked').value,
+    SemMarks: semVals,
+    OverallCGPA: document.getElementById('overallCGPA').value.trim(),
+    ResumeLink: document.getElementById('resumeLink').value.trim(),
+    PhotoLink: document.getElementById('photoLink').value.trim(),
+    PlacementWillingness: willing,
+    WithdrawReason: willing==='No' ? document.getElementById('withdrawReason').value : '',
+    WithdrawOther: willing==='No' ? document.getElementById('withdrawOther').value.trim() : '',
+    InternshipStatus: status,
+    Internship: hasInternshipDetail ? {
+      CompanyName: document.getElementById('companyName').value.trim(),
+      CompanyAddress: document.getElementById('companyAddress').value.trim(),
+      RoleOffered: document.getElementById('roleOffered').value.trim(),
+      PaidUnpaid: document.querySelector('input[name=paidUnpaid]:checked').value,
+      Remuneration: document.getElementById('remuneration').value,
+      Mode: document.getElementById('mode').value,
+      StartDate: document.getElementById('startDate').value,
+      EndDate: document.getElementById('endDate').value,
+      HRContactName: document.getElementById('hrName').value.trim(),
+      HRContactNumber: document.getElementById('hrContact').value.trim(),
+      FacultyMentor: document.getElementById('facultyMentor').value.trim(),
+      MappingStatus: document.getElementById('mappingStatus').value,
+      MappingPercent: document.getElementById('mappingPercent').value,
+      OfferLetterLink: document.getElementById('offerLetterLink').value.trim()
+    } : null,
+    DeclarationAccepted: document.getElementById('declaration').checked
+  };
+}
+
+function buildReview(){
+  const p = collectPayload();
+  const rows = [
+    ['Registration No', p.RegistrationNo], ['Name', p.Name], ['Section / Semester', p.Section+' / '+p.Semester],
+    ['Specialization', p.Specialization], ['Mobile', p.MobileNo], ['Parent Contact', p.ParentContactNo || '—'],
+    ['Email', p.Email], ['Aadhaar', p.AadharNo.replace(/(\d{4})(\d{4})(\d{4})/,'$1 $2 $3')],
+    ['10th', fmtMarks(p.Tenth)], ['12th', fmtMarks(p.Twelfth)],
+    ['Overall CGPA/%', p.OverallCGPA],
+    ['Placement Willingness', p.PlacementWillingness + (p.WithdrawReason? ' — '+p.WithdrawReason:'')],
+  ];
+  if(p.Internship){
+    rows.push(['Internship Status', p.InternshipStatus]);
+    rows.push(['Company', p.Internship.CompanyName]);
+    rows.push(['Role', p.Internship.RoleOffered]);
+    rows.push(['Paid/Unpaid', p.Internship.PaidUnpaid + (p.Internship.Remuneration? ' — ₹'+p.Internship.Remuneration+'/mo':'')]);
+    rows.push(['Duration', p.Internship.StartDate+' to '+p.Internship.EndDate]);
+  } else if(student.sem === 'VII'){
+    rows.push(['Internship Status', p.InternshipStatus]);
+  }
+  const table = document.getElementById('reviewTable');
+  table.innerHTML = rows.map(r => '<tr><td>'+r[0]+'</td><td>'+(r[1]||'—')+'</td></tr>').join('');
+  goStep(5);
+}
+
+function submitForm(){
+  const btn = document.getElementById('submitBtn');
+  const banner = document.getElementById('submitBanner');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>Submitting…';
+  banner.style.display='none';
+
+  const payload = collectPayload();
+
+  apiPost('submitMaster', payload)
+    .then(res => {
+      if(res && !res.error){
+        goStep(6);
+      } else {
+        banner.className = 'banner info';
+        banner.style.display='block';
+        banner.style.background = '#fdecea'; banner.style.color = '#a4231b';
+        banner.textContent = (res && res.error) ? res.error : 'Something went wrong. Please try again.';
+        btn.disabled = false; btn.innerHTML = 'Submit';
+      }
+    })
+    .catch(err => {
+      banner.className = 'banner info';
+      banner.style.display='block';
+      banner.style.background = '#fdecea'; banner.style.color = '#a4231b';
+      banner.textContent = 'Network/CORS error: ' + err.message + ' — check WEB_APP_URL and that the deployment access is "Anyone".';
+      btn.disabled = false; btn.innerHTML = 'Submit';
+    });
+}
+</script>
+</body>
+</html>
