@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Registration Form</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Georgia',serif;background:linear-gradient(135deg,#f5f1e8,#e8e3d8);min-height:100vh;padding:16px}
+.card{max-width:460px;margin:0 auto;background:#fff;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,.12);overflow:hidden}
+.header{background:linear-gradient(135deg,#2c5f7c,#1e4258);color:#fff;padding:22px 24px}
+.header h1{font-size:19px;margin-bottom:4px}
+.header p{font-size:12px;opacity:.9}
+.body{padding:24px}
+.msg{padding:14px;border-radius:6px;margin-bottom:16px;font-size:14px;display:none;text-align:center;line-height:1.5}
+.msg.success{background:#d4edda;color:#155724;border:1px solid #c3e6cb}
+.msg.error{background:#f8d7da;color:#721c24;border:1px solid #f5c6cb}
+.field{margin-bottom:16px}
+label{display:block;font-weight:600;font-size:13px;color:#444;margin-bottom:5px}
+select,input[type=text],input[type=tel],input[type=email]{
+  width:100%;padding:11px 13px;border:1px solid #d0c8b8;border-radius:5px;
+  font-size:15px;background:#fafafa;font-family:inherit;transition:border-color .2s
+}
+select:focus,input:focus{outline:none;border-color:#2c5f7c;box-shadow:0 0 0 3px rgba(44,95,124,.12);background:#fff}
+.hint{font-size:11px;color:#999;margin-top:4px}
+.btn-submit{width:100%;padding:14px;background:#2c5f7c;color:#fff;border:none;border-radius:5px;
+  font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .2s;margin-top:4px}
+.btn-submit:hover{background:#1e4258}
+.btn-submit:disabled{background:#aaa;cursor:not-allowed}
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid #fff;border-top-color:transparent;
+  border-radius:50%;animation:spin .7s linear infinite;vertical-align:-2px;margin-right:6px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.footer{text-align:center;font-size:11px;color:#aaa;margin-top:18px;padding-top:14px;border-top:1px solid #eee}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="header">
+    <h1>Student Registration</h1>
+    <p>Please fill in your details below</p>
+  </div>
+  <div class="body">
+    <div id="msg" class="msg" role="alert"></div>
+
+    <form id="regForm" autocomplete="off">
+      <div class="field">
+        <label for="rollno">Roll Number *</label>
+        <input type="text" id="rollno" placeholder="e.g. 231302045" required>
+      </div>
+
+      <div class="field">
+        <label for="name">Full Name *</label>
+        <input type="text" id="name" placeholder="e.g. Aakash Sharma" required>
+      </div>
+
+      <div class="field">
+        <label for="phone">Phone Number *</label>
+        <input type="tel" id="phone" placeholder="10-digit mobile number" maxlength="10" inputmode="numeric" required>
+      </div>
+
+      <div class="field">
+        <label for="email">Email ID *</label>
+        <input type="email" id="email" placeholder="e.g. student@example.com" required>
+      </div>
+
+      <div class="field">
+        <label for="branch">Branch *</label>
+        <select id="branch" required>
+          <option value="">-- Select branch --</option>
+          <option value="CSE">Computer Science Engineering</option>
+          <option value="AI&ML">AI &amp; ML</option>
+          <option value="IT">Information Technology</option>
+          <option value="ECE">Electronics &amp; Communication</option>
+          <option value="EE">Electrical Engineering</option>
+          <option value="ME">Mechanical Engineering</option>
+          <option value="CE">Civil Engineering</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="semester">Semester *</label>
+        <select id="semester" required>
+          <option value="">-- Select semester --</option>
+          <option value="1">Semester 1</option>
+          <option value="2">Semester 2</option>
+          <option value="3">Semester 3</option>
+          <option value="4">Semester 4</option>
+          <option value="5">Semester 5</option>
+          <option value="6">Semester 6</option>
+          <option value="7">Semester 7</option>
+          <option value="8">Semester 8</option>
+        </select>
+      </div>
+
+      <button type="submit" class="btn-submit" id="submitBtn">Submit Registration</button>
+    </form>
+
+    <div class="footer">
+      Your data is submitted securely to the department records.
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+// ══════════ CONFIG ══════════
+// Replace this with the Web App URL you get after deploying the attached
+// Google Apps Script (Deploy > New deployment > Web app).
+var GAS_URL = 'https://script.google.com/macros/s/AKfycby8-1LVfeLrd4Ae9p7G5TYmVKgX-mAAg1dLPd735wOQ6BKozn1TolvsQJR99BqaDUCv-Q/exec';
+var FETCH_TIMEOUT_MS = 20000;
+
+function $(id){ return document.getElementById(id); }
+
+function fetchWithTimeout(url, opts) {
+  var controller = new AbortController();
+  var timer = setTimeout(function(){ controller.abort(); }, FETCH_TIMEOUT_MS);
+  opts = opts || {};
+  opts.signal = controller.signal;
+  return fetch(url, opts).finally(function(){ clearTimeout(timer); });
+}
+
+function showMsg(text, type) {
+  var el = $('msg');
+  el.textContent = text;
+  el.className = 'msg ' + type;
+  el.style.display = 'block';
+  el.scrollIntoView({behavior:'smooth', block:'nearest'});
+  if (type === 'success') setTimeout(function(){ el.style.display = 'none'; }, 8000);
+}
+
+function setSubmitting(on) {
+  var btn = $('submitBtn');
+  btn.disabled = on;
+  btn.innerHTML = on ? '<span class="spinner"></span>Submitting...' : 'Submit Registration';
+}
+
+function isValidEmail(v) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+}
+
+document.getElementById('regForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+
+  var rollno = $('rollno').value.trim();
+  var name = $('name').value.trim();
+  var phone = $('phone').value.trim();
+  var email = $('email').value.trim();
+  var branch = $('branch').value;
+  var semester = $('semester').value;
+
+  if (!rollno)  { showMsg('Please enter your roll number.', 'error'); return; }
+  if (!name)    { showMsg('Please enter your name.', 'error'); return; }
+  if (!/^[0-9]{10}$/.test(phone)) { showMsg('Enter a valid 10-digit phone number.', 'error'); return; }
+  if (!isValidEmail(email)) { showMsg('Enter a valid email address.', 'error'); return; }
+  if (!branch)  { showMsg('Please select your branch.', 'error'); return; }
+  if (!semester){ showMsg('Please select your semester.', 'error'); return; }
+
+  if (GAS_URL.indexOf('PASTE_YOUR') === 0) {
+    showMsg('Set GAS_URL in the script to your deployed Apps Script Web App URL.', 'error');
+    return;
+  }
+
+  setSubmitting(true);
+
+  var payload = {
+    rollno: rollno,
+    name: name,
+    phone: phone,
+    email: email,
+    branch: branch,
+    semester: semester
+  };
+
+  fetchWithTimeout(GAS_URL, {
+    method: 'POST',
+    redirect: 'follow',
+    headers: {'Content-Type': 'text/plain'},
+    body: JSON.stringify(payload)
+  })
+  .then(function(response) {
+    if (!response.ok) throw new Error('HTTP ' + response.status);
+    return response.json();
+  })
+  .then(function(result) {
+    if (result && result.success) {
+      showMsg('Registration submitted successfully! Thank you, ' + name + '.', 'success');
+      document.getElementById('regForm').reset();
+    } else {
+      showMsg((result && result.error) || 'Submission failed — please try again.', 'error');
+    }
+  })
+  .catch(function(err) {
+    if (err.name === 'AbortError') {
+      showMsg('Request timed out. Please check your connection and try again.', 'error');
+    } else {
+      showMsg('Network problem — check internet and try again.', 'error');
+    }
+  })
+  .finally(function() {
+    setSubmitting(false);
+  });
+});
+</script>
+</body>
+</html>
