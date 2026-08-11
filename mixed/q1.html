@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MIXED-01 | K.P. Singh · SGT University</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;700&family=Inconsolata:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<style>
+/* ===== MODULE: THEME ===== */
+:root{
+  --accent:#f0a500; /* saffron - mixed event */
+  --accent-dark:#c97e00;
+  --ink:#1c1a17;
+  --paper:#faf6ee;
+  --paper-2:#f1ebdd;
+  --line:#ddd3bd;
+  --ok:#1f8a45;
+  --bad:#c0392b;
+  --warn:#c97e00;
+  --radius:14px;
+  --shadow:0 6px 24px rgba(28,26,23,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+  font-family:'DM Sans',sans-serif;
+  background:var(--paper);
+  color:var(--ink);
+  min-height:100vh;
+  background-image:
+    repeating-linear-gradient(135deg, rgba(0,0,0,.015) 0 2px, transparent 2px 40px);
+}
+h1,h2,h3,.serif{font-family:'DM Serif Display',serif;}
+.mono{font-family:'Inconsolata',monospace;}
+.hidden{display:none !important;}
+button{font-family:inherit;cursor:pointer;border:none;}
+input,select{font-family:inherit;}
+
+/* NAV */
+nav{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 24px;background:var(--paper);
+  border-bottom:2px solid var(--ink);
+  flex-wrap:wrap;gap:10px;
+}
+.nav-left{display:flex;align-items:center;gap:10px;}
+.logo{width:34px;height:34px;border-radius:50%;background:var(--accent);
+  display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-family:'DM Serif Display',serif;}
+.nav-title{font-family:'DM Serif Display',serif;font-size:1.1rem;}
+.nav-sub{font-size:.75rem;color:#6b6355;}
+.nav-right{display:flex;align-items:center;gap:14px;font-size:.85rem;}
+.nav-right a,.nav-right button{color:var(--ink);text-decoration:none;background:transparent;font-weight:500;}
+.lb-btn{background:var(--ink);color:#fff;padding:8px 14px;border-radius:8px;}
+
+.wrap{max-width:900px;margin:0 auto;padding:28px 18px 60px;}
+.card{
+  background:#fff;border:1px solid var(--line);border-radius:var(--radius);
+  box-shadow:var(--shadow);padding:28px;
+}
+.pill{
+  display:inline-block;padding:4px 12px;border-radius:20px;
+  background:var(--paper-2);border:1px solid var(--line);font-size:.75rem;font-weight:600;
+}
+.badge-diff{padding:3px 10px;border-radius:20px;font-size:.7rem;font-weight:700;text-transform:uppercase;}
+.diff-easy{background:#e4f5ea;color:var(--ok);}
+.diff-medium{background:#fdf1dc;color:var(--warn);}
+.diff-hard{background:#fbe6e3;color:var(--bad);}
+
+/* REGISTRATION */
+.reg-grid{display:grid;grid-template-columns:1.3fr .9fr;gap:22px;}
+@media (max-width:760px){.reg-grid{grid-template-columns:1fr;}}
+.step-banner{padding:12px 16px;border-radius:10px;font-size:.9rem;margin-bottom:16px;display:none;}
+.banner-ok{background:#e4f5ea;color:var(--ok);border:1px solid #b8e2c6;}
+.banner-warn{background:#fdf1dc;color:var(--warn);border:1px solid #f2d9ad;}
+.field{margin-bottom:16px;}
+.field label{display:block;font-size:.8rem;font-weight:700;margin-bottom:6px;color:#4d473c;}
+.field input,.field select{
+  width:100%;padding:11px 12px;border:1.5px solid var(--line);border-radius:8px;font-size:.95rem;background:var(--paper);
+}
+.field input:disabled{background:var(--paper-2);color:#888;}
+.btn-primary{
+  background:var(--accent);color:#1c1a17;padding:13px 22px;border-radius:9px;font-weight:700;
+  font-size:.95rem;width:100%;transition:.15s;
+}
+.btn-primary:hover{background:var(--accent-dark);color:#fff;}
+.btn-secondary{background:transparent;border:1.5px solid var(--ink);padding:11px 18px;border-radius:9px;font-weight:600;}
+.link-reset{font-size:.8rem;text-decoration:underline;background:none;color:#6b6355;display:block;text-align:center;margin-top:12px;}
+.spinner{width:16px;height:16px;border:2px solid #fff;border-top-color:transparent;border-radius:50%;
+  display:inline-block;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.topics-box{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0;}
+.topic-chip{background:var(--paper-2);border:1px solid var(--line);border-radius:16px;padding:4px 10px;font-size:.72rem;}
+.research-note{background:var(--paper-2);border-left:3px solid var(--accent);padding:10px 14px;border-radius:6px;font-size:.82rem;margin-top:10px;}
+.tagline{font-style:italic;color:var(--accent-dark);font-size:.85rem;margin-top:4px;}
+
+/* LB widget */
+.lb-widget{border:1px solid var(--line);border-radius:12px;padding:16px;background:var(--paper-2);}
+.lb-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px dashed var(--line);font-size:.85rem;}
+.lb-row:last-child{border-bottom:none;}
+
+/* QUIZ SCREEN */
+.subbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;font-size:.85rem;color:#5a5346;flex-wrap:wrap;gap:8px;}
+.progress-track{height:6px;background:var(--paper-2);border-radius:6px;overflow:hidden;flex:1;margin:0 14px;}
+.progress-fill{height:100%;background:var(--accent);width:0%;transition:.25s;}
+.timer{font-family:'Inconsolata',monospace;font-weight:700;padding:4px 10px;border-radius:6px;background:var(--ink);color:#fff;}
+.timer.low{background:var(--bad);}
+.q-card{border:1px solid var(--line);border-radius:var(--radius);padding:26px;background:#fff;}
+.q-meta{display:flex;gap:8px;align-items:center;margin-bottom:14px;flex-wrap:wrap;}
+.q-num{width:30px;height:30px;border-radius:50%;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;}
+.q-stem{font-size:1.12rem;line-height:1.55;margin:14px 0 20px;font-weight:500;}
+.opt-btn{
+  display:block;width:100%;text-align:left;padding:13px 16px;margin-bottom:10px;
+  border:1.5px solid var(--line);border-radius:10px;background:var(--paper);font-size:.93rem;transition:.15s;
+}
+.opt-btn:hover{border-color:var(--accent);}
+.opt-btn.selected{border-color:var(--accent);background:#fff4de;font-weight:600;}
+.conf-scale{margin-top:18px;padding-top:14px;border-top:1px dashed var(--line);}
+.conf-scale p{font-size:.78rem;font-weight:700;margin-bottom:8px;color:#4d473c;}
+.conf-opts{display:flex;gap:10px;flex-wrap:wrap;}
+.conf-opt{padding:6px 12px;border:1.5px solid var(--line);border-radius:20px;font-size:.78rem;background:var(--paper);}
+.conf-opt.selected{background:var(--ink);color:#fff;border-color:var(--ink);}
+.nav-chips{display:flex;flex-wrap:wrap;gap:6px;margin:18px 0;}
+.chip{width:30px;height:30px;border-radius:7px;border:1.5px solid var(--line);background:#fff;font-size:.72rem;font-weight:700;}
+.chip.current{border-color:var(--ink);box-shadow:0 0 0 2px var(--ink);}
+.chip.answered{background:var(--accent);color:#1c1a17;border-color:var(--accent);}
+.nav-buttons{display:flex;justify-content:space-between;gap:10px;margin-top:16px;}
+
+/* RESULT SCREEN */
+.result-hero{text-align:center;padding:20px 0;}
+.emoji-big{font-size:3rem;}
+.score-big{font-size:2.6rem;font-family:'DM Serif Display',serif;color:var(--accent-dark);}
+.grade-pill{display:inline-block;padding:6px 18px;border-radius:20px;background:var(--ink);color:#fff;font-weight:700;margin-top:8px;}
+.diff-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:20px 0;}
+.diff-card{border:1px solid var(--line);border-radius:10px;padding:12px;text-align:center;}
+.topic-bar-row{margin-bottom:10px;}
+.topic-bar-track{height:10px;background:var(--paper-2);border-radius:6px;overflow:hidden;}
+.topic-bar-fill{height:100%;background:var(--accent);}
+.sub-id-box{margin-top:20px;padding:12px;background:var(--paper-2);border-radius:8px;font-family:'Inconsolata',monospace;font-size:.8rem;text-align:center;}
+.actions{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap;}
+.actions button{flex:1;min-width:140px;}
+
+/* LEADERBOARD */
+.medal-table{width:100%;border-collapse:collapse;margin-top:16px;}
+.medal-table th,.medal-table td{padding:10px 8px;text-align:left;border-bottom:1px solid var(--line);font-size:.88rem;}
+.medal-table th{color:#6b6355;font-size:.75rem;text-transform:uppercase;}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-left">
+    <div class="logo">K</div>
+    <div>
+      <div class="nav-title">K.P. Singh</div>
+      <div class="nav-sub">SGT University · CSE · Mixed Aptitude Screen</div>
+    </div>
+  </div>
+  <div class="nav-right">
+    <a href="student.html" target="_blank">📋 My Record</a>
+    <button class="lb-btn" id="navLbBtn">🏆 Leaderboard</button>
+    <a href="https://kpsingh.in" target="_blank">kpsingh.in ↗</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ S1 REGISTRATION ============ -->
+<section id="screen-reg">
+  <div class="reg-grid">
+    <div class="card">
+      <!-- STEP 1: ROLL LOOKUP -->
+      <div id="regStep1">
+        <h2 class="serif">Enter your Roll Number</h2>
+        <p style="color:#6b6355;font-size:.85rem;margin-top:6px;">We'll check the registration list and auto-fill your details.</p>
+        <div class="field" style="margin-top:18px;">
+          <label>Roll Number</label>
+          <input type="text" id="rollInput" placeholder="e.g. 21CSE045" autocomplete="off">
+        </div>
+        <button class="btn-primary" id="lookupBtn">Look up →</button>
+      </div>
+
+      <!-- STEP 2: CONFIRM DETAILS -->
+      <div id="regStep2" class="hidden">
+        <div id="bannerOk" class="step-banner banner-ok"></div>
+        <div id="bannerWarn" class="step-banner banner-warn"></div>
+        <h2 class="serif">Confirm your details</h2>
+        <div class="field">
+          <label>Full Name</label>
+          <input type="text" id="nameInput" placeholder="Your full name">
+        </div>
+        <div class="field">
+          <label>Section (optional)</label>
+          <select id="sectionInput">
+            <option value="">Select section</option>
+            <option value="A">A</option><option value="B">B</option>
+            <option value="C">C</option><option value="D">D</option><option value="E">E</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Branch</label>
+          <input type="text" id="branchLocked" value="CSE" disabled>
+        </div>
+        <div class="field">
+          <label>Semester</label>
+          <input type="text" id="semLocked" value="7th" disabled>
+        </div>
+
+        <div class="research-note">
+          This screen also captures a confidence rating per question for a short academic study on calibration between knowledge and confidence. Your quiz score is unaffected either way.
+          <div class="tagline">"Know what you know — and what you only think you know"</div>
+        </div>
+
+        <p style="font-size:.78rem;font-weight:700;margin:16px 0 6px;color:#4d473c;">Topics covered</p>
+        <div class="topics-box">
+          <span class="topic-chip">Time & Work</span>
+          <span class="topic-chip">Pipes & Cisterns</span>
+          <span class="topic-chip">Ages</span>
+          <span class="topic-chip">Python</span>
+          <span class="topic-chip">C / C++</span>
+        </div>
+
+        <button class="btn-primary" id="beginBtn" style="margin-top:10px;">Begin Quiz →</button>
+        <button class="link-reset" id="resetRollBtn">← Change roll number</button>
+      </div>
+    </div>
+
+    <div>
+      <div class="lb-widget">
+        <h3 class="serif" style="font-size:1.05rem;">🏆 Live Leaderboard</h3>
+        <div id="lbWidgetBody" style="margin-top:10px;font-size:.82rem;color:#6b6355;">Loading…</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ S2 QUIZ ============ -->
+<section id="screen-quiz" class="hidden">
+  <div class="subbar">
+    <span id="quizWho" class="mono"></span>
+    <div class="progress-track"><div class="progress-fill" id="progFill"></div></div>
+    <span class="timer" id="timerBox">20:00</span>
+  </div>
+  <div class="q-card">
+    <div class="q-meta">
+      <span class="pill" id="qSectionPill">Section</span>
+      <div class="q-num" id="qNumCircle">1</div>
+      <span class="pill mono" id="qTagBadge">Tag</span>
+      <span class="badge-diff" id="qDiffChip">easy</span>
+    </div>
+    <div class="q-stem" id="qStem"></div>
+    <div id="optsContainer"></div>
+    <div class="conf-scale" id="confScale">
+      <p>How confident are you?</p>
+      <div class="conf-opts">
+        <button class="conf-opt" data-c="1">Not Sure</button>
+        <button class="conf-opt" data-c="2">Somewhat Sure</button>
+        <button class="conf-opt" data-c="3">Very Sure</button>
+      </div>
+    </div>
+  </div>
+  <div class="nav-chips" id="navChips"></div>
+  <div class="nav-buttons">
+    <button class="btn-secondary" id="prevBtn">← Previous</button>
+    <button class="btn-primary" id="nextBtn" style="width:auto;padding:11px 24px;">Next →</button>
+  </div>
+</section>
+
+<!-- ============ S3 RESULT ============ -->
+<section id="screen-result" class="hidden">
+  <div class="card" id="resultCardRoot">
+    <div class="result-hero">
+      <div class="emoji-big" id="resEmoji">🏅</div>
+      <h2 class="serif">Mixed Aptitude Screen — Scorecard</h2>
+      <div class="score-big"><span id="resScore">0</span>/<span id="resTotal">30</span></div>
+      <div style="color:#6b6355;font-size:.9rem;" id="resPct">0%</div>
+      <div class="grade-pill" id="resGrade">Grade</div>
+    </div>
+
+    <h3 class="serif" style="margin-top:22px;font-size:1.1rem;">Difficulty Breakdown</h3>
+    <div class="diff-grid" id="diffGrid"></div>
+
+    <h3 class="serif" style="font-size:1.1rem;">Topic Breakdown</h3>
+    <div id="topicBars" style="margin-top:10px;"></div>
+
+    <div id="calSnapshot"></div>
+
+    <div class="sub-id-box" id="subIdBox"></div>
+
+    <div class="actions">
+      <button class="btn-secondary" id="downloadPdfBtn">⬇ Download PDF</button>
+      <button class="btn-secondary" id="reviewBtn">🔍 Review Answers</button>
+      <button class="btn-primary" id="viewLbBtn" style="width:auto;">🏆 View Leaderboard</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ S4 LEADERBOARD ============ -->
+<section id="screen-lb" class="hidden">
+  <div class="card">
+    <button class="btn-secondary" id="lbBackBtn">← Back</button>
+    <h2 class="serif" style="margin-top:14px;">Mixed Aptitude Screen — Leaderboard</h2>
+    <table class="medal-table">
+      <thead><tr><th>#</th><th>Name</th><th>Roll</th><th>Section</th><th>Score</th><th>%</th></tr></thead>
+      <tbody id="lbTableBody"></tbody>
+    </table>
+  </div>
+</section>
+
+</div>
+
+<script>
+/* ===== MODULE: CONFIG ===== */
+const API_URL   = 'https://script.google.com/macros/s/AKfycbyi9JbTcDf8NhVy4lJ0dsXmTVi0jFGIKFePy-95tUD2sT_yeQUUwflBFWjF6bjQasU/exec';
+const QUIZ_ID   = 'MIXED-01';
+const COHORT_ID = 'BTECH_SEM7_CD_Q1';
+const QUIZ_MODE = 'EVENT';
+const TIME_LIMIT_SEC = 20 * 60;
+const LB_SIZE = 5;
+const RESEARCH_MODE = true;
+const INACTIVITY_MS = 30000, FLUSH_INTERVAL_MS = 8000, TAB_SWITCH_LIMIT = 2;
+
+const SECTIONS = ['Time & Work','Pipes & Cisterns','Ages','Python','C / C++'];
+
+const QUESTIONS = [
+/* ===== TIME & WORK (Q01-Q06) ===== */
+{id:'Q01',section:'Time & Work',difficulty:'easy',tag:'Time & Work',
+ q:"Rahul can finish a task in 10 days and Meena can finish the same task in 15 days. Working together, in how many days will they finish it?",
+ opts:["5 days","6 days","8 days","12 days"],a:1},
+{id:'Q02',section:'Time & Work',difficulty:'easy',tag:'Time & Work',
+ q:"If a worker completes an entire job in 20 days, what fraction of the job does he complete in a single day?",
+ opts:["1/10","1/15","1/20","1/25"],a:2},
+{id:'Q03',section:'Time & Work',difficulty:'medium',tag:'Time & Work',
+ q:"A and B together can complete a wall in 12 days. A alone can complete it in 20 days. In how many days can B alone complete it?",
+ opts:["24 days","28 days","30 days","36 days"],a:2},
+{id:'Q04',section:'Time & Work',difficulty:'medium',tag:'Time & Work',
+ q:"Vikram is twice as efficient as Suresh. Working together they finish a project in 12 days. How long would Vikram alone take?",
+ opts:["16 days","18 days","20 days","24 days"],a:1},
+{id:'Q05',section:'Time & Work',difficulty:'hard',tag:'Time & Work',
+ q:"A, B and C together finish a task in 6 days. A alone needs 12 days and B alone needs 18 days. How many days would C alone need?",
+ opts:["24 days","30 days","36 days","42 days"],a:2},
+{id:'Q06',section:'Time & Work',difficulty:'hard',tag:'Time & Work',
+ q:"A can finish a job alone in 15 days. He works alone for 3 days, then B joins him and together they finish the remaining work in 6 more days. In how many days could B alone have finished the entire job?",
+ opts:["12 days","15 days","18 days","20 days"],a:2},
+
+/* ===== PIPES & CISTERNS (Q07-Q12) ===== */
+{id:'Q07',section:'Pipes & Cisterns',difficulty:'easy',tag:'Pipes & Cisterns',
+ q:"Pipe A can fill a tank in 6 hours. What fraction of the tank does it fill in 2 hours?",
+ opts:["1/2","1/3","2/3","1/6"],a:1},
+{id:'Q08',section:'Pipes & Cisterns',difficulty:'easy',tag:'Pipes & Cisterns',
+ q:"A pipe fills a tank in 8 hours. A drainage pipe empties the full tank in 8 hours as well. If both are opened together, what happens to the tank?",
+ opts:["It fills up","It empties","Water level stays the same","It fills in 4 hours"],a:2},
+{id:'Q09',section:'Pipes & Cisterns',difficulty:'medium',tag:'Pipes & Cisterns',
+ q:"Two pipes A and B can fill a tank in 12 and 18 hours respectively. If both pipes are opened together, how long will it take to fill the tank?",
+ opts:["6.2 hours","7.2 hours","8.5 hours","9 hours"],a:1},
+{id:'Q10',section:'Pipes & Cisterns',difficulty:'medium',tag:'Pipes & Cisterns',
+ q:"An inlet pipe fills a tank in 10 hours while an outlet pipe empties it in 15 hours. If both are opened together, in how many hours will the tank be filled?",
+ opts:["25 hours","30 hours","20 hours","18 hours"],a:1},
+{id:'Q11',section:'Pipes & Cisterns',difficulty:'hard',tag:'Pipes & Cisterns',
+ q:"Pipe A fills a tank in 20 hours. After 5 hours, pipe B is also opened and together they fill the tank in 7 more hours. In how many hours could pipe B alone fill the tank?",
+ opts:["14 hours","16 hours","17.5 hours","20 hours"],a:2},
+{id:'Q12',section:'Pipes & Cisterns',difficulty:'hard',tag:'Pipes & Cisterns',
+ q:"Three pipes A, B and C can fill a cistern in 10, 15 and 20 hours respectively. All three are opened together, but C is closed 2 hours before the cistern is full. In approximately how many hours is the cistern filled?",
+ opts:["4.5 hours","5 hours","5.5 hours","6 hours"],a:1},
+
+/* ===== AGES (Q13-Q18) ===== */
+{id:'Q13',section:'Ages',difficulty:'easy',tag:'Ages',
+ q:"Priya is 24 years old and her brother is 18. In how many years will Priya be twice as old as her brother was 6 years ago?",
+ opts:["0 years (already true)","2 years","4 years","6 years"],a:0},
+{id:'Q14',section:'Ages',difficulty:'easy',tag:'Ages',
+ q:"A father is 30 years older than his son. If the son is currently 10 years old, what will the father's age be when the son turns 20?",
+ opts:["40","45","50","55"],a:2},
+{id:'Q15',section:'Ages',difficulty:'medium',tag:'Ages',
+ q:"The sum of the ages of a mother and her daughter is 50 years. Five years ago, the mother's age was 4 times the daughter's age. What is the daughter's current age?",
+ opts:["12 years","14 years","15 years","18 years"],a:1},
+{id:'Q16',section:'Ages',difficulty:'medium',tag:'Ages',
+ q:"Ten years ago, Arjun was half as old as Bina is now. If the ratio of their present ages is 3:4, what is Bina's present age?",
+ opts:["24 years","28 years","32 years","36 years"],a:1},
+{id:'Q17',section:'Ages',difficulty:'hard',tag:'Ages',
+ q:"The ratio of the ages of A and B five years ago was 3:4. The ratio of their ages ten years hence will be 5:6. What is A's present age?",
+ opts:["20 years","25 years","30 years","35 years"],a:1},
+{id:'Q18',section:'Ages',difficulty:'hard',tag:'Ages',
+ q:"A father's age is currently equal to the sum of the ages of his 3 children. In 15 years, the sum of the children's ages will be twice the father's age at that time. What is the father's current age?",
+ opts:["30 years","40 years","45 years","50 years"],a:2},
+
+/* ===== PYTHON (Q19-Q24) ===== */
+{id:'Q19',section:'Python',difficulty:'easy',tag:'Python',
+ q:"What is the output of: print(type(5 / 2)) in Python 3?",
+ opts:["<class 'int'>","<class 'float'>","<class 'double'>","<class 'complex'>"],a:1},
+{id:'Q20',section:'Python',difficulty:'easy',tag:'Python',
+ q:"Which keyword is used to define a function in Python?",
+ opts:["function","def","fun","lambda"],a:1},
+{id:'Q21',section:'Python',difficulty:'medium',tag:'Python',
+ q:"What does the list comprehension [x*x for x in range(5) if x % 2 == 0] evaluate to?",
+ opts:["[0, 4, 16]","[0, 1, 4, 9, 16]","[0, 2, 4]","[4, 16]"],a:0},
+{id:'Q22',section:'Python',difficulty:'medium',tag:'Python',
+ q:"What will the following code print?\ndef f(a, b=[]):\n    b.append(a)\n    return b\nprint(f(1))\nprint(f(2))",
+ opts:["[1] then [2]","[1] then [1, 2]","[2] then [1, 2]","Error"],a:1},
+{id:'Q23',section:'Python',difficulty:'hard',tag:'Python',
+ q:"What is the output of: print([1,2,3] + [4,5]) versus print([1,2,3] * 2)?",
+ opts:["Error for both","[1,2,3,4,5] and [1,2,3,1,2,3]","[5,7] and [2,4,6]","[1,2,3,4,5] and [2,4,6]"],a:1},
+{id:'Q24',section:'Python',difficulty:'hard',tag:'Python',
+ q:"Given a = {1: 'a', 2: 'b'} and b = {2: 'c', 3: 'd'}, what does {**a, **b} evaluate to?",
+ opts:["{1:'a', 2:'b', 3:'d'}","{1:'a', 2:'c', 3:'d'}","Error, duplicate key","{1:'a', 2:'b', 2:'c', 3:'d'}"],a:1},
+
+/* ===== C / C++ (Q25-Q30) ===== */
+{id:'Q25',section:'C / C++',difficulty:'easy',tag:'C/C++',
+ q:"Which of the following correctly declares a pointer to an integer in C?",
+ opts:["int ptr;","int *ptr;","ptr int;","pointer int ptr;"],a:1},
+{id:'Q26',section:'C / C++',difficulty:'easy',tag:'C/C++',
+ q:"What is the size of a 'char' data type in standard C on most systems?",
+ opts:["1 byte","2 bytes","4 bytes","8 bytes"],a:0},
+{id:'Q27',section:'C / C++',difficulty:'medium',tag:'C/C++',
+ q:"What is the output of the following C code?\nint x = 5;\nprintf(\"%d\", x++ + ++x);",
+ opts:["10","11","12","Undefined behavior"],a:3},
+{id:'Q28',section:'C / C++',difficulty:'medium',tag:'C/C++',
+ q:"In C++, which of the following best describes the purpose of a 'virtual' function?",
+ opts:["To make a function run faster","To enable runtime polymorphism via dynamic dispatch","To prevent a function from being overridden","To allocate memory dynamically"],a:1},
+{id:'Q29',section:'C / C++',difficulty:'hard',tag:'C/C++',
+ q:"What does the following C code print?\nint a[] = {10, 20, 30};\nint *p = a;\nprintf(\"%d\", *(p + 2) + *(a));",
+ opts:["30","40","50","Compilation error"],a:1},
+{id:'Q30',section:'C / C++',difficulty:'hard',tag:'C/C++',
+ q:"In C++, what is the key difference between 'malloc' (from C) and 'new' when allocating an object with a constructor?",
+ opts:["They are functionally identical","malloc calls the constructor, new does not","new calls the constructor, malloc does not","Both skip the constructor for performance"],a:2},
+];
+
+/* ===== MODULE: STATE ===== */
+let state = {
+  sessionId: 'S-' + Date.now() + '-' + Math.random().toString(36).slice(2,8),
+  student: {name:'', roll:'', section:'', branch:'CSE', semester:'7th'},
+  order: [],
+  answers: {}, // qid -> {selectedIdx, confidence, correct}
+  currentIndex: 0,
+  startTime: null,
+  timeLeft: TIME_LIMIT_SEC,
+  timerHandle: null,
+  tabSwitches: 0,
+  submissionId: null
+};
+
+/* ===== MODULE: SHUFFLE ===== */
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+function prepareOrder(){
+  state.order = shuffle(QUESTIONS).map(q => {
+    const optIdx = shuffle(q.opts.map((o,i)=>i));
+    return {...q, shuffledOpts: optIdx.map(i=>q.opts[i]), correctShuffledIdx: optIdx.indexOf(q.a)};
+  });
+}
+
+/* ===== MODULE: ANALYTICS ===== */
+let eventBuffer = [];
+function logEvent(type, questionId, value){
+  eventBuffer.push({
+    sessionId: state.sessionId, eventId: 'E'+Date.now()+Math.random().toString(36).slice(2,6),
+    quizId: QUIZ_ID, studentId: state.student.roll, questionId: questionId||'',
+    eventType: type, eventValue: value!==undefined ? JSON.stringify(value) : '',
+    clientTs: new Date().toISOString(),
+    elapsedMs: state.startTime ? Date.now()-state.startTime : 0
+  });
+}
+function flushEvents(){
+  if(eventBuffer.length===0) return;
+  const batch = eventBuffer.splice(0, eventBuffer.length);
+  fetch(API_URL, {method:'POST', mode:'no-cors', body: JSON.stringify({action:'event_batch', events:batch})}).catch(()=>{});
+}
+setInterval(flushEvents, FLUSH_INTERVAL_MS);
+window.addEventListener('pagehide', () => {
+  if(eventBuffer.length && navigator.sendBeacon){
+    navigator.sendBeacon(API_URL, JSON.stringify({action:'event_batch', events:eventBuffer}));
+  }
+});
+document.addEventListener('visibilitychange', () => {
+  if(document.hidden){
+    logEvent('TAB_HIDDEN', currentQ() ? currentQ().id : '');
+    state.tabSwitches++;
+  } else {
+    logEvent('TAB_VISIBLE', currentQ() ? currentQ().id : '');
+  }
+});
+let inactivityTimer = null;
+function resetInactivity(){
+  if(inactivityTimer) clearTimeout(inactivityTimer);
+  inactivityTimer = setTimeout(()=>{
+    logEvent('INACTIVITY_START', currentQ()?currentQ().id:'');
+  }, INACTIVITY_MS);
+}
+document.addEventListener('mousemove', resetInactivity);
+document.addEventListener('keydown', resetInactivity);
+
+/* ===== MODULE: API ===== */
+async function lookupStudent(roll){
+  try{
+    const r = await fetch(`${API_URL}?action=my_registrations&roll=${encodeURIComponent(roll)}`);
+    const j = await r.json();
+    if(j && j.success && j.data) return j.data;
+    return null;
+  }catch(e){ return null; }
+}
+async function loadLeaderboard(targetTbody, targetWidget){
+  try{
+    const r = await fetch(`${API_URL}?action=leaderboard&quiz=${QUIZ_ID}&top=${LB_SIZE}`);
+    const j = await r.json();
+    if(j && j.success && Array.isArray(j.data)){
+      renderLeaderboard(j.data, targetTbody, targetWidget);
+    } else {
+      if(targetWidget) targetWidget.textContent = 'No entries yet — be the first!';
+    }
+  }catch(e){
+    if(targetWidget) targetWidget.textContent = 'Leaderboard unavailable.';
+  }
+}
+function renderLeaderboard(data, tbody, widget){
+  if(widget){
+    widget.innerHTML = data.slice(0,LB_SIZE).map((r,i)=>
+      `<div class="lb-row"><span>${i+1}. ${escapeHtml(r.name||'')}</span><span class="mono">${r.score||0}</span></div>`
+    ).join('') || 'No entries yet.';
+  }
+  if(tbody){
+    tbody.innerHTML = data.slice(0,LB_SIZE).map((r,i)=>
+      `<tr><td>${i+1}</td><td>${escapeHtml(r.name||'')}</td><td class="mono">${escapeHtml(r.roll||'')}</td><td>${escapeHtml(r.section||'')}</td><td>${r.score||0}/${r.total||30}</td><td>${r.pct||''}</td></tr>`
+    ).join('') || '<tr><td colspan="6">No entries yet.</td></tr>';
+  }
+}
+function submitFinal(){
+  const payload = buildPayload();
+  fetch(API_URL, {method:'POST', mode:'no-cors', body: JSON.stringify(payload)}).catch(()=>{});
+}
+
+/* ===== MODULE: UI — helpers ===== */
+function escapeHtml(s){ return (s+'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function currentQ(){ return state.order[state.currentIndex]; }
+function show(id){
+  ['screen-reg','screen-quiz','screen-result','screen-lb'].forEach(s=>{
+    document.getElementById(s).classList.toggle('hidden', s!==id);
+  });
+}
+
+/* ---- Registration Step 1 ---- */
+document.getElementById('lookupBtn').addEventListener('click', async () => {
+  const roll = document.getElementById('rollInput').value.trim();
+  if(!roll){ alert('Please enter your roll number.'); return; }
+  const btn = document.getElementById('lookupBtn');
+  const orig = btn.textContent;
+  btn.innerHTML = '<span class="spinner"></span>Looking up…';
+  const data = await lookupStudent(roll);
+  btn.textContent = orig;
+  state.student.roll = roll;
+  const bOk = document.getElementById('bannerOk');
+  const bWarn = document.getElementById('bannerWarn');
+  bOk.style.display = 'none'; bWarn.style.display = 'none';
+  if(data && data.name){
+    document.getElementById('nameInput').value = data.name || '';
+    if(data.section) document.getElementById('sectionInput').value = data.section;
+    bOk.textContent = `Welcome back, ${data.name}!`;
+    bOk.style.display = 'block';
+  } else {
+    bWarn.textContent = 'Fill your details below';
+    bWarn.style.display = 'block';
+  }
+  document.getElementById('regStep1').classList.add('hidden');
+  document.getElementById('regStep2').classList.remove('hidden');
+});
+document.getElementById('resetRollBtn').addEventListener('click', () => {
+  document.getElementById('regStep2').classList.add('hidden');
+  document.getElementById('regStep1').classList.remove('hidden');
+});
+
+/* ---- Registration Step 2 -> Begin ---- */
+document.getElementById('beginBtn').addEventListener('click', () => {
+  const name = document.getElementById('nameInput').value.trim();
+  if(!name){ alert('Please enter your name.'); return; }
+  state.student.name = name;
+  state.student.section = document.getElementById('sectionInput').value;
+  startQuiz();
+});
+
+/* ---- Quiz flow ---- */
+function startQuiz(){
+  prepareOrder();
+  state.startTime = Date.now();
+  logEvent('QUIZ_START', '', {quizId: QUIZ_ID});
+  logEvent('DEVICE_INFO', '', {
+    ua: navigator.userAgent,
+    screen: `${screen.width}x${screen.height}`,
+    viewport: `${window.innerWidth}x${window.innerHeight}`,
+    touch: 'ontouchstart' in window
+  });
+  document.getElementById('quizWho').textContent = `${state.student.name} · ${state.student.section||'-'}`;
+  buildNavChips();
+  show('screen-quiz');
+  renderQuestion();
+  startTimer();
+}
+function startTimer(){
+  const box = document.getElementById('timerBox');
+  state.timerHandle = setInterval(()=>{
+    state.timeLeft--;
+    const m = String(Math.floor(state.timeLeft/60)).padStart(2,'0');
+    const s = String(state.timeLeft%60).padStart(2,'0');
+    box.textContent = `${m}:${s}`;
+    if(state.timeLeft <= 60) box.classList.add('low');
+    if(state.timeLeft === 300) logEvent('TIME_WARNING','', {remaining:300});
+    if(state.timeLeft <= 0){
+      clearInterval(state.timerHandle);
+      finishQuiz();
+    }
+  },1000);
+}
+function buildNavChips(){
+  const wrap = document.getElementById('navChips');
+  wrap.innerHTML = state.order.map((q,i)=>`<button class="chip" data-i="${i}">${i+1}</button>`).join('');
+  wrap.querySelectorAll('.chip').forEach(ch=>{
+    ch.addEventListener('click', ()=>{
+      logEvent('NAV_JUMP', currentQ().id, {to: ch.dataset.i});
+      state.currentIndex = parseInt(ch.dataset.i);
+      renderQuestion();
+    });
+  });
+}
+function renderQuestion(){
+  const q = currentQ();
+  document.getElementById('qSectionPill').textContent = q.section;
+  document.getElementById('qNumCircle').textContent = state.currentIndex+1;
+  document.getElementById('qTagBadge').textContent = q.tag;
+  const diffChip = document.getElementById('qDiffChip');
+  diffChip.textContent = q.difficulty;
+  diffChip.className = 'badge-diff diff-'+q.difficulty;
+  document.getElementById('qStem').textContent = q.q;
+
+  const optsWrap = document.getElementById('optsContainer');
+  optsWrap.innerHTML = '';
+  const saved = state.answers[q.id];
+  q.shuffledOpts.forEach((optText, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'opt-btn' + (saved && saved.selectedIdx===idx ? ' selected' : '');
+    btn.textContent = String.fromCharCode(65+idx) + '.  ' + optText;
+    btn.addEventListener('click', () => selectOption(idx));
+    optsWrap.appendChild(btn);
+  });
+
+  document.getElementById('confScale').style.display = RESEARCH_MODE ? 'block' : 'none';
+  document.querySelectorAll('.conf-opt').forEach(c=>{
+    c.classList.toggle('selected', saved && saved.confidence == c.dataset.c);
+  });
+
+  document.querySelectorAll('.chip').forEach((ch,i)=>{
+    ch.classList.toggle('current', i===state.currentIndex);
+    ch.classList.toggle('answered', !!state.answers[state.order[i].id]);
+  });
+
+  const pct = ((state.currentIndex+1)/state.order.length)*100;
+  document.getElementById('progFill').style.width = pct+'%';
+  document.getElementById('nextBtn').textContent = (state.currentIndex === state.order.length-1) ? 'Review & Submit' : 'Next →';
+
+  logEvent('QUESTION_DISPLAYED', q.id);
+}
+function selectOption(idx){
+  const q = currentQ();
+  const prev = state.answers[q.id];
+  state.answers[q.id] = {
+    selectedIdx: idx,
+    correct: idx === q.correctShuffledIdx,
+    confidence: prev ? prev.confidence : null
+  };
+  logEvent(prev ? 'OPTION_CHANGED' : 'OPTION_SELECTED', q.id, {idx});
+  logEvent('ANSWER_SUBMITTED', q.id, {idx, correct: idx===q.correctShuffledIdx});
+  renderQuestion();
+}
+document.getElementById('confScale').addEventListener('click', (e)=>{
+  const btn = e.target.closest('.conf-opt');
+  if(!btn) return;
+  const q = currentQ();
+  if(!state.answers[q.id]) state.answers[q.id] = {selectedIdx:null, correct:false, confidence:null};
+  state.answers[q.id].confidence = btn.dataset.c;
+  logEvent('CONFIDENCE_SET', q.id, {c: btn.dataset.c});
+  renderQuestion();
+});
+document.getElementById('prevBtn').addEventListener('click', ()=>{
+  if(state.currentIndex>0){
+    logEvent('NAV_PREVIOUS', currentQ().id);
+    state.currentIndex--;
+    renderQuestion();
+  }
+});
+document.getElementById('nextBtn').addEventListener('click', ()=>{
+  const q = currentQ();
+  if(!state.answers[q.id]) logEvent('QUESTION_SKIPPED', q.id);
+  if(state.currentIndex === state.order.length-1){
+    finishQuiz();
+  } else {
+    logEvent('NAV_NEXT', q.id);
+    state.currentIndex++;
+    renderQuestion();
+  }
+});
+
+/* ---- Finish & Scoring ---- */
+function finishQuiz(){
+  if(state.timerHandle) clearInterval(state.timerHandle);
+  logEvent('FINAL_SUBMISSION', '', {});
+  flushEvents();
+  computeAndRenderResult();
+  submitFinal();
+  show('screen-result');
+}
+function buildScoreBreakdown(){
+  let correct = 0;
+  const diffTotals = {easy:{c:0,t:0}, medium:{c:0,t:0}, hard:{c:0,t:0}};
+  const topicTotals = {};
+  const calib = {1:{c:0,t:0},2:{c:0,t:0},3:{c:0,t:0}};
+  state.order.forEach(q=>{
+    const ans = state.answers[q.id];
+    const isCorrect = ans && ans.correct;
+    if(isCorrect) correct++;
+    diffTotals[q.difficulty].t++;
+    if(isCorrect) diffTotals[q.difficulty].c++;
+    if(!topicTotals[q.section]) topicTotals[q.section] = {c:0,t:0};
+    topicTotals[q.section].t++;
+    if(isCorrect) topicTotals[q.section].c++;
+    if(ans && ans.confidence){
+      calib[ans.confidence].t++;
+      if(isCorrect) calib[ans.confidence].c++;
+    }
+  });
+  return {correct, diffTotals, topicTotals, calib};
+}
+function buildPayload(){
+  const {correct, diffTotals, topicTotals, calib} = buildScoreBreakdown();
+  const total = state.order.length;
+  const pct = Math.round((correct/total)*100);
+  const grade = pct>=90?'A+':pct>=80?'A':pct>=70?'B':pct>=60?'C':pct>=40?'D':'F';
+  state.submissionId = 'SUB-'+QUIZ_ID+'-'+Date.now();
+  const tagFields = {};
+  const confFields = {};
+  const correctFields = {};
+  state.order.forEach(q=>{
+    const ans = state.answers[q.id];
+    tagFields['tag_'+q.id] = q.tag;
+    confFields['conf_'+q.id] = ans ? ans.confidence : '';
+    correctFields['correct_'+q.id] = ans ? !!ans.correct : false;
+  });
+  return {
+    action: 'quiz_response',
+    submissionId: state.submissionId, sessionId: state.sessionId,
+    quizId: QUIZ_ID, quizType: QUIZ_ID, cohortId: COHORT_ID,
+    name: state.student.name, roll: state.student.roll, section: state.student.section,
+    branch: state.student.branch, semester: state.student.semester,
+    mode: QUIZ_MODE,
+    score: correct, scoreWeighted: correct, total: total, scoreMax: total,
+    percentage: pct, grade, passed: pct>=40,
+    timeTaken: TIME_LIMIT_SEC - state.timeLeft,
+    submittedAt: new Date().toISOString(),
+    sectionScores: Object.entries(topicTotals).map(([k,v])=>({section:k, correct:v.c, total:v.t})),
+    difficultyScores: diffTotals,
+    ...tagFields, ...confFields, ...correctFields
+  };
+}
+function computeAndRenderResult(){
+  const {correct, diffTotals, topicTotals, calib} = buildScoreBreakdown();
+  const total = state.order.length;
+  const pct = Math.round((correct/total)*100);
+  const grade = pct>=90?'A+':pct>=80?'A':pct>=70?'B':pct>=60?'C':pct>=40?'D':'F';
+  document.getElementById('resEmoji').textContent = pct>=80?'🏆':pct>=60?'🎯':pct>=40?'📘':'📝';
+  document.getElementById('resScore').textContent = correct;
+  document.getElementById('resTotal').textContent = total;
+  document.getElementById('resPct').textContent = pct+'%';
+  document.getElementById('resGrade').textContent = 'Grade ' + grade + (pct>=40?' · Passed':' · Not cleared');
+
+  const diffGrid = document.getElementById('diffGrid');
+  diffGrid.innerHTML = ['easy','medium','hard'].map(d=>
+    `<div class="diff-card"><div class="badge-diff diff-${d}">${d}</div><div style="margin-top:6px;font-weight:700;">${diffTotals[d].c}/${diffTotals[d].t}</div></div>`
+  ).join('');
+
+  const topicBars = document.getElementById('topicBars');
+  topicBars.innerHTML = Object.entries(topicTotals).map(([k,v])=>{
+    const p = v.t ? Math.round((v.c/v.t)*100) : 0;
+    return `<div class="topic-bar-row"><div style="display:flex;justify-content:space-between;font-size:.8rem;margin-bottom:4px;"><span>${k}</span><span>${v.c}/${v.t}</span></div><div class="topic-bar-track"><div class="topic-bar-fill" style="width:${p}%;"></div></div></div>`;
+  }).join('');
+
+  if(RESEARCH_MODE){
+    const calSnap = document.getElementById('calSnapshot');
+    calSnap.innerHTML = `<h3 class="serif" style="font-size:1.1rem;margin-top:20px;">Calibration Snapshot</h3>
+      <div style="font-size:.85rem;color:#5a5346;margin-top:8px;">
+      Not Sure: ${calib[1].c}/${calib[1].t} correct ·
+      Somewhat Sure: ${calib[2].c}/${calib[2].t} correct ·
+      Very Sure: ${calib[3].c}/${calib[3].t} correct
+      </div>`;
+  }
+
+  document.getElementById('subIdBox').textContent = `Verified participation record — SGIF · Submission ID: ${state.submissionId}`;
+}
+
+/* ---- Result actions ---- */
+document.getElementById('downloadPdfBtn').addEventListener('click', ()=>{
+  const el = document.getElementById('resultCardRoot');
+  html2pdf().from(el).set({filename: `${QUIZ_ID}_${state.student.roll||'result'}.pdf`}).save();
+});
+document.getElementById('reviewBtn').addEventListener('click', ()=>{
+  alert('Review mode: check console for full answer log.');
+  console.table(state.order.map(q=>({
+    id:q.id, section:q.section, difficulty:q.difficulty,
+    yourAnswer: state.answers[q.id] ? q.shuffledOpts[state.answers[q.id].selectedIdx] : '(skipped)',
+    correctAnswer: q.shuffledOpts[q.correctShuffledIdx],
+    correct: state.answers[q.id] ? state.answers[q.id].correct : false
+  })));
+});
+document.getElementById('viewLbBtn').addEventListener('click', ()=>{
+  show('screen-lb');
+  loadLeaderboard(document.getElementById('lbTableBody'), null);
+});
+document.getElementById('navLbBtn').addEventListener('click', ()=>{
+  show('screen-lb');
+  loadLeaderboard(document.getElementById('lbTableBody'), null);
+});
+document.getElementById('lbBackBtn').addEventListener('click', ()=>{
+  show(state.submissionId ? 'screen-result' : 'screen-reg');
+});
+
+/* ---- Tab-switch protection ---- */
+window.addEventListener('blur', ()=>{
+  if(!document.getElementById('screen-quiz').classList.contains('hidden')){
+    if(state.tabSwitches >= TAB_SWITCH_LIMIT){
+      console.warn('Tab switch limit exceeded');
+    }
+  }
+});
+
+/* ---- Init ---- */
+loadLeaderboard(null, document.getElementById('lbWidgetBody'));
+</script>
+</body>
+</html>
