@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lab 1 — Practical 1 | Instructor Guide</title>
+<style>
+:root{--accent:#7c3aed;--ink:#172033;--muted:#5f6b7a;--bg:#f5f7fb;--card:#fff;--line:#dfe5ee;--soft:#eef4ff}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.65}
+.wrap{max-width:1050px;margin:auto;padding:28px 20px 60px}
+.hero{background:linear-gradient(135deg,#172033,var(--accent));color:white;border-radius:20px;padding:36px;margin-bottom:22px}
+.hero .tag{font-size:.82rem;text-transform:uppercase;letter-spacing:.12em;opacity:.85}
+h1{font-size:2.15rem;margin:.25rem 0 .5rem} h2{margin-top:34px;color:#18253b} h3{color:#243552}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px;margin:16px 0;box-shadow:0 3px 12px rgba(23,32,51,.05)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+.callout{background:var(--soft);border-left:5px solid var(--accent);padding:15px 18px;border-radius:9px;margin:16px 0}
+.warning{background:#fff7ed;border-left-color:#ea580c}
+.success{background:#ecfdf5;border-left-color:#059669}
+code,kbd{background:#eef1f5;border-radius:5px;padding:2px 6px}
+pre{background:#111827;color:#f3f4f6;padding:18px;border-radius:12px;overflow:auto;font-size:.93rem;line-height:1.55}
+table{width:100%;border-collapse:collapse;margin:14px 0}th,td{border:1px solid var(--line);padding:10px;text-align:left;vertical-align:top}th{background:#f0f4fa}
+.badge{display:inline-block;background:#e8eefc;color:#1d4ed8;border-radius:999px;padding:4px 10px;font-size:.82rem;font-weight:600}
+.check li{margin:8px 0}
+footer{margin-top:35px;color:var(--muted);font-size:.9rem;border-top:1px solid var(--line);padding-top:15px}
+@media print{body{background:white}.wrap{max-width:none}.hero{print-color-adjust:exact;-webkit-print-color-adjust:exact}.card{box-shadow:none}}
+
+.nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:16px;background:rgba(255,255,255,.92);backdrop-filter:saturate(180%) blur(10px);border-bottom:1px solid var(--line);padding:10px 22px;margin:-28px -20px 22px -20px}
+.nav-brand{display:flex;align-items:center;gap:10px;min-width:0}
+.nav-logo{width:38px;height:38px;border-radius:9px;object-fit:cover;flex-shrink:0;background:#fff}
+.nav-name{font-weight:700;font-size:.98rem;color:var(--ink);line-height:1.15}
+.nav-sub{font-size:.76rem;color:var(--muted);white-space:nowrap}
+.nav-links{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.nav-cta{background:var(--accent,#2563eb);color:#fff !important;text-decoration:none;font-size:.85rem;font-weight:600;padding:8px 14px;border-radius:999px;white-space:nowrap;transition:opacity .15s}
+.nav-cta:hover{opacity:.88}
+.nav-cta.secondary{background:transparent;color:var(--ink,#172033) !important;border:1px solid var(--line,#dfe5ee)}
+@media (prefers-color-scheme: dark){
+  .nav{background:rgba(15,23,36,.9);border-bottom-color:var(--line)}
+  .nav-cta.secondary{color:#e8edf7 !important}
+}
+@media (max-width:700px){
+  .nav{padding:10px 14px;margin:-16px -12px 16px -12px;flex-wrap:wrap}
+  .nav-sub{display:none}
+  .nav-links{width:100%;justify-content:flex-start}
+}
+@media print{.nav{display:none}}
+
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-brand">
+    <img class="nav-logo" src="KP_Singh.png" alt="K.P. Singh"/>
+    <div>
+      <div class="nav-name">K.P. Singh</div>
+      <div class="nav-sub">SGT University · AI &amp; ML · Practical 1 · Instructor Guide</div>
+    </div>
+  </div>
+    <div class="nav-links">
+    <a class="nav-cta secondary" href="https://kpsingh.in" target="_blank" rel="noopener">kpsingh.in ↗</a>
+  </div>
+</nav>
+<main class="wrap">
+
+<section class="hero">
+<div class="tag">Instructor Guide • Ready-to-Deliver Script</div>
+<h1>Lab 1 — Practical 1</h1>
+<p style="font-size:1.12rem">Bayes’ Rule in Python: Student Absence Given Friday</p>
+</section>
+
+<div class="card">
+<strong>Delivery goal:</strong> Students should leave knowing what “given that” means, why the denominator is P(Friday), how the 15% result is obtained, and how to implement it in a few Python lines.
+</div>
+
+<h2>1. Opening — 2 minutes</h2>
+<div class="callout">
+<strong>Say:</strong><br>
+“Before we touch Python, I want you to think about a very ordinary question. Suppose I tell you that today is Friday. Does that new information change the probability that a student is absent? Of course it might. Today we are going to teach the computer how to calculate exactly that kind of probability.”
+</div>
+<p><strong>Engage:</strong> Ask students: “If I tell you nothing about the day, and then I tell you it is Friday, should your probability calculation be allowed to change?” Take two or three answers.</p>
+
+<h2>2. Introduce the Problem — 3 minutes</h2>
+<div class="callout">
+<strong>Say:</strong><br>
+“Our syllabus gives us this problem. The probability that it is Friday and a student is absent is 3%. The probability that it is Friday is 20%. We want the probability that a student is absent, given that today is Friday. The syllabus expects 15%.”
+</div>
+<p>Write on the board:</p>
+<pre><code>A = student is absent
+F = today is Friday
+
+P(A ∩ F) = 0.03
+P(F) = 0.20
+Find P(A | F)</code></pre>
+
+<h2>3. The Key Phrase: “Given That” — 4 minutes</h2>
+<div class="callout success">
+<strong>Say:</strong><br>
+“The most important words in this practical are ‘given that’. When I say P(A given F), I am no longer looking at every possible day. I am looking only at the cases where F is true — the Fridays.”
+</div>
+<p><strong>Engaging example:</strong> “Imagine we have 100 school days. If 20 are Fridays and 3 days are both Friday and an absence day, then inside our 20 Friday days, 3 are absence days. What fraction is that?”</p>
+<p>Let students answer <strong>3 out of 20</strong>.</p>
+
+<h2>4. Derive the Formula — 3 minutes</h2>
+<div class="card" style="text-align:center;font-size:1.25rem">
+<strong>P(A | F) = P(A ∩ F) / P(F)</strong>
+</div>
+<div class="callout">
+<strong>Say:</strong><br>
+“Notice what happened. The numerator is the overlap — Friday and absent. The denominator is the condition we were given — Friday. This is why the denominator is P(F).”
+</div>
+
+<h2>5. Calculate It Before Coding — 2 minutes</h2>
+<pre><code>P(A | F) = 0.03 / 0.20
+         = 0.15
+         = 15%</code></pre>
+<div class="callout warning"><strong>Ask:</strong> “Who can explain 15% in one sentence?” Desired answer: “Given that today is Friday, the probability that the student is absent is 15%.”</div>
+
+<h2>6. Connect to Bayes’ Rule — 3 minutes</h2>
+<div class="callout">
+<strong>Say:</strong><br>
+“You may have seen the longer Bayes formula: P(A given B) equals P(B given A) times P(A), divided by P(B). Today the joint probability is already supplied to us. So we can use the equivalent conditional-probability form directly: P(A given F) equals P(A and F) divided by P(F).”
+</div>
+<p>Emphasize: “Do not memorize a formula without knowing what the symbols mean. First identify the event we want, then identify what is given.”</p>
+
+<h2>7. Live Python Demo — 5 minutes</h2>
+<div class="callout">
+<strong>Say:</strong><br>
+“Now we give the calculation to Python. This is deliberately a tiny program. In machine learning, even large systems are built from small, understandable operations.”
+</div>
+<pre><code>prob_friday_and_absent = 0.03
+prob_friday = 0.20
+
+prob_absent_given_friday = prob_friday_and_absent / prob_friday
+percentage = prob_absent_given_friday * 100
+
+print("P(Absent | Friday) =", prob_absent_given_friday)
+print("Probability =", percentage, "%")</code></pre>
+<p>Run it and pause on the output.</p>
+
+<h2>8. Explain the Code Line by Line — 4 minutes</h2>
+<ul>
+<li><strong>First line:</strong> “We store 3% as 0.03.”</li>
+<li><strong>Second line:</strong> “We store 20% as 0.20.”</li>
+<li><strong>Third line:</strong> “We perform exactly the mathematical division we did on the board.”</li>
+<li><strong>Fourth line:</strong> “0.15 is a probability; multiplying by 100 gives the percentage 15.”</li>
+<li><strong>print:</strong> “This simply displays the result for us.”</li>
+</ul>
+
+<h2>9. Mini Challenge — 4 minutes</h2>
+<div class="card">
+<p><strong>Tell students:</strong> “Change only the values in the first two lines. Predict the output before running Python. Then run it and check.”</p>
+<p>Follow-up: “What happens if the joint probability becomes 0.02 while Friday remains 0.20?”</p>
+<p>Expected calculation: 0.02 / 0.20 = 0.10 = 10%.</p>
+</div>
+
+<h2>10. Common Misconception Check — 3 minutes</h2>
+<p><strong>Ask:</strong> “Is P(A | F) the same as P(F | A)?”</p>
+<p>Expected response: <strong>No.</strong> Explain:</p>
+<div class="callout">
+“P(A | F) asks about absence after we know it is Friday. P(F | A) asks about Friday after we know the student is absent. The information being given is different, so the probabilities are generally different.”
+</div>
+
+<h2>11. Practical Record Guidance — 2 minutes</h2>
+<div class="callout success">
+<strong>Say:</strong><br>
+“For your record, do not submit only a screenshot. Show the problem, identify the probabilities, write the formula, include the Python program, show the output, and write the answer in words. I want to see that you understand the calculation, not only that the code ran.”
+</div>
+
+<h2>12. Closing — 2 minutes</h2>
+<div class="callout">
+<strong>Say:</strong><br>
+“Today you performed a very small AI/ML building block: reasoning under uncertainty. The important lesson is not the number 15. The important lesson is how new information changes the probability we are interested in. Next time you see ‘given that’, think conditional probability.”
+</div>
+
+<h2>13. Quick Viva Prompts</h2>
+<table>
+<tr><th>Ask</th><th>Listen for</th></tr>
+<tr><td>What does the “|” mean?</td><td>Given that.</td></tr>
+<tr><td>Why is the denominator P(F)?</td><td>Because Friday is the condition already known.</td></tr>
+<tr><td>What is 3% as a decimal?</td><td>0.03.</td></tr>
+<tr><td>What is 20% as a decimal?</td><td>0.20.</td></tr>
+<tr><td>What is the final probability?</td><td>0.15 or 15%.</td></tr>
+<tr><td>What is the real-world interpretation?</td><td>Given Friday, the probability of absence is 15%.</td></tr>
+</table>
+
+<h2>14. Instructor Checklist</h2>
+<ul class="check">
+<li>Explain A and F before introducing the formula.</li>
+<li>Emphasize “given that”.</li>
+<li>Use the 100-day example before coding.</li>
+<li>Calculate manually first; code second.</li>
+<li>Ask for an interpretation of 15%.</li>
+<li>Have students change an input and predict the output.</li>
+<li>Check that students distinguish P(A | F) from P(F | A).</li>
+</ul>
+
+<footer>AI-ML Lab • Lab 1 / Practical 1 • Prepared as a student/instructor companion to the supplied AI-ML syllabus.</footer>
+</main></body></html>
