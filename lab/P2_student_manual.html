@@ -1,0 +1,46 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Lab 1 Practical 2 Student Manual</title><style>:root{--a:#2563eb;--bg:#f5f7fb;--card:#fff;--ink:#172033;--muted:#5f6b7a;--line:#dfe5ee}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 system-ui,-apple-system,Segoe UI,Arial,sans-serif}.wrap{max-width:1050px;margin:auto;padding:20px}.hero{background:linear-gradient(135deg,#172033,var(--a));color:#fff;padding:32px;border-radius:18px;margin-bottom:20px}.tag{font-size:.8rem;text-transform:uppercase;letter-spacing:.12em;opacity:.85}h1{line-height:1.2}h2{margin-top:32px}.card{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:20px;margin:14px 0}.callout{background:#eef4ff;border-left:5px solid var(--a);padding:14px 17px;border-radius:8px}.success{background:#ecfdf5;border-color:#059669}.warning{background:#fff7ed;border-color:#ea580c}pre{background:#111827;color:#f3f4f6;padding:16px;border-radius:10px;overflow:auto}pre code{background:none;color:inherit}code{background:#edf0f5;padding:2px 5px;border-radius:4px}table{width:100%;border-collapse:collapse;margin:14px 0}th,td{border:1px solid var(--line);padding:9px;text-align:left}th{background:#f0f4fa}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}.treasure{cursor:pointer;user-select:none}footer{margin-top:35px;color:var(--muted);font-size:.9rem;border-top:1px solid var(--line);padding-top:15px}@media(max-width:700px){.wrap{padding:12px}.hero{padding:22px 17px}h1{font-size:1.7rem}h2{font-size:1.3rem}.card{padding:15px}table{display:block;overflow-x:auto}pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:.84rem}}@media(prefers-color-scheme:dark){:root{--bg:#0f1724;--card:#182235;--ink:#e8edf7;--muted:#aab5c7;--line:#304057}th{background:#223047;color:#fff}td{color:#e8edf7}code{background:#29364b;color:#f5f7fb}.callout{background:#172a46}.success{background:#143328}.warning{background:#35271c}}
+.nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:16px;background:rgba(255,255,255,.92);backdrop-filter:saturate(180%) blur(10px);border-bottom:1px solid var(--line);padding:10px 22px;margin:-28px -20px 22px -20px}
+.nav-brand{display:flex;align-items:center;gap:10px;min-width:0}
+.nav-logo{width:38px;height:38px;border-radius:9px;object-fit:cover;flex-shrink:0;background:#fff}
+.nav-name{font-weight:700;font-size:.98rem;color:var(--ink);line-height:1.15}
+.nav-sub{font-size:.76rem;color:var(--muted);white-space:nowrap}
+.nav-links{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.nav-cta{background:var(--accent,#2563eb);color:#fff !important;text-decoration:none;font-size:.85rem;font-weight:600;padding:8px 14px;border-radius:999px;white-space:nowrap;transition:opacity .15s}
+.nav-cta:hover{opacity:.88}
+.nav-cta.secondary{background:transparent;color:var(--ink,#172033) !important;border:1px solid var(--line,#dfe5ee)}
+@media (prefers-color-scheme: dark){
+  .nav{background:rgba(15,23,36,.9);border-bottom-color:var(--line)}
+  .nav-cta.secondary{color:#e8edf7 !important}
+}
+@media (max-width:700px){
+  .nav{padding:10px 14px;margin:-16px -12px 16px -12px;flex-wrap:wrap}
+  .nav-sub{display:none}
+  .nav-links{width:100%;justify-content:flex-start}
+}
+@media print{.nav{display:none}}
+
+</style></head><body>
+<nav class="nav">
+  <div class="nav-brand">
+    <img class="nav-logo" src="KP_Singh.png" alt="K.P. Singh"/>
+    <div>
+      <div class="nav-name">K.P. Singh</div>
+      <div class="nav-sub">SGT University · AI &amp; ML · Practical 2 · Student Manual</div>
+    </div>
+  </div>
+    <div class="nav-links">
+    <a class="nav-cta secondary" href="https://kpsingh.in" target="_blank" rel="noopener">kpsingh.in ↗</a>
+  </div>
+</nav>
+<main class="wrap"><section class="hero"><div class="tag">Artificial Intelligence and Machine Learning Lab</div><h1>Lab 1 — Practical 2</h1><p>Student Manual — Extract Data from a Database Using Python</p></section><div class="card"><b>Syllabus task:</b> “Extract the data from database using python.”<p>For this practical, <b>college.db is provided</b>. You are not required to create the database or insert records.</p></div><h2>1. Aim</h2><p>To extract data from an existing database using Python.</p><h2>2. Database Provided</h2><p>The supplied <code>college.db</code> contains a table named <code>students</code>.</p><table><tr><th>Column</th><th>Meaning</th></tr><tr><td>id</td><td>Student identifier</td></tr><tr><td>name</td><td>Student name</td></tr><tr><td>department</td><td>Department</td></tr><tr><td>marks</td><td>Marks</td></tr></table><h2>3. Data in the Database</h2><table><tr><th>ID</th><th>Name</th><th>Department</th><th>Marks</th></tr><tr><td>1</td><td>Aarav</td><td>CSE</td><td>82</td></tr><tr><td>2</td><td>Diya</td><td>ECE</td><td>76</td></tr><tr><td>3</td><td>Kabir</td><td>CSE</td><td>91</td></tr><tr><td>4</td><td>Meera</td><td>IT</td><td>68</td></tr><tr><td>5</td><td>Rohan</td><td>ECE</td><td>88</td></tr></table><h2>4. Before You Begin</h2><ol><li>Obtain <code>college.db</code> from your instructor.</li><li>Keep it in the same folder as your Python program/notebook, or use its correct path.</li><li>Do not recreate or populate the database.</li></ol><h2 id="lab" class="treasure">🗝️ Lab Exercise</h2><div class="card"><p><b>Task:</b> Using Python, connect to the provided <code>college.db</code> database and extract data from the <code>students</code> table.</p><p>Your program should connect, execute an SQL query, fetch the returned data, display it, and close the connection.</p><p>Then write queries that:</p><ul><li>extract only <code>name</code> and <code>marks</code>;</li><li>extract students whose marks are greater than 80;</li><li>extract students belonging to CSE;</li><li>display students in descending order of marks.</li></ul><p><b>Submission:</b> Show your Python program, SQL queries, output, and a short explanation of how Python extracted the data.</p></div><h2>5. Practical Workflow</h2><div class="card" style="text-align:center"><b>Connect → Execute SQL → Fetch → Display/Process → Close</b></div><h2>6. Environment</h2><p>Use Google Colab, Jupyter Notebook, or local Python. Python’s <code>sqlite3</code> module works with the supplied SQLite database.</p><h2>7. Practical Record</h2><ul><li>Aim</li><li>Problem statement</li><li>Database/table information</li><li>Python program</li><li>SQL queries</li><li>Output</li><li>Short interpretation</li></ul><h2>8. Viva Questions: Core Concepts</h2><table><tr><th>Question</th><th>Good answer should cover</th></tr><tr><td>What is a database?</td><td>An organized collection of data that can be stored, managed and retrieved.</td></tr><tr><td>What is a relational database?</td><td>Related data organized into tables of rows and columns.</td></tr><tr><td>What is a row?</td><td>A single record.</td></tr><tr><td>What is a column?</td><td>A field or attribute.</td></tr><tr><td>What is SQL?</td><td>Structured Query Language for relational databases.</td></tr><tr><td>What does SELECT do?</td><td>Retrieves data.</td></tr><tr><td>What does WHERE do?</td><td>Filters rows.</td></tr><tr><td>What does ORDER BY do?</td><td>Sorts results.</td></tr><tr><td>What is SQLite?</td><td>A lightweight relational database engine stored in a file.</td></tr><tr><td>Why use sqlite3.connect()?</td><td>To connect Python to the SQLite database.</td></tr><tr><td>What is a cursor?</td><td>An object used to execute SQL and work with results.</td></tr><tr><td>fetchone vs fetchall?</td><td>One row versus all remaining returned rows.</td></tr><tr><td>Why close the connection?</td><td>To release resources and end the session.</td></tr><tr><td>What is a primary key?</td><td>A field or fields that uniquely identify a record.</td></tr><tr><td>Python vs SQL?</td><td>SQL specifies the data request; Python manages the interaction and returned data.</td></tr></table><div id="sol" class="card" hidden><b>Reference solution</b><pre><code>import sqlite3
+
+conn = sqlite3.connect("college.db")
+cursor = conn.cursor()
+
+cursor.execute("SELECT * FROM students")
+rows = cursor.fetchall()
+
+for row in rows:
+    print(row)
+
+conn.close()</code></pre></div><footer>AI-ML Lab • Lab 1 / Practical 2 • Provided database: <strong>college.db</strong></footer></main><script>let c=0,t;document.getElementById('lab').onclick=()=>{c++;clearTimeout(t);t=setTimeout(()=>c=0,2500);if(c===5){let s=document.getElementById('sol');s.hidden=!s.hidden;c=0}}</script></body></html>
