@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lab 1 — Practical 1 | Student Manual</title>
+<style>
+:root{--accent:#2563eb;--ink:#172033;--muted:#5f6b7a;--bg:#f5f7fb;--card:#fff;--line:#dfe5ee;--soft:#eef4ff}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.65}
+.wrap{max-width:1050px;margin:auto;padding:28px 20px 60px}
+.hero{background:linear-gradient(135deg,#172033,var(--accent));color:white;border-radius:20px;padding:36px;margin-bottom:22px}
+.hero .tag{font-size:.82rem;text-transform:uppercase;letter-spacing:.12em;opacity:.85}
+h1{font-size:2.15rem;margin:.25rem 0 .5rem} h2{margin-top:34px;color:#18253b} h3{color:#243552}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px;margin:16px 0;box-shadow:0 3px 12px rgba(23,32,51,.05)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+.callout{background:var(--soft);border-left:5px solid var(--accent);padding:15px 18px;border-radius:9px;margin:16px 0}
+.warning{background:#fff7ed;border-left-color:#ea580c}
+.success{background:#ecfdf5;border-left-color:#059669}
+code,kbd{background:#eef1f5;border-radius:5px;padding:2px 6px}
+pre{background:#111827;color:#f3f4f6;padding:18px;border-radius:12px;overflow:auto;font-size:.93rem;line-height:1.55}
+table{width:100%;border-collapse:collapse;margin:14px 0}th,td{border:1px solid var(--line);padding:10px;text-align:left;vertical-align:top}th{background:#f0f4fa}
+.badge{display:inline-block;background:#e8eefc;color:#1d4ed8;border-radius:999px;padding:4px 10px;font-size:.82rem;font-weight:600}
+.check li{margin:8px 0}
+footer{margin-top:35px;color:var(--muted);font-size:.9rem;border-top:1px solid var(--line);padding-top:15px}
+@media (max-width: 700px){
+  .wrap{padding:16px 12px 40px}
+  .hero{padding:24px 18px;border-radius:15px}
+  h1{font-size:1.7rem;line-height:1.2}
+  h2{font-size:1.3rem;margin-top:26px}
+  h3{font-size:1.05rem}
+  .card{padding:16px;margin:12px 0}
+  .grid{grid-template-columns:1fr}
+  table{display:block;overflow-x:auto;white-space:normal;-webkit-overflow-scrolling:touch}
+  th,td{min-width:120px;padding:8px;font-size:.92rem}
+  pre{font-size:.82rem;padding:13px;border-radius:9px;white-space:pre-wrap;overflow-wrap:anywhere}
+  code{overflow-wrap:anywhere}
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --ink:#e8edf7;
+    --muted:#aab5c7;
+    --bg:#0f1724;
+    --card:#182235;
+    --line:#304057;
+    --soft:#172a46;
+  }
+  body{background:var(--bg);color:var(--ink)}
+  .hero{color:#fff}
+  h2,h3{color:#eef3fb}
+  th{background:#223047;color:#f4f7fb}
+  td{color:#e8edf7}
+  code,kbd{background:#29364b;color:#f5f7fb}
+  .callout{color:#e8edf7}
+  .callout.warning{background:#35271c}
+  .callout.success{background:#143328}
+  footer{color:#9eabc0}
+}
+@media print{
+  body{background:white}
+  .wrap{max-width:none}
+  .hero{print-color-adjust:exact;-webkit-print-color-adjust:exact}
+  .card{box-shadow:none}
+}
+
+.treasure-heading{cursor:pointer;user-select:none;transition:transform .12s ease,opacity .12s ease}
+.treasure-heading:active{transform:scale(.99)}
+.treasure-heading.treasure-found{letter-spacing:.01em}
+.treasure-solution{border:2px dashed #8b5cf6}
+
+.nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:16px;background:rgba(255,255,255,.92);backdrop-filter:saturate(180%) blur(10px);border-bottom:1px solid var(--line);padding:10px 22px;margin:-28px -20px 22px -20px}
+.nav-brand{display:flex;align-items:center;gap:10px;min-width:0}
+.nav-logo{width:38px;height:38px;border-radius:9px;object-fit:cover;flex-shrink:0;background:#fff}
+.nav-name{font-weight:700;font-size:.98rem;color:var(--ink);line-height:1.15}
+.nav-sub{font-size:.76rem;color:var(--muted);white-space:nowrap}
+.nav-links{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.nav-cta{background:var(--accent,#2563eb);color:#fff !important;text-decoration:none;font-size:.85rem;font-weight:600;padding:8px 14px;border-radius:999px;white-space:nowrap;transition:opacity .15s}
+.nav-cta:hover{opacity:.88}
+.nav-cta.secondary{background:transparent;color:var(--ink,#172033) !important;border:1px solid var(--line,#dfe5ee)}
+@media (prefers-color-scheme: dark){
+  .nav{background:rgba(15,23,36,.9);border-bottom-color:var(--line)}
+  .nav-cta.secondary{color:#e8edf7 !important}
+}
+@media (max-width:700px){
+  .nav{padding:10px 14px;margin:-16px -12px 16px -12px;flex-wrap:wrap}
+  .nav-sub{display:none}
+  .nav-links{width:100%;justify-content:flex-start}
+}
+@media print{.nav{display:none}}
+
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-brand">
+    <img class="nav-logo" src="KP_Singh.png" alt="K.P. Singh"/>
+    <div>
+      <div class="nav-name">K.P. Singh</div>
+      <div class="nav-sub">SGT University · AI &amp; ML · Practical 1 · Student Manual</div>
+    </div>
+  </div>
+    <div class="nav-links">
+    <a class="nav-cta secondary" href="https://kpsingh.in" target="_blank" rel="noopener">kpsingh.in ↗</a>
+  </div>
+</nav>
+<main class="wrap">
+
+<section class="hero">
+<div class="tag">Artificial Intelligence and Machine Learning Lab</div>
+<h1>Lab 1 — Practical 1</h1>
+<p style="font-size:1.15rem">Bayes’ Rule in Python: Probability of Student Absence Given That Today Is Friday</p>
+</section>
+
+<div class="card">
+<span class="badge">Syllabus-aligned practical</span>
+<p><strong>Syllabus task:</strong> The first practical asks students to calculate the probability that a student is absent given that today is Friday, using Bayes’ rule in Python. The syllabus gives the expected answer as <strong>15%</strong>.</p>
+<p><strong>Lab time:</strong> 4 practical hours/week are allocated in the syllabus. This manual is specifically for Practical 1.</p>
+</div>
+
+<h2>1. Learning Objectives</h2>
+<div class="grid">
+<div class="card"><h3>Understand</h3><p>Recognize conditional probability and the quantities needed for Bayes’ rule.</p></div>
+<div class="card"><h3>Calculate</h3><p>Compute a conditional probability from the values supplied in the problem.</p></div>
+<div class="card"><h3>Implement</h3><p>Translate the mathematical formula into a short Python program.</p></div>
+<div class="card"><h3>Interpret</h3><p>Explain why the answer is 15%, rather than simply reporting a number.</p></div>
+</div>
+
+<h2>2. Problem Statement</h2>
+<div class="card">
+<p>The probability that it is Friday <strong>and</strong> that a student is absent is <strong>3%</strong>.</p>
+<p>There are 5 school days in a week, so the probability that it is Friday is <strong>20%</strong>.</p>
+<p><strong>Find:</strong> the probability that a student is absent <strong>given that today is Friday</strong>, and apply Bayes’ rule in Python.</p>
+</div>
+
+<h2>3. Given Information</h2>
+<table>
+<tr><th>Symbol</th><th>Meaning</th><th>Value</th></tr>
+<tr><td>P(F)</td><td>Probability that today is Friday</td><td>0.20</td></tr>
+<tr><td>P(A ∩ F)</td><td>Probability that it is Friday and the student is absent</td><td>0.03</td></tr>
+<tr><td>P(A | F)</td><td>Probability of absence given that today is Friday</td><td>To calculate</td></tr>
+</table>
+
+<h2>4. Theory: What We Need</h2>
+<div class="callout">
+<strong>Conditional probability:</strong> P(A | F) means “the probability of A when we already know F has happened.”
+</div>
+<p>For this practical, we can use the conditional-probability form of Bayes’ rule:</p>
+<div class="card" style="text-align:center;font-size:1.25rem"><strong>P(A | F) = P(A ∩ F) / P(F)</strong></div>
+<p>Substitute the given values:</p>
+<div class="card" style="text-align:center"><strong>P(A | F) = 0.03 / 0.20 = 0.15 = 15%</strong></div>
+
+<h2>5. Step-by-Step Procedure</h2>
+<ol class="check">
+<li>Open Python, Google Colab, Jupyter Notebook, or another Python environment.</li>
+<li>Create variables for the joint probability and the probability of Friday.</li>
+<li>Divide the joint probability by the probability of Friday.</li>
+<li>Store the result in a variable.</li>
+<li>Convert the result to a percentage by multiplying by 100.</li>
+<li>Print both the decimal probability and percentage.</li>
+<li>Check that the program produces the syllabus answer: <strong>15%</strong>.</li>
+<li>Write a short interpretation in your practical record.</li>
+</ol>
+
+<h2>6. Python Implementation</h2>
+<pre><code>prob_friday_and_absent = 0.03
+prob_friday = 0.20
+
+prob_absent_given_friday = prob_friday_and_absent / prob_friday
+percentage = prob_absent_given_friday * 100
+
+print("P(Absent | Friday) =", prob_absent_given_friday)
+print("Probability =", percentage, "%")</code></pre>
+
+<h2>7. Expected Output</h2>
+<pre><code>P(Absent | Friday) = 0.15
+Probability = 15.0 %</code></pre>
+
+<div class="callout success">
+<strong>Interpretation:</strong> Given that today is Friday, the probability that the student is absent is <strong>15%</strong>.
+</div>
+
+<h2>8. What Each Line Does</h2>
+<table>
+<tr><th>Code</th><th>Purpose</th></tr>
+<tr><td><code>prob_friday_and_absent = 0.03</code></td><td>Stores the given joint probability, 3%.</td></tr>
+<tr><td><code>prob_friday = 0.20</code></td><td>Stores the probability of Friday, 20%.</td></tr>
+<tr><td><code>... = 0.03 / 0.20</code></td><td>Applies the conditional-probability formula.</td></tr>
+<tr><td><code>* 100</code></td><td>Converts a probability such as 0.15 into 15%.</td></tr>
+<tr><td><code>print(...)</code></td><td>Displays the result.</td></tr>
+</table>
+
+<h2>9. Common Mistakes</h2>
+<ul>
+<li>Entering <strong>3</strong> instead of <strong>0.03</strong> for 3%.</li>
+<li>Entering <strong>20</strong> instead of <strong>0.20</strong> for 20%.</li>
+<li>Dividing by the wrong probability.</li>
+<li>Confusing <code>P(A | F)</code> with <code>P(F | A)</code>. They are generally not the same.</li>
+<li>Reporting 0.15 as “0.15%”. It is <strong>15%</strong>.</li>
+</ul>
+
+<h2>10. Practical Record / Submission</h2>
+<div class="card">
+<p>Students should record:</p>
+<ul>
+<li>Title and aim of the practical.</li>
+<li>Problem statement.</li>
+<li>Given values.</li>
+<li>Bayes/conditional-probability formula.</li>
+<li>Python program.</li>
+<li>Output screenshot or copied output.</li>
+<li>Final answer and one-sentence interpretation.</li>
+</ul>
+</div>
+
+<h2>11. Viva Questions: Core Concepts</h2>
+<p>These questions test the concepts needed to understand and extend the practical, rather than asking students only to repeat the code.</p>
+<table>
+<tr><th>Question</th><th>What a good answer should cover</th></tr>
+<tr><td>What is probability?</td><td>A numerical measure of how likely an event is, usually between 0 and 1.</td></tr>
+<tr><td>What is conditional probability?</td><td>The probability of an event when another event is already known to have occurred.</td></tr>
+<tr><td>What does P(A | F) mean?</td><td>The probability of A given F.</td></tr>
+<tr><td>What does P(A ∩ F) mean?</td><td>The probability that A and F occur together.</td></tr>
+<tr><td>State Bayes’ theorem.</td><td>P(A | B) = [P(B | A) × P(A)] / P(B), provided P(B) &gt; 0.</td></tr>
+<tr><td>How is P(A ∩ F) related to conditional probability?</td><td>P(A ∩ F) = P(F | A) × P(A) and also P(A ∩ F) = P(A | F) × P(F).</td></tr>
+<tr><td>Why is P(A | F) not generally equal to P(F | A)?</td><td>The condition is different; conditional probabilities are generally not symmetric.</td></tr>
+<tr><td>What is the difference between joint and conditional probability?</td><td>Joint probability concerns both events occurring; conditional probability concerns one event within the cases where another is known.</td></tr>
+<tr><td>Why can probability be written as 0.15 or 15%?</td><td>They represent the same probability; 15% = 15/100 = 0.15.</td></tr>
+<tr><td>What is the role of the denominator in P(A | F)?</td><td>It represents the probability of the condition F and normalizes the joint probability to the Friday cases.</td></tr>
+<tr><td>What information is required to calculate P(F | A) from P(A ∩ F)?</td><td>P(A) is required, because P(F | A) = P(A ∩ F) / P(A).</td></tr>
+<tr><td>Can P(F | A) be calculated from the two values given in this practical alone?</td><td>No. We know P(A ∩ F) = 0.03 and P(F) = 0.20, but P(A) has not been supplied.</td></tr>
+</table>
+
+
+<h2 id="lab-exercise-heading" class="treasure-heading" title="Lab Exercise">🗝️ Lab Exercise: Is P(A | F) the Same as P(F | A)?</h2>
+<div class="card">
+<p><strong>Task:</strong> Determine whether <code>P(A | F)</code> is the same as <code>P(F | A)</code>.</p>
+
+<div class="callout">
+<p><strong>Submission:</strong> Show your formulas, calculations, and a short written conclusion. Do not submit only a final number.</p>
+</div>
+</div>
+
+<!-- Instructor/reference solution is intentionally hidden from normal student view.
+     It is revealed only after five clicks on the exercise heading. -->
+<div id="treasure-solution" class="card treasure-solution" hidden>
+<h3>🔐 Treasure Unlocked: Reference Solution</h3>
+<p><strong>1. Calculate P(A | F)</strong></p>
+<div class="card" style="text-align:center">
+<strong>P(A | F) = P(A ∩ F) / P(F)</strong><br><br>
+<strong>= 0.03 / 0.20 = 0.15 = 15%</strong>
+</div>
+
+<p><strong>2. Write P(F | A)</strong></p>
+<div class="card" style="text-align:center">
+<strong>P(F | A) = P(A ∩ F) / P(A)</strong>
+</div>
+
+<p><strong>3. Can we calculate P(F | A) numerically?</strong></p>
+<p>No. The practical gives <code>P(A ∩ F) = 0.03</code>, but it does not give <code>P(A)</code>. Therefore:</p>
+<div class="card" style="text-align:center">
+<strong>P(F | A) = 0.03 / P(A)</strong>
+</div>
+
+<p><strong>4. Are the two probabilities necessarily equal?</strong></p>
+<p>No. In general, <code>P(A | F) ≠ P(F | A)</code> because they condition on different events.</p>
+
+<p><strong>5. Bayes' theorem connection</strong></p>
+<div class="card" style="text-align:center">
+<strong>P(A | F) = [P(F | A) × P(A)] / P(F)</strong>
+</div>
+<p>The joint-probability identity behind this is:</p>
+<div class="card" style="text-align:center">
+<strong>P(A ∩ F) = P(F | A) × P(A)</strong>
+</div>
+
+<div class="callout success">
+<strong>Final conclusion:</strong> <code>P(A | F) = 15%</code>. A numerical value for <code>P(F | A)</code> cannot be obtained from the supplied data alone because <code>P(A)</code> is missing.
+</div>
+</div>
+<h2>13. Practical Record / Submission</h2>
+<div class="card">
+<p>Students should record:</p>
+<ul>
+<li>Title and aim of the practical.</li>
+<li>Problem statement.</li>
+<li>Given values.</li>
+<li>Conditional-probability/Bayes formula.</li>
+<li>Python program.</li>
+<li>Output screenshot or copied output.</li>
+<li>Final answer and one-sentence interpretation.</li>
+<li>The formula for P(F | A), with a note explaining what additional information is required.</li>
+</ul>
+</div>
+<footer>AI-ML Lab • Lab 1 / Practical 1 • Prepared as a student/instructor companion to the supplied AI-ML syllabus.</footer>
+</main>
+<script>
+(() => {
+  const heading = document.getElementById('lab-exercise-heading');
+  const solution = document.getElementById('treasure-solution');
+  const hint = document.getElementById('treasure-hint');
+
+  if (!heading || !solution) return;
+
+  let clicks = 0;
+  let timer = null;
+
+  heading.addEventListener('click', () => {
+    clicks += 1;
+
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      clicks = 0;
+      if (hint) hint.textContent = '🗝️ Keep exploring...';
+    }, 2500);
+
+    if (clicks < 5) {
+      if (hint) hint.textContent = `🗝️ ${5 - clicks} more click${5 - clicks === 1 ? '' : 's'}...`;
+      return;
+    }
+
+    solution.hidden = !solution.hidden;
+    heading.classList.add('treasure-found');
+
+    if (hint) {
+      hint.textContent = solution.hidden
+        ? '🗝️ The treasure is hidden again.'
+        : '🎉 Treasure unlocked — reference solution revealed.';
+    }
+
+    clicks = 0;
+  });
+})();
+</script>
+</body></html>
