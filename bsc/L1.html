@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lecture 1 | Introduction to AI — Student Notes</title>
+<style>
+:root{--accent:#ff8a3d;--accent2:#12b3a8;--accent3:#ffc857;--ink:#33301f;--muted:#8a8270;--bg:#fffdf6;--card:#ffffff;--line:#f3e6cf;--soft:#fff4e0;--good:#0d9c6b;--bad:#e15b5b}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.65}
+.wrap{max-width:1000px;margin:auto;padding:24px 20px 70px}
+.hero{background:linear-gradient(120deg,#ff8a3d,#ffc857 55%,#12b3a8);color:#2c2410;border-radius:22px;padding:34px;margin-bottom:22px;box-shadow:0 8px 24px rgba(255,138,61,.25)}
+.hero .tag{font-size:.82rem;text-transform:uppercase;letter-spacing:.12em;opacity:.8;font-weight:700}
+h1{font-size:2rem;margin:.25rem 0 .5rem;color:#2c2410}
+h2{margin-top:38px;color:#3a2f1a;display:flex;align-items:center;gap:10px}
+h3{color:#4a3d24}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px;margin:16px 0;box-shadow:0 3px 14px rgba(51,48,31,.06)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+.callout{background:var(--soft);border-left:5px solid var(--accent);padding:15px 18px;border-radius:9px;margin:16px 0}
+.callout.tip{border-left-color:var(--accent2);background:#e5faf7}
+code{background:#fbeed9;border-radius:5px;padding:2px 6px}
+.badge{display:inline-block;background:#fff0dc;color:#c25a10;border-radius:999px;padding:4px 10px;font-size:.82rem;font-weight:700}
+footer{margin-top:35px;color:var(--muted);font-size:.9rem;border-top:1px solid var(--line);padding-top:15px}
+
+.progress-wrap{position:sticky;top:0;z-index:40;background:var(--bg);padding-top:8px;padding-bottom:6px}
+.progress-track{height:8px;background:var(--line);border-radius:999px;overflow:hidden}
+.progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .25s}
+.progress-label{font-size:.78rem;color:var(--muted);margin-top:4px;text-align:right}
+
+.flip-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin:16px 0}
+.flip-card{perspective:1000px;height:180px;cursor:pointer}
+.flip-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d}
+.flip-card.flipped .flip-inner{transform:rotateY(180deg)}
+.flip-front,.flip-back{position:absolute;inset:0;backface-visibility:hidden;border-radius:16px;padding:16px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center}
+.flip-front{background:linear-gradient(135deg,#ff8a3d,#ffb35c);color:#fff}
+.flip-front .emoji{font-size:2.1rem;margin-bottom:6px}
+.flip-back{background:#fff6e6;color:var(--ink);transform:rotateY(180deg);border:1px solid var(--line);font-size:.92rem}
+.flip-hint{font-size:.72rem;opacity:.85;margin-top:8px}
+
+.loop{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:8px;margin:18px 0}
+.loop .node{background:var(--soft);border:2px solid var(--accent);border-radius:12px;padding:12px 16px;font-weight:700;font-size:.92rem;text-align:center;min-width:110px}
+.loop .arrow{font-size:1.4rem;color:var(--accent)}
+
+/* Day infographic */
+.day-strip{display:flex;overflow-x:auto;gap:14px;padding:8px 4px 14px;margin:16px 0}
+.day-item{flex:0 0 auto;width:140px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px;text-align:center;box-shadow:0 3px 10px rgba(51,48,31,.06)}
+.day-item .time{font-size:.75rem;color:var(--muted);font-weight:700}
+.day-item .icon{font-size:2rem;margin:6px 0}
+.day-item .label{font-size:.85rem;font-weight:700;color:#3a2f1a}
+.day-item .sub{font-size:.72rem;color:var(--muted);margin-top:2px}
+
+.timeline{position:relative;margin:24px 0;padding-left:26px;border-left:3px solid var(--accent)}
+.timeline .item{position:relative;margin:22px 0}
+.timeline .item:before{content:"";position:absolute;left:-33px;top:4px;width:14px;height:14px;border-radius:50%;background:var(--accent2);border:3px solid var(--card)}
+.timeline .year{font-weight:800;color:var(--accent);font-size:1.05rem}
+
+.quiz-q{margin:18px 0;padding:16px;border:1px solid var(--line);border-radius:14px;background:var(--card)}
+.quiz-q p.qtext{font-weight:700;margin:0 0 10px}
+.opt{display:block;width:100%;text-align:left;background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin:7px 0;cursor:pointer;font-size:.95rem;color:var(--ink)}
+.opt:hover{border-color:var(--accent)}
+.opt.correct{background:#e6f9f0;border-color:var(--good);color:#0a6b48;font-weight:700}
+.opt.wrong{background:#fdecec;border-color:var(--bad);color:#a13a3a;font-weight:700}
+.opt[disabled]{cursor:default}
+.feedback{margin-top:8px;font-size:.88rem;font-weight:700}
+.feedback.good{color:var(--good)}
+.feedback.bad{color:var(--bad)}
+#quiz-score{font-weight:800;color:var(--accent)}
+
+.reveal{border:1px solid var(--line);border-radius:14px;margin:10px 0;overflow:hidden;background:var(--card)}
+.reveal summary{cursor:pointer;padding:13px 16px;font-weight:700;list-style:none;display:flex;align-items:center;justify-content:space-between}
+.reveal summary::-webkit-details-marker{display:none}
+.reveal summary:after{content:"+";font-size:1.3rem;color:var(--accent)}
+.reveal[open] summary:after{content:"–"}
+.reveal .ans{padding:0 16px 16px;color:var(--muted)}
+
+.check li{margin:8px 0}
+
+.nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:16px;background:rgba(255,253,246,.92);backdrop-filter:saturate(180%) blur(10px);border-bottom:1px solid var(--line);padding:10px 22px;margin:-24px -20px 22px -20px}
+.nav-brand{display:flex;align-items:center;gap:10px;min-width:0}
+.nav-logo{width:38px;height:38px;border-radius:9px;object-fit:cover;flex-shrink:0;background:#fff}
+.nav-name{font-weight:700;font-size:.98rem;color:var(--ink);line-height:1.15}
+.nav-sub{font-size:.76rem;color:var(--muted);white-space:nowrap}
+.nav-cta{background:var(--accent);color:#fff !important;text-decoration:none;font-size:.85rem;font-weight:700;padding:8px 14px;border-radius:999px;white-space:nowrap;transition:opacity .15s}
+.nav-cta:hover{opacity:.88}
+@media print{.nav{display:none}}
+
+@media (max-width:700px){
+  .nav{padding:10px 14px;margin:-16px -12px 16px -12px;flex-wrap:wrap}
+  .nav-sub{display:none}
+}
+@media (max-width:700px){
+  .wrap{padding:16px 12px 50px}
+  .hero{padding:22px 17px;border-radius:16px}
+  h1{font-size:1.55rem}
+  h2{font-size:1.25rem;margin-top:28px}
+  .card{padding:16px}
+  .loop{gap:5px}
+  .loop .node{min-width:88px;font-size:.8rem;padding:9px 10px}
+  .loop .arrow{font-size:1.1rem}
+}
+</style>
+</head>
+<body>
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-brand">
+    <img class="nav-logo" src="KP_Singh.png" alt="K.P. Singh"/>
+    <div>
+      <div class="nav-name">K.P. Singh</div>
+      <div class="nav-sub">SGT University · Unit 1 · Lecture 1</div>
+    </div>
+  </div>
+  <a class="nav-cta" href="https://kpsingh.in" target="_blank">kpsingh.in ↗</a>
+</nav>
+<main class="wrap">
+
+<div class="progress-wrap">
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="progress-label" id="progressLabel">0% read</div>
+</div>
+
+<section class="hero">
+<div class="tag">Unit 1 · Lecture 1 of 3 · Student Notes</div>
+<h1>Introduction to Artificial Intelligence</h1>
+<p style="font-size:1.1rem;margin:0">A simple, story-driven intro — no coding, no jargon, just everyday examples.</p>
+</section>
+
+<div class="card">
+<span class="badge">📘 17200706 · BSc Elective</span>
+<p style="margin:10px 0 0">Every idea in this lecture is explained through something you already do every day — no technical background needed.</p>
+</div>
+
+<h2>🤔 1. A Question to Start</h2>
+<div class="card">
+<p>Think of two people:</p>
+<div class="grid">
+<div class="card" style="margin:0;text-align:center"><div style="font-size:2.2rem">🎓</div><p><strong>A topper</strong> who has memorized the entire textbook</p></div>
+<div class="card" style="margin:0;text-align:center"><div style="font-size:2.2rem">🚕</div><p><strong>An auto driver</strong> who never read that book, but always finds a shortcut in traffic</p></div>
+</div>
+<p style="text-align:center;font-weight:700;margin-top:12px">Who is more "intelligent"?</p>
+<p style="text-align:center;color:var(--muted);font-size:.9rem">Keep this in mind — the next section answers it!</p>
+</div>
+
+<h2>🧠 2. Knowledge vs Intelligence</h2>
+<div class="card">
+<p>These two words sound similar, but they are <strong>not</strong> the same thing:</p>
+<div class="grid">
+<div class="card" style="margin:0"><h3>📚 Knowledge</h3><p>Facts you have stored. Like knowing all the state capitals by heart.</p></div>
+<div class="card" style="margin:0"><h3>💡 Intelligence</h3><p>The ability to use what you know to solve a <strong>new</strong> problem you've never faced before.</p></div>
+</div>
+<div class="callout tip">
+<strong>Example:</strong> Your GPS suddenly stops working. Knowledge doesn't help here — you need <strong>intelligence</strong> to figure out the way using landmarks, memory, and common sense.
+</div>
+<p style="text-align:center;font-weight:700">So... the auto driver? Intelligent. The topper who freezes without notes? Full of knowledge, but not using intelligence.</p>
+</div>
+
+<h2>🤖 3. So What Is "Artificial" Intelligence?</h2>
+<div class="card">
+<div class="grid">
+<div class="card" style="margin:0;text-align:center"><h3>Artificial</h3><p>Man-made, not natural</p></div>
+<div class="card" style="margin:0;text-align:center"><h3>Intelligence</h3><p>The ability to think, solve problems, adapt to new situations</p></div>
+</div>
+<div class="callout">
+<strong>Artificial Intelligence</strong> = teaching machines to do the "figuring out" part — not just storing facts, but solving new problems.
+</div>
+</div>
+
+<h2>🏛️ 4. Where Did the Name Come From?</h2>
+<div class="card">
+<p>In <strong>1956</strong>, a group of scientists met for a summer workshop at <strong>Dartmouth College</strong>, USA.</p>
+<p>One of them, <strong>John McCarthy</strong>, needed a name for this brand-new field. He simply joined two everyday English words:</p>
+<p style="text-align:center;font-size:1.3rem;font-weight:800;color:var(--accent)">Artificial + Intelligence</p>
+<div class="callout tip">That's it — no secret formula. Just two simple words describing exactly what it means: <strong>man-made thinking</strong>.</div>
+</div>
+
+<h2>📱 5. AI Is Already Part of Your Day</h2>
+<p>Scroll sideways through a typical day 👉</p>
+<div class="day-strip">
+  <div class="day-item"><div class="time">7:00 AM</div><div class="icon">📱</div><div class="label">Face Unlock</div><div class="sub">Machine "sees" & recognizes you</div></div>
+  <div class="day-item"><div class="time">8:15 AM</div><div class="icon">🗺️</div><div class="label">Google Maps</div><div class="sub">Picks the fastest route</div></div>
+  <div class="day-item"><div class="time">1:00 PM</div><div class="icon">⌨️</div><div class="label">Autocorrect</div><div class="sub">Predicts your next word</div></div>
+  <div class="day-item"><div class="time">6:30 PM</div><div class="icon">📺</div><div class="label">YouTube/Netflix</div><div class="sub">Guesses what you'll enjoy</div></div>
+  <div class="day-item"><div class="time">9:00 PM</div><div class="icon">🗣️</div><div class="label">Voice Assistant</div><div class="sub">Understands your spoken request</div></div>
+</div>
+<div class="callout">None of this is magic — every one of these is a machine trying to act the way an intelligent person would.</div>
+
+<h2>☕ 6. The Simplest AI Loop: Sense → Think → Act</h2>
+<div class="card">
+<p>Imagine making tea:</p>
+<div class="loop">
+  <div class="node">👀 Sense<br><span style="font-weight:400;font-size:.8rem">Is water boiling?</span></div>
+  <div class="arrow">→</div>
+  <div class="node">🤔 Think<br><span style="font-weight:400;font-size:.8rem">Not yet, wait</span></div>
+  <div class="arrow">→</div>
+  <div class="node">✋ Act<br><span style="font-weight:400;font-size:.8rem">Add tea leaves</span></div>
+</div>
+<p style="text-align:center;color:var(--muted);font-size:.9rem">AI machines follow this exact loop — sense the situation, think, act, then sense again.</p>
+</div>
+
+<h2>🧩 7. The Big Problem Areas — Flip Each Card</h2>
+<p><strong>Tap each card</strong> to see a real-life example.</p>
+<div class="flip-grid" id="flipGrid">
+  <div class="flip-card">
+    <div class="flip-inner">
+      <div class="flip-front"><div class="emoji">🎮</div>Playing Games<div class="flip-hint">tap to flip</div></div>
+      <div class="flip-back"><strong>Chess, Go</strong><br>A computer named Deep Blue beat the world chess champion in 1997.</div>
+    </div>
+  </div>
+  <div class="flip-card">
+    <div class="flip-inner">
+      <div class="flip-front"><div class="emoji">🗣️</div>Understanding Language<div class="flip-hint">tap to flip</div></div>
+      <div class="flip-back"><strong>Siri, Google Translate</strong><br>Your keyboard's autocomplete guesses your next word — a tiny example of this.</div>
+    </div>
+  </div>
+  <div class="flip-card">
+    <div class="flip-inner">
+      <div class="flip-front"><div class="emoji">🤖</div>Moving in the Real World<div class="flip-hint">tap to flip</div></div>
+      <div class="flip-back"><strong>Robots, self-driving cars</strong><br>Machines that physically sense, move, and act around us.</div>
+    </div>
+  </div>
+  <div class="flip-card">
+    <div class="flip-inner">
+      <div class="flip-front"><div class="emoji">👁️</div>Recognizing Images<div class="flip-hint">tap to flip</div></div>
+      <div class="flip-back"><strong>Face unlock, photo tagging</strong><br>Your phone recognizing your face is this in action.</div>
+    </div>
+  </div>
+  <div class="flip-card">
+    <div class="flip-inner">
+      <div class="flip-front"><div class="emoji">💡</div>Giving Expert Advice<div class="flip-hint">tap to flip</div></div>
+      <div class="flip-back"><strong>Symptom-checker apps</strong><br>Asks a few questions, applies rules, gives a possible answer — like a digital expert.</div>
+    </div>
+  </div>
+  <div class="flip-card">
+    <div class="flip-inner">
+      <div class="flip-front"><div class="emoji">🧮</div>Solving Logical Puzzles<div class="flip-hint">tap to flip</div></div>
+      <div class="flip-back"><strong>Proving something true/false</strong><br>Sounds abstract, but it's behind the "rules-based reasoning" used in expert advice systems.</div>
+    </div>
+  </div>
+</div>
+
+<h2>🗺️ 8. How AI Actually "Figures Things Out"</h2>
+<div class="card">
+<p><strong>Think of a treasure hunt:</strong></p>
+<div class="grid">
+<div class="card" style="margin:0"><h3>🙈 No Clues</h3><p>You check every single room in the house — slow, tiring, blind guessing.</p></div>
+<div class="card" style="margin:0"><h3>🧭 With Clues</h3><p>"Cold near the kitchen, warm near the bedroom" — you search smartly and quickly.</p></div>
+</div>
+<div class="callout tip">AI works exactly like this: it searches for the answer, guided by clues (knowledge). No clues = slow guessing. Good clues = fast, smart answers.</div>
+</div>
+
+<h2>🕵️ 9. Can Machines Actually "Think"? — Turing Test</h2>
+<div class="card">
+<div class="callout">
+In 1950, scientist <strong>Alan Turing</strong> asked a simple question: <em>"Can machines think?"</em> He designed a simple test — you chat with someone through text, not knowing if it's a human or a machine. <strong>If you can't tell the difference, the machine "passes."</strong>
+</div>
+<p>Ever chatted with a customer-care bot and wondered "wait, is this a real person?" — that's the Turing Test happening to you, live.</p>
+</div>
+
+<h2>🕰️ 10. A Quick, Fun History of AI</h2>
+<div class="timeline">
+  <div class="item"><div class="year">1956</div>The name "Artificial Intelligence" is born at Dartmouth College.</div>
+  <div class="item"><div class="year">1980s</div><strong>AI Winter</strong> — people got over-excited, results didn't match promises, funding dropped.</div>
+  <div class="item"><div class="year">1997</div>A computer named <strong>Deep Blue</strong> beats the world chess champion.</div>
+  <div class="item"><div class="year">2010s–today</div>The AI boom we live in — voice assistants, self-driving cars, chatbots.</div>
+</div>
+<div class="callout tip"><strong>Lesson:</strong> AI has had ups and downs — it's not a straight success story, and that's completely okay.</div>
+
+<h2>✅ 11. Test Yourself</h2>
+<p>Answer each question — you'll get instant feedback. <span id="quiz-score">Score: 0 / 5</span></p>
+
+<div class="quiz-q" data-answer="1">
+<p class="qtext">Q1. An auto driver who's never read a textbook always finds a smart shortcut in traffic. This shows:</p>
+<button class="opt" data-idx="0">Knowledge</button>
+<button class="opt" data-idx="1">Intelligence</button>
+<button class="opt" data-idx="2">Neither</button>
+<div class="feedback"></div>
+</div>
+
+<div class="quiz-q" data-answer="1">
+<p class="qtext">Q2. "An app listens to your voice, converts it to text, and replies back in a human-like voice." Which AI problem area is this mainly?</p>
+<button class="opt" data-idx="0">Playing Games</button>
+<button class="opt" data-idx="1">Understanding Language</button>
+<button class="opt" data-idx="2">Moving in the Real World</button>
+<div class="feedback"></div>
+</div>
+
+<div class="quiz-q" data-answer="2">
+<p class="qtext">Q3. Where and when was the term "Artificial Intelligence" first used?</p>
+<button class="opt" data-idx="0">MIT, 1970</button>
+<button class="opt" data-idx="1">Turing's paper, 1950</button>
+<button class="opt" data-idx="2">Dartmouth College, 1956</button>
+<div class="feedback"></div>
+</div>
+
+<div class="quiz-q" data-answer="0">
+<p class="qtext">Q4. What does the Turing Test check for?</p>
+<button class="opt" data-idx="0">Whether a human can tell a machine apart from a human in conversation</button>
+<button class="opt" data-idx="1">How fast a computer can calculate</button>
+<button class="opt" data-idx="2">How many facts a machine has stored</button>
+<div class="feedback"></div>
+</div>
+
+<div class="quiz-q" data-answer="2">
+<p class="qtext">Q5. What is an "AI Winter"?</p>
+<button class="opt" data-idx="0">A cold-climate AI conference</button>
+<button class="opt" data-idx="1">A season researchers took a break in</button>
+<button class="opt" data-idx="2">A period where hype outran results and funding for AI dried up</button>
+<div class="feedback"></div>
+</div>
+
+<h2>🎯 12. Exam-Angle Questions</h2>
+<p>Click each question to reveal a model one-line answer. Try to answer in your head first!</p>
+
+<details class="reveal">
+<summary>What is the difference between Knowledge and Intelligence?</summary>
+<div class="ans">Knowledge is facts you have stored. Intelligence is the ability to use that knowledge to solve a new, unseen problem.</div>
+</details>
+
+<details class="reveal">
+<summary>Define Artificial Intelligence in your own words.</summary>
+<div class="ans">Teaching machines to think, solve new problems, and act the way an intelligent person would — not just store facts.</div>
+</details>
+
+<details class="reveal">
+<summary>How and when did the term "Artificial Intelligence" originate?</summary>
+<div class="ans">Coined in 1956 by John McCarthy at the Dartmouth Conference — widely considered the official birth of AI as a field.</div>
+</details>
+
+<details class="reveal">
+<summary>What is the Turing Test?</summary>
+<div class="ans">A test proposed by Alan Turing (1950): if a human chatting with a hidden machine cannot tell it's a machine, the machine "passes."</div>
+</details>
+
+<details class="reveal">
+<summary>Name any four real-world areas where AI is applied.</summary>
+<div class="ans">Playing games, understanding language, moving in the real world (robotics), recognizing images, giving expert advice, solving logical puzzles — pick any four.</div>
+</details>
+
+<h2>🔁 Quick Recap</h2>
+<ul class="check">
+<li>Knowledge = facts. Intelligence = using facts to solve <em>new</em> problems.</li>
+<li>AI = teaching machines to be "intelligent," not just "knowledgeable."</li>
+<li>The name was picked in 1956 at Dartmouth by John McCarthy — just two simple words joined together.</li>
+<li>AI = Sense → Think → Act, guided by clues (knowledge) to search smartly.</li>
+<li>Turing Test: if you can't tell it's a machine, it "passes."</li>
+</ul>
+
+<div class="callout tip">
+<strong>Coming up in Lecture 2:</strong> How AI organizes its "clues" (Production Systems) and the start of proper Searching.
+</div>
+
+<footer>AI/ML Elective (17200706) · Unit 1 · Lecture 1 of 3 · Student Notes.</footer>
+</main>
+
+<script>
+document.querySelectorAll('.flip-card').forEach(card=>{
+  card.addEventListener('click', ()=> card.classList.toggle('flipped'));
+});
+
+let score = 0;
+const scored = new Set();
+document.querySelectorAll('.quiz-q').forEach((q, qi)=>{
+  const correctIdx = parseInt(q.dataset.answer, 10);
+  const fb = q.querySelector('.feedback');
+  q.querySelectorAll('.opt').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const chosen = parseInt(btn.dataset.idx, 10);
+      q.querySelectorAll('.opt').forEach(b=>b.disabled = true);
+      if(chosen === correctIdx){
+        btn.classList.add('correct');
+        fb.textContent = '✅ Correct!';
+        fb.className = 'feedback good';
+        if(!scored.has(qi)){ score++; scored.add(qi); }
+      } else {
+        btn.classList.add('wrong');
+        q.querySelectorAll('.opt')[correctIdx].classList.add('correct');
+        fb.textContent = '❌ Not quite — correct answer highlighted.';
+        fb.className = 'feedback bad';
+      }
+      document.getElementById('quiz-score').textContent = `Score: ${score} / 5`;
+    });
+  });
+});
+
+function updateProgress(){
+  const scrollTop = window.scrollY;
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  const pct = docHeight > 0 ? Math.min(100, Math.round((scrollTop/docHeight)*100)) : 0;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = pct + '% read';
+}
+window.addEventListener('scroll', updateProgress);
+window.addEventListener('resize', updateProgress);
+updateProgress();
+</script>
+</body></html>
