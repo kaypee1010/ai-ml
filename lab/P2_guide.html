@@ -1,0 +1,47 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Lab 1 Practical 2 Instructor Guide</title><style>:root{--a:#2563eb;--bg:#f5f7fb;--card:#fff;--ink:#172033;--muted:#5f6b7a;--line:#dfe5ee}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 system-ui,-apple-system,Segoe UI,Arial,sans-serif}.wrap{max-width:1050px;margin:auto;padding:20px}.hero{background:linear-gradient(135deg,#172033,var(--a));color:#fff;padding:32px;border-radius:18px;margin-bottom:20px}.tag{font-size:.8rem;text-transform:uppercase;letter-spacing:.12em;opacity:.85}h1{line-height:1.2}h2{margin-top:32px}.card{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:20px;margin:14px 0}.callout{background:#eef4ff;border-left:5px solid var(--a);padding:14px 17px;border-radius:8px}.success{background:#ecfdf5;border-color:#059669}.warning{background:#fff7ed;border-color:#ea580c}pre{background:#111827;color:#f3f4f6;padding:16px;border-radius:10px;overflow:auto}pre code{background:none;color:inherit}code{background:#edf0f5;padding:2px 5px;border-radius:4px}table{width:100%;border-collapse:collapse;margin:14px 0}th,td{border:1px solid var(--line);padding:9px;text-align:left}th{background:#f0f4fa}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}.treasure{cursor:pointer;user-select:none}footer{margin-top:35px;color:var(--muted);font-size:.9rem;border-top:1px solid var(--line);padding-top:15px}@media(max-width:700px){.wrap{padding:12px}.hero{padding:22px 17px}h1{font-size:1.7rem}h2{font-size:1.3rem}.card{padding:15px}table{display:block;overflow-x:auto}pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:.84rem}}@media(prefers-color-scheme:dark){:root{--bg:#0f1724;--card:#182235;--ink:#e8edf7;--muted:#aab5c7;--line:#304057}th{background:#223047;color:#fff}td{color:#e8edf7}code{background:#29364b;color:#f5f7fb}.callout{background:#172a46}.success{background:#143328}.warning{background:#35271c}}
+.nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:16px;background:rgba(255,255,255,.92);backdrop-filter:saturate(180%) blur(10px);border-bottom:1px solid var(--line);padding:10px 22px;margin:-28px -20px 22px -20px}
+.nav-brand{display:flex;align-items:center;gap:10px;min-width:0}
+.nav-logo{width:38px;height:38px;border-radius:9px;object-fit:cover;flex-shrink:0;background:#fff}
+.nav-name{font-weight:700;font-size:.98rem;color:var(--ink);line-height:1.15}
+.nav-sub{font-size:.76rem;color:var(--muted);white-space:nowrap}
+.nav-links{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.nav-cta{background:var(--accent,#2563eb);color:#fff !important;text-decoration:none;font-size:.85rem;font-weight:600;padding:8px 14px;border-radius:999px;white-space:nowrap;transition:opacity .15s}
+.nav-cta:hover{opacity:.88}
+.nav-cta.secondary{background:transparent;color:var(--ink,#172033) !important;border:1px solid var(--line,#dfe5ee)}
+@media (prefers-color-scheme: dark){
+  .nav{background:rgba(15,23,36,.9);border-bottom-color:var(--line)}
+  .nav-cta.secondary{color:#e8edf7 !important}
+}
+@media (max-width:700px){
+  .nav{padding:10px 14px;margin:-16px -12px 16px -12px;flex-wrap:wrap}
+  .nav-sub{display:none}
+  .nav-links{width:100%;justify-content:flex-start}
+}
+@media print{.nav{display:none}}
+
+</style></head><body>
+<nav class="nav">
+  <div class="nav-brand">
+    <img class="nav-logo" src="KP_Singh.png" alt="K.P. Singh"/>
+    <div>
+      <div class="nav-name">K.P. Singh</div>
+      <div class="nav-sub">SGT University · AI &amp; ML · Practical 2 · Instructor Guide</div>
+    </div>
+  </div>
+    <div class="nav-links">
+    <a class="nav-cta secondary" href="https://kpsingh.in" target="_blank" rel="noopener">kpsingh.in ↗</a>
+  </div>
+</nav>
+<main class="wrap"><section class="hero"><div class="tag">Artificial Intelligence and Machine Learning Lab</div><h1>Lab 1 — Practical 2</h1><p>Instructor Guide — Extract Data from a Database Using Python</p></section><div class="card"><b>Syllabus:</b> “Extract the data from database using python.” Students receive <code>college.db</code>; they do not create or populate it.</div><h2>1. Opening — 3 minutes</h2><div class="callout"><b>Say:</b> “Imagine I give you thousands of student records and ask for only CSE students who scored above 80. Would you search manually? Today we will make Python communicate with a database and retrieve exactly what we ask for.”</div><h2>2. Explain the Practical — 1 minute</h2><p><b>Say:</b> “The database is already prepared. Our task is extraction: connect, ask, receive, and work with the returned data.”</p><h2>3. Show college.db — 3 minutes</h2><p><b>Say:</b> “This SQLite file contains a table called students with id, name, department and marks. A row is one record; a column is one property.”</p><h2>4. Introduce SQL — 4 minutes</h2><pre><code>SELECT * FROM students;</code></pre><p><b>Say:</b> “SQL is the language we use to ask a relational database for data. This asks for all columns from students.”</p><div class="callout warning"><b>Ask:</b> “If I replace <code>*</code> with <code>name, marks</code>, what will come back?”</div><h2>5. Python’s Role — 3 minutes</h2><div class="card" style="text-align:center"><b>Python → SQL → Database → Result → Python</b></div><p><b>Say:</b> “Python manages the interaction. SQL describes the request.”</p><h2>6. Connect — 3 minutes</h2><pre><code>import sqlite3
+conn = sqlite3.connect("college.db")
+cursor = conn.cursor()</code></pre><p><b>Say:</b> “Notice that we open an existing database. We are not creating it.”</p><h2>7. Execute and Fetch — 4 minutes</h2><pre><code>cursor.execute("SELECT * FROM students")
+rows = cursor.fetchall()</code></pre><p><b>Say:</b> “The cursor sends the query; fetchall brings the returned rows into Python.”</p><h2>8. Display and Close — 3 minutes</h2><pre><code>for row in rows:
+    print(row)
+
+conn.close()</code></pre><p><b>Say:</b> “Now the data is in Python and can be displayed or analyzed. We close the connection when finished.”</p><h2>9. Ask Better Questions — 5 minutes</h2><p>Have students predict the result before running:</p><pre><code>SELECT name, marks FROM students;
+
+SELECT * FROM students WHERE marks &gt; 80;
+
+SELECT * FROM students WHERE department = 'CSE';
+
+SELECT * FROM students ORDER BY marks DESC;</code></pre><div class="callout success"><b>Say:</b> “The database did not change. We changed the question.”</div><h2>10. Student Activity — 10+ minutes</h2><div class="card"><b>Read aloud:</b> “Use the supplied college.db. Connect with Python, extract the student records, display them, and then write additional queries for selected columns, filtering, and sorting. Submit code, queries, output and a short explanation.”</div><h2>11. Engagement Questions</h2><table><tr><th>Ask</th><th>Expected direction</th></tr><tr><td>Where is the data stored?</td><td>Database/table.</td></tr><tr><td>What language asks for data?</td><td>SQL.</td></tr><tr><td>What does Python do?</td><td>Connects, sends query, receives and processes results.</td></tr><tr><td>What does WHERE do?</td><td>Filters rows.</td></tr><tr><td>What does ORDER BY do?</td><td>Sorts results.</td></tr><tr><td>Why fetchall?</td><td>Retrieve all returned rows.</td></tr></table><h2>12. Closing — 2 minutes</h2><div class="callout success"><b>Say:</b> “Remember: connect, execute, fetch, process or display, close. This simple workflow is the foundation for using Python with databases and for bringing stored data into analysis and machine learning.”</div><h2>13. Viva Prompts</h2><ul><li>What is a database?</li><li>What is a relational database?</li><li>What is a table, row and column?</li><li>What is SQL?</li><li>What do SELECT, WHERE and ORDER BY do?</li><li>What is SQLite?</li><li>Why use sqlite3.connect?</li><li>What is a cursor?</li><li>fetchone versus fetchall?</li><li>Why close the connection?</li><li>What is a primary key?</li><li>SQL versus Python in this practical?</li></ul><h2>14. Instructor Emphasis</h2><div class="callout">Keep the focus on <b>extraction</b>. Students are given <code>college.db</code>. Database creation is not part of the student task.</div><footer>AI-ML Lab • Lab 1 / Practical 2 • Provided database: <strong>college.db</strong></footer></main></body></html>
