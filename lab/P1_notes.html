@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lab 1 | Notes</title>
+<style>
+:root{--accent:#0f766e;--ink:#172033;--muted:#5f6b7a;--bg:#f5f7fb;--card:#fff;--line:#dfe5ee;--soft:#eef4ff}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.65}
+.wrap{max-width:1050px;margin:auto;padding:28px 20px 60px}
+.hero{background:linear-gradient(135deg,#172033,var(--accent));color:white;border-radius:20px;padding:36px;margin-bottom:22px}
+.hero .tag{font-size:.82rem;text-transform:uppercase;letter-spacing:.12em;opacity:.85}
+h1{font-size:2.15rem;margin:.25rem 0 .5rem} h2{margin-top:34px;color:#18253b} h3{color:#243552}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px;margin:16px 0;box-shadow:0 3px 12px rgba(23,32,51,.05)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+.callout{background:var(--soft);border-left:5px solid var(--accent);padding:15px 18px;border-radius:9px;margin:16px 0}
+.warning{background:#fff7ed;border-left-color:#ea580c}
+.success{background:#ecfdf5;border-left-color:#059669}
+code,kbd{background:#eef1f5;border-radius:5px;padding:2px 6px}
+pre{background:#111827;color:#f3f4f6;padding:18px;border-radius:12px;overflow:auto;font-size:.93rem;line-height:1.55}
+table{width:100%;border-collapse:collapse;margin:14px 0}th,td{border:1px solid var(--line);padding:10px;text-align:left;vertical-align:top}th{background:#f0f4fa}
+.badge{display:inline-block;background:#e8eefc;color:#1d4ed8;border-radius:999px;padding:4px 10px;font-size:.82rem;font-weight:600}
+.check li{margin:8px 0}
+footer{margin-top:35px;color:var(--muted);font-size:.9rem;border-top:1px solid var(--line);padding-top:15px}
+@media (max-width: 700px){
+  .wrap{padding:16px 12px 40px}
+  .hero{padding:24px 18px;border-radius:15px}
+  h1{font-size:1.7rem;line-height:1.2}
+  h2{font-size:1.3rem;margin-top:26px}
+  h3{font-size:1.05rem}
+  .card{padding:16px;margin:12px 0}
+  .grid{grid-template-columns:1fr}
+  table{display:block;overflow-x:auto;white-space:normal;-webkit-overflow-scrolling:touch}
+  th,td{min-width:120px;padding:8px;font-size:.92rem}
+  pre{font-size:.82rem;padding:13px;border-radius:9px;white-space:pre-wrap;overflow-wrap:anywhere}
+  code{overflow-wrap:anywhere}
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --ink:#e8edf7;
+    --muted:#aab5c7;
+    --bg:#0f1724;
+    --card:#182235;
+    --line:#304057;
+    --soft:#172a46;
+  }
+  body{background:var(--bg);color:var(--ink)}
+  .hero{color:#fff}
+  h2,h3{color:#eef3fb}
+  th{background:#223047;color:#f4f7fb}
+  td{color:#e8edf7}
+  code,kbd{background:#29364b;color:#f5f7fb}
+  .callout{color:#e8edf7}
+  .callout.warning{background:#35271c}
+  .callout.success{background:#143328}
+  footer{color:#9eabc0}
+}
+@media print{
+  body{background:white}
+  .wrap{max-width:none}
+  .hero{print-color-adjust:exact;-webkit-print-color-adjust:exact}
+  .card{box-shadow:none}
+}
+
+.nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:16px;background:rgba(255,255,255,.92);backdrop-filter:saturate(180%) blur(10px);border-bottom:1px solid var(--line);padding:10px 22px;margin:-28px -20px 22px -20px}
+.nav-brand{display:flex;align-items:center;gap:10px;min-width:0}
+.nav-logo{width:38px;height:38px;border-radius:9px;object-fit:cover;flex-shrink:0;background:#fff}
+.nav-name{font-weight:700;font-size:.98rem;color:var(--ink);line-height:1.15}
+.nav-sub{font-size:.76rem;color:var(--muted);white-space:nowrap}
+.nav-links{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.nav-cta{background:var(--accent,#2563eb);color:#fff !important;text-decoration:none;font-size:.85rem;font-weight:600;padding:8px 14px;border-radius:999px;white-space:nowrap;transition:opacity .15s}
+.nav-cta:hover{opacity:.88}
+.nav-cta.secondary{background:transparent;color:var(--ink,#172033) !important;border:1px solid var(--line,#dfe5ee)}
+@media (prefers-color-scheme: dark){
+  .nav{background:rgba(15,23,36,.9);border-bottom-color:var(--line)}
+  .nav-cta.secondary{color:#e8edf7 !important}
+}
+@media (max-width:700px){
+  .nav{padding:10px 14px;margin:-16px -12px 16px -12px;flex-wrap:wrap}
+  .nav-sub{display:none}
+  .nav-links{width:100%;justify-content:flex-start}
+}
+@media print{.nav{display:none}}
+
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-brand">
+    <img class="nav-logo" src="KP_Singh.png" alt="K.P. Singh"/>
+    <div>
+      <div class="nav-name">K.P. Singh</div>
+      <div class="nav-sub">SGT University · AI &amp; ML · Practical 1 · Notes</div>
+    </div>
+  </div>
+    <div class="nav-links">
+    <a class="nav-cta secondary" href="https://kpsingh.in" target="_blank" rel="noopener">kpsingh.in ↗</a>
+  </div>
+</nav>
+<main class="wrap">
+
+<section class="hero">
+<div class="tag">Lab 1 Notes</div>
+<h1>Probability & Bayes’ Rule — Basics for Practical 1</h1>
+<p style="font-size:1.1rem">A simple, intuitive introduction before writing the Python program.</p>
+</section>
+
+<div class="card">
+<strong>What you need to know for this practical:</strong> probability, percentages as decimals, joint probability, conditional probability, Bayes’ rule, and basic Python arithmetic/printing.
+</div>
+
+<h2>1. Probability: The Language of Uncertainty</h2>
+<p>Probability tells us how likely an event is to happen. It is represented by a number from <strong>0 to 1</strong>.</p>
+<table>
+<tr><th>Probability</th><th>Percentage</th><th>Meaning</th></tr>
+<tr><td>0</td><td>0%</td><td>Impossible</td></tr>
+<tr><td>0.5</td><td>50%</td><td>One-half chance</td></tr>
+<tr><td>1</td><td>100%</td><td>Certain</td></tr>
+</table>
+<p>To convert a percentage to a decimal, divide by 100. Therefore, 3% = 0.03 and 20% = 0.20.</p>
+
+<h2>2. Events</h2>
+<p>Let:</p>
+<ul>
+<li><strong>A</strong> = student is absent.</li>
+<li><strong>F</strong> = today is Friday.</li>
+</ul>
+<p>An event is simply something we are interested in observing.</p>
+
+<h2>3. “AND” Means Joint Probability</h2>
+<p><strong>P(A ∩ F)</strong> means the probability that <em>both</em> events happen: the student is absent <strong>and</strong> today is Friday.</p>
+<p>In the practical, this is given as 3%, so:</p>
+<div class="card" style="text-align:center"><strong>P(A ∩ F) = 0.03</strong></div>
+
+<h2>4. “Given That” Means Conditional Probability</h2>
+<p>The notation <strong>P(A | F)</strong> is read as:</p>
+<div class="callout"><strong>“Probability of A given F.”</strong></div>
+<p>Here, we already know that it is Friday. We are asking: <em>among the Friday cases, how likely is absence?</em></p>
+
+<h2>5. The Formula</h2>
+<div class="card" style="text-align:center;font-size:1.25rem">
+<strong>P(A | F) = P(A ∩ F) / P(F)</strong>
+</div>
+<p>This is the conditional-probability form used in the practical. It is also consistent with Bayes’ rule when the joint probability is already available.</p>
+
+<h2>6. Apply It to the Friday Example</h2>
+<table>
+<tr><th>Quantity</th><th>Value</th></tr>
+<tr><td>P(A ∩ F)</td><td>0.03</td></tr>
+<tr><td>P(F)</td><td>0.20</td></tr>
+</table>
+<p>Therefore:</p>
+<div class="card" style="text-align:center">
+<strong>0.03 ÷ 0.20 = 0.15</strong><br>
+<strong>0.15 × 100 = 15%</strong>
+</div>
+
+<h2>7. Understanding the Example with Counts</h2>
+<p>Imagine 100 school days. If 20 of those days are Fridays, and 3 days are both Friday and an absence day, then among the 20 Friday days, 3 involve absence.</p>
+<p>So the fraction is:</p>
+<div class="card" style="text-align:center"><strong>3 / 20 = 0.15 = 15%</strong></div>
+<div class="callout success">The important idea is that the condition “it is Friday” changes the group we are looking at.</div>
+
+<h2>8. Bayes’ Theorem and the Joint-Probability Relationship</h2>
+<p>Bayes’ theorem lets us reverse the direction of a conditional probability. Its general form is:</p>
+<div class="card" style="text-align:center;font-size:1.15rem">
+<strong>P(A | B) = [P(B | A) × P(A)] / P(B)</strong>
+</div>
+
+<p>The key relationship behind Bayes’ theorem is the joint-probability identity:</p>
+<div class="card" style="text-align:center;font-size:1.15rem">
+<strong>P(A ∩ F) = P(F | A) × P(A)</strong>
+</div>
+<p>It can also be written from the other direction:</p>
+<div class="card" style="text-align:center;font-size:1.15rem">
+<strong>P(A ∩ F) = P(A | F) × P(F)</strong>
+</div>
+
+<p>Equating these two expressions gives:</p>
+<div class="card" style="text-align:center;font-size:1.15rem">
+<strong>P(F | A) × P(A) = P(A | F) × P(F)</strong>
+</div>
+<p>and therefore:</p>
+<div class="card" style="text-align:center;font-size:1.15rem">
+<strong>P(A | F) = [P(F | A) × P(A)] / P(F)</strong>
+</div>
+
+<div class="callout">
+<strong>Important for this practical:</strong> the question directly gives P(A ∩ F) and P(F), so P(A | F) can be calculated as P(A ∩ F) / P(F). However, P(F | A) cannot be given a numerical value unless P(A) is also known.
+</div>
+
+<h2>9. Why P(A | F) and P(F | A) Are Different</h2>
+<p><strong>P(A | F)</strong> asks: “If I already know it is Friday, how likely is absence?”</p>
+<p><strong>P(F | A)</strong> asks: “If I already know the student is absent, how likely is it that today is Friday?”</p>
+<p>These are different questions. In general:</p>
+<div class="card" style="text-align:center;font-size:1.15rem">
+<strong>P(A | F) ≠ P(F | A)</strong>
+</div>
+<p>For the current data, we know:</p>
+<ul>
+<li>P(A ∩ F) = 0.03</li>
+<li>P(F) = 0.20</li>
+<li>P(A) is not supplied.</li>
+</ul>
+<p>So:</p>
+<div class="card" style="text-align:center">
+<strong>P(A | F) = 0.03 / 0.20 = 0.15 = 15%</strong><br><br>
+<strong>P(F | A) = 0.03 / P(A)</strong>
+</div>
+<p>The second expression is correct, but it cannot be reduced to a number without P(A).</p>
+
+<h2>10. Python Basics Needed</h2>
+<p>You do not need advanced programming. Only four ideas are required.</p>
+<div class="grid">
+<div class="card"><h3>Variables</h3><p>Store a value using <code>name = value</code>.</p></div>
+<div class="card"><h3>Arithmetic</h3><p>Use <code>/</code> for division and <code>*</code> for multiplication.</p></div>
+<div class="card"><h3>Output</h3><p>Use <code>print()</code> to display a result.</p></div>
+<div class="card"><h3>Comments</h3><p>Use <code>#</code> to add an explanation that Python does not execute.</p></div>
+</div>
+
+<pre><code># Given probabilities
+prob_friday_and_absent = 0.03
+prob_friday = 0.20
+
+# Conditional probability
+prob_absent_given_friday = prob_friday_and_absent / prob_friday
+
+# Convert to percentage
+percentage = prob_absent_given_friday * 100
+
+print(percentage, "%")</code></pre>
+
+<h2>11. Remember These Three Distinctions</h2>
+<table>
+<tr><th>Expression</th><th>Meaning</th></tr>
+<tr><td>P(A)</td><td>Probability of A.</td></tr>
+<tr><td>P(A ∩ F)</td><td>Probability that A and F both occur.</td></tr>
+<tr><td>P(A | F)</td><td>Probability of A when F is already known.</td></tr>
+</table>
+
+
+<footer>AI-ML Lab • Lab 1 / Practical 1 • Prepared as a student/instructor companion to the supplied AI-ML syllabus.</footer>
+</main></body></html>
