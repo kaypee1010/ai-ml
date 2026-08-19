@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>7A Feedback Check-In</title>
+<style>
+  :root{
+    --bg:#f5f6f8;
+    --card:#ffffff;
+    --ink:#1c1f26;
+    --ink-soft:#5b6270;
+    --brand:#4f46e5;
+    --brand-ink:#ffffff;
+    --ok:#127a3e;
+    --ok-bg:#e7f7ee;
+    --err:#b3261e;
+    --err-bg:#fdecea;
+    --border:#e3e5ea;
+    --radius:14px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    min-height:100vh;
+    display:flex;
+    align-items:flex-start;
+    justify-content:center;
+    padding:32px 16px;
+  }
+  .card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    max-width:440px;
+    width:100%;
+    padding:28px 24px 24px;
+    box-shadow:0 1px 3px rgba(20,20,30,0.06), 0 8px 24px rgba(20,20,30,0.04);
+  }
+  h1{
+    font-size:19px;
+    margin:0 0 4px;
+    letter-spacing:-0.01em;
+  }
+  .sub{
+    color:var(--ink-soft);
+    font-size:13.5px;
+    margin:0 0 20px;
+    line-height:1.5;
+  }
+  label{
+    display:block;
+    font-size:13px;
+    font-weight:600;
+    margin-bottom:6px;
+    color:var(--ink);
+  }
+  input[type="text"]{
+    width:100%;
+    padding:12px 14px;
+    font-size:16px;
+    border:1.5px solid var(--border);
+    border-radius:10px;
+    outline:none;
+    transition:border-color .15s ease;
+    background:#fff;
+    color:var(--ink);
+  }
+  input[type="text"]:focus{
+    border-color:var(--brand);
+  }
+  .leet-note{
+    background:#fff8e6;
+    border:1px solid #f0dca0;
+    border-radius:10px;
+    padding:10px 12px;
+    font-size:12.5px;
+    color:#6b5300;
+    margin-top:10px;
+    line-height:1.5;
+  }
+  .leet-note b{color:#4a3a00;}
+  button{
+    width:100%;
+    border:none;
+    border-radius:10px;
+    padding:13px 16px;
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+    margin-top:14px;
+    transition:opacity .15s ease, transform .1s ease;
+  }
+  button:active{transform:scale(0.98);}
+  button:disabled{opacity:0.5;cursor:not-allowed;}
+  .btn-primary{
+    background:var(--brand);
+    color:var(--brand-ink);
+  }
+  .btn-secondary{
+    background:#fff;
+    color:var(--ink-soft);
+    border:1.5px solid var(--border);
+  }
+  .result{
+    margin-top:16px;
+    border-radius:10px;
+    padding:14px 16px;
+    font-size:14px;
+    line-height:1.5;
+    display:none;
+  }
+  .result.show{display:block;}
+  .result.found{
+    background:var(--ok-bg);
+    color:var(--ok);
+    border:1px solid #b9e6cc;
+  }
+  .result.notfound{
+    background:var(--err-bg);
+    color:var(--err);
+    border:1px solid #f3c6c2;
+  }
+  .result .name{
+    font-size:17px;
+    font-weight:700;
+    display:block;
+    margin-bottom:2px;
+  }
+  .success-screen{
+    text-align:center;
+    padding:12px 0 4px;
+    display:none;
+  }
+  .success-screen.show{display:block;}
+  .success-icon{
+    font-size:44px;
+    margin-bottom:8px;
+  }
+  .success-screen h2{
+    font-size:19px;
+    margin:0 0 6px;
+  }
+  .success-screen p{
+    color:var(--ink-soft);
+    font-size:13.5px;
+    line-height:1.5;
+    margin:0;
+  }
+  .footer-note{
+    margin-top:18px;
+    text-align:center;
+    font-size:11.5px;
+    color:#9aa0ab;
+    line-height:1.5;
+  }
+  .form-block{display:block;}
+  .hidden{display:none !important;}
+  .mentor{
+    font-size:12px;
+    color:var(--ink-soft);
+    text-align:right;
+    margin-top:2px;
+  }
+</style>
+</head>
+<body>
+<div class="card">
+
+  <div id="formBlock" class="form-block">
+    <h1>7A Feedback Check-In</h1>
+    <p class="sub">Already submitted your Student–Teaching Feedback on the IQAC portal? Enter your Registration (Roll) Number below to confirm and mark yourself done — no need to type DONE in the WhatsApp group.</p>
+
+    <label for="rollInput">Roll Number</label>
+    <input type="text" id="rollInput" inputmode="text" autocomplete="off" placeholder="e.g. 231302002" autocapitalize="characters">
+
+    <div class="leet-note">
+      <b>Lateral Entry (LEET) students:</b> enter your roll number exactly as printed on your ID card. If your roll number carries a <b>-LEET</b> suffix, include it exactly.<br>
+      Example: <b>251302298-LEET</b> (not 251302298 or LEET251302298).
+    </div>
+
+    <button class="btn-primary" id="findBtn">Find My Name</button>
+
+    <div id="result" class="result"></div>
+
+    <button class="btn-primary hidden" id="doneBtn">✅ Yes, this is me — Mark as Done</button>
+    <button class="btn-secondary hidden" id="retryBtn">↺ Not me, re-enter roll number</button>
+  </div>
+
+  <div id="successScreen" class="success-screen">
+    <div class="success-icon">🎉</div>
+    <h2 id="successName">Thank you!</h2>
+    <p>Your feedback completion has been recorded for 7A. You don't need to post DONE in the WhatsApp group — your mentor will see it on the tracker.</p>
+  </div>
+
+  <p class="footer-note">7A Mentor Tracker · AY 2025–26 · K. P. Singh</p>
+</div>
+
+<script>
+// ---- 7A roster (Roll Number -> Name) ----
+const ROSTER = {
+  "231302002": "TANNU TIWARI",
+  "231302003": "PRANAV SINGH",
+  "231302006": "TANISH",
+  "231302007": "PRINCE KUMAR",
+  "231302023": "RAHUL KUMAR",
+  "231302024": "HIMANSHU SINGH",
+  "231302025": "SAMYAK JAIN",
+  "231302026": "ANSHUL",
+  "231302028": "VIKASH SRIVASTAVA",
+  "231302031": "VARUN YADAV",
+  "231302033": "AMAN",
+  "231302034": "ANURAG",
+  "231302035": "SAHIL SINGH",
+  "231302037": "LAVISHA",
+  "231302038": "UMESH",
+  "231302045": "AAKASH",
+  "231302047": "ARSHAD KHAN",
+  "231302049": "DEEPESH",
+  "231302051": "KUNAL",
+  "231302054": "HARSH CHAUHAN",
+  "231302055": "LAKSHITA",
+  "231302058": "PRATISHTHA",
+  "231302061": "SARTHAK",
+  "231302062": "HUNNY GULIA",
+  "231302065": "DUSHYANT VASISHT",
+  "231302066": "MAYANK GOYAL",
+  "231302072": "SHUBHAM DAGAR",
+  "231302073": "MAHESH KUMAR",
+  "231302075": "SHUBHAM",
+  "231302081": "TANUSH BANDUNI",
+  "231302082": "ANJALI",
+  "231302083": "HIMANSHU SONI",
+  "231302085": "SHASHANK VERMA",
+  "231302086": "HARSH",
+  "231302097": "MEGHA SHARMA",
+  "231302099": "MAYANK GARG",
+  "231302101": "PUNIT",
+  "231302102": "Deepanshu",
+  "231302105": "TARUN YADAV",
+  "231302107": "PRIYA",
+  "231302110": "ARPIT",
+  "231302111": "ROHAN",
+  "231302113": "RAJAT YADAV",
+  "231302118": "VANDANA KUMARI",
+  "231302121": "ABHIMANYU KANDHAL",
+  "231302128": "RAGHAV KUMAR JHA",
+  "231302133": "RAHUL KUMAR",
+  "231302136": "PRASHANT ROHILLA",
+  "231302140": "VANSHIKA RATHI",
+  "231302142": "NIKHIL NARANG",
+  "231302144": "YUVRAJ SINGH YADAV",
+  "231302149": "YASH",
+  "231302151": "PUSHPENDER YADAV",
+  "231302152": "DEVESH DWIVEDI",
+  "231302156": "ANGEL SURI",
+  "231302157": "VISHAL KUMAR UPADHYAY",
+  "231302163": "SHUBHAM BHARDWAJ",
+  "231302166": "MANISH RATHI",
+  "231302175": "PINKI BADHANA",
+  "231302186": "DEEPAK KUMAR",
+  "231302192": "SALONI",
+  "231302194": "ROBIN",
+  "231302203": "VARSHA",
+  "231302205": "SNEHA",
+  "231302214": "MONU",
+  "231302216": "ARPIT GUPTA",
+  "231302221": "NIKSHEY YADAV",
+  "231302230": "ADITYA CHAUHAN",
+  "231302232": "DIKSHA SHARMA",
+  "231302244": "NAMAN SHARMA",
+  "231302257": "LAKSHAY ROHILLA"
+};
+
+// ---- Google Apps Script logging config ----
+// TODO(mentor setup): deploy the Apps Script (provided separately) as a Web
+// App bound to your "7A Feedback Tracker" Google Sheet, then paste its
+// /exec URL below. Once set, every "Mark as Done" tap writes Status=Done
+// directly into that Sheet's Status column — no manual updating needed.
+// Until this is set, submissions are shown on-screen only and NOT saved.
+const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbxC5LIB-_43O207HV3f0-RlqkraUjw7-6xg9VCZJhC3GktdUaN1tILMik6V9KkRZi4s_A/exec";
+
+function normalizeRoll(raw){
+  return raw.trim().toUpperCase().replace(/\s+/g, "");
+}
+
+const rollInput = document.getElementById("rollInput");
+const findBtn = document.getElementById("findBtn");
+const doneBtn = document.getElementById("doneBtn");
+const retryBtn = document.getElementById("retryBtn");
+const resultEl = document.getElementById("result");
+const formBlock = document.getElementById("formBlock");
+const successScreen = document.getElementById("successScreen");
+const successName = document.getElementById("successName");
+
+let matchedRoll = null;
+let matchedName = null;
+
+function showResult(found, roll){
+  resultEl.classList.add("show");
+  if(found){
+    matchedRoll = roll;
+    matchedName = ROSTER[roll];
+    resultEl.className = "result show found";
+    resultEl.innerHTML = '<span class="name">' + matchedName + '</span>Roll No. ' + roll + ' — is this you?';
+    doneBtn.classList.remove("hidden");
+    retryBtn.classList.remove("hidden");
+    findBtn.classList.add("hidden");
+    rollInput.disabled = true;
+  } else {
+    matchedRoll = null;
+    matchedName = null;
+    resultEl.className = "result show notfound";
+    resultEl.innerHTML = "We couldn't find that roll number in the 7A list. Please double-check it (see the LEET note above if you're a Lateral Entry student), or contact your mentor if you believe this is an error.";
+    doneBtn.classList.add("hidden");
+    retryBtn.classList.add("hidden");
+  }
+}
+
+findBtn.addEventListener("click", function(){
+  const roll = normalizeRoll(rollInput.value);
+  if(!roll){
+    rollInput.focus();
+    return;
+  }
+  if(Object.prototype.hasOwnProperty.call(ROSTER, roll)){
+    showResult(true, roll);
+  } else {
+    showResult(false, roll);
+  }
+});
+
+rollInput.addEventListener("keydown", function(e){
+  if(e.key === "Enter"){ findBtn.click(); }
+});
+
+retryBtn.addEventListener("click", function(){
+  rollInput.disabled = false;
+  rollInput.value = "";
+  rollInput.focus();
+  resultEl.classList.remove("show");
+  doneBtn.classList.add("hidden");
+  retryBtn.classList.add("hidden");
+  findBtn.classList.remove("hidden");
+});
+
+doneBtn.addEventListener("click", function(){
+  if(!matchedRoll) return;
+  doneBtn.disabled = true;
+
+  // Fire-and-forget log to the Apps Script Web App, if configured.
+  // Uses a hidden iframe (not fetch) so this works even though the Web App
+  // is on a different origin and doesn't send CORS headers back.
+  if(WEBAPP_URL){
+    const iframe = document.createElement("iframe");
+    iframe.style.display = "none";
+    iframe.src = WEBAPP_URL + "?roll=" + encodeURIComponent(matchedRoll);
+    document.body.appendChild(iframe);
+  }
+
+  successName.textContent = "Thank you, " + matchedName + "!";
+  formBlock.classList.add("hidden");
+  successScreen.classList.add("show");
+});
+</script>
+</body>
+</html>
