@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI &amp; ML Attendance — Admin</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Georgia',serif;background:linear-gradient(135deg,#f5f1e8,#e8e3d8);min-height:100vh;padding:20px}
+.wrap{max-width:640px;margin:0 auto}
+.header{background:linear-gradient(135deg,#8B3A3A,#6B2D2D);color:#fff;padding:24px 28px;border-radius:10px 10px 0 0}
+.header h1{font-size:21px;margin-bottom:3px}
+.header p{font-size:13px;opacity:.9}
+.body{background:#fff;padding:28px;border-radius:0 0 10px 10px;box-shadow:0 4px 20px rgba(0,0,0,.12)}
+.section-card{border:2px solid #d0c8b8;border-radius:10px;padding:20px;margin-bottom:18px;background:#fafafa}
+.section-card.live{border-color:#8B3A3A;background:#fdf8f3}
+.sec-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.sec-title{font-size:17px;font-weight:bold;color:#8B3A3A}
+.sec-sub{font-size:12px;color:#777;margin-bottom:14px}
+.toggle{position:relative;width:58px;height:30px;flex-shrink:0}
+.toggle input{opacity:0;width:0;height:0}
+.slider{position:absolute;cursor:pointer;inset:0;background:#ccc;border-radius:30px;transition:.2s}
+.slider:before{content:"";position:absolute;height:24px;width:24px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s}
+input:checked + .slider{background:#8B3A3A}
+input:checked + .slider:before{transform:translateX(28px)}
+.status-line{font-size:13px;font-weight:600;margin-bottom:10px}
+.status-open{color:#1a5c2a}
+.status-closed{color:#888}
+.counts{display:flex;gap:10px;margin-top:10px}
+.count-box{flex:1;text-align:center;padding:10px 6px;border-radius:8px;background:#fff;border:1px solid #eee}
+.count-box .num{font-size:26px;font-weight:900;color:#8B3A3A}
+.count-box.green .num{color:#1a5c2a}
+.count-box.red .num{color:#c0392b}
+.count-box .lbl{font-size:10px;color:#888;margin-top:2px}
+.refresh-note{font-size:10px;color:#aaa;margin-top:8px;text-align:center}
+.msg{padding:12px 16px;border-radius:5px;margin-bottom:16px;font-size:14px;display:none}
+.msg.success{background:#d4edda;color:#155724;border:1px solid #c3e6cb}
+.msg.error{background:#f8d7da;color:#721c24;border:1px solid #f5c6cb}
+.msg.info{background:#d1ecf1;color:#0c5460;border:1px solid #bee5eb}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="header">
+    <h1>AI &amp; ML Attendance — Admin</h1>
+    <p>Mr. K.P. Singh · B.Tech Sem 7, Section 7B · Lecture &amp; Lab</p>
+  </div>
+  <div class="body">
+    <div id="msg" class="msg" role="alert"></div>
+
+    <div class="section-card" id="card_7B_Lecture">
+      <div class="sec-row">
+        <div>
+          <div class="sec-title">7B — Lecture</div>
+          <div class="sec-sub">Monday &amp; Thursday &middot; AI &amp; Machine Learning</div>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" id="toggle_7B_Lecture" onchange="onToggle('7B_Lecture', this.checked)">
+          <span class="slider"></span>
+        </label>
+      </div>
+      <div class="status-line status-closed" id="status_7B_Lecture">Closed</div>
+      <div class="counts">
+        <div class="count-box"><div class="num" id="present_7B_Lecture">0</div><div class="lbl">PRESENT</div></div>
+        <div class="count-box green"><div class="num" id="oncampus_7B_Lecture">0</div><div class="lbl">ON-CAMPUS</div></div>
+        <div class="count-box red"><div class="num" id="offcampus_7B_Lecture">0</div><div class="lbl">OFF-CAMPUS</div></div>
+      </div>
+    </div>
+
+    <div class="section-card" id="card_7B_Lab">
+      <div class="sec-row">
+        <div>
+          <div class="sec-title">7B — Lab</div>
+          <div class="sec-sub">Monday &amp; Wednesday &middot; AI &amp; Machine Learning Lab</div>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" id="toggle_7B_Lab" onchange="onToggle('7B_Lab', this.checked)">
+          <span class="slider"></span>
+        </label>
+      </div>
+      <div class="status-line status-closed" id="status_7B_Lab">Closed</div>
+      <div class="counts">
+        <div class="count-box"><div class="num" id="present_7B_Lab">0</div><div class="lbl">PRESENT</div></div>
+        <div class="count-box green"><div class="num" id="oncampus_7B_Lab">0</div><div class="lbl">ON-CAMPUS</div></div>
+        <div class="count-box red"><div class="num" id="offcampus_7B_Lab">0</div><div class="lbl">OFF-CAMPUS</div></div>
+      </div>
+    </div>
+
+    <div class="refresh-note">Live counts auto-refresh every 15 seconds while a session is open. Toggle off to close attendance for that section.</div>
+  </div>
+</div>
+
+<script>
+'use strict';
+var GAS_URL = 'https://script.google.com/macros/s/AKfycbyt91R8qP2Q781JcdiNTHJeQHrSORYoX5f2m3IhMV_fvwQhfipPuUBlMjX0h2Ohc7IkxQ/exec';
+var FETCH_TIMEOUT_MS = 15000;
+var REFRESH_MS = 15000;
+var SECTIONS = ['7B_Lecture', '7B_Lab'];
+var sectionState = { '7B_Lecture': false, '7B_Lab': false };
+var refreshTimer = null;
+
+function $(id){ return document.getElementById(id); }
+
+function fetchWithTimeout(url, opts) {
+  var controller = new AbortController();
+  var timer = setTimeout(function(){ controller.abort(); }, FETCH_TIMEOUT_MS);
+  opts = opts || {};
+  opts.signal = controller.signal;
+  return fetch(url, opts).finally(function(){ clearTimeout(timer); });
+}
+
+function showMsg(text, type) {
+  var el = $('msg');
+  el.textContent = text; el.className = 'msg ' + type; el.style.display = 'block';
+  if (type !== 'error') setTimeout(function(){ el.style.display = 'none'; }, 4000);
+}
+
+function onToggle(section, isOpen) {
+  var action = isOpen ? 'open' : 'closed';
+  fetchWithTimeout(GAS_URL, {
+    method: 'POST', redirect: 'follow', headers: {'Content-Type':'text/plain'},
+    body: JSON.stringify({ type: 'session_toggle', section: section, action: isOpen ? 'open' : 'close' })
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(d){
+    if (d && d.success) {
+      sectionState[section] = isOpen;
+      updateCard(section, isOpen);
+      showMsg('Section ' + section + ' attendance ' + (isOpen ? 'opened' : 'closed') + '.', 'success');
+      manageRefresh();
+    } else {
+      showMsg((d && d.error) || 'Could not update session.', 'error');
+      $('toggle_' + section).checked = !isOpen; // revert
+    }
+  })
+  .catch(function(){
+    showMsg('Network problem toggling ' + section + '.', 'error');
+    $('toggle_' + section).checked = !isOpen;
+  });
+}
+
+function updateCard(section, isOpen) {
+  var card = $('card_' + section);
+  var status = $('status_' + section);
+  card.classList.toggle('live', isOpen);
+  status.textContent = isOpen ? 'Open — students can mark now' : 'Closed';
+  status.className = 'status-line ' + (isOpen ? 'status-open' : 'status-closed');
+}
+
+function refreshCounts() {
+  SECTIONS.forEach(function(section) {
+    if (!sectionState[section]) return;
+    fetchWithTimeout(GAS_URL + '?action=get_live_count&section=' + section)
+      .then(function(r){ return r.json(); })
+      .then(function(d){
+        if (!d || !d.success) return;
+        $('present_' + section).textContent = d.present;
+        $('oncampus_' + section).textContent = d.onCampus;
+        $('offcampus_' + section).textContent = d.offCampus;
+      })
+      .catch(function(){});
+  });
+}
+
+function manageRefresh() {
+  clearInterval(refreshTimer);
+  if (SECTIONS.some(function(s){ return sectionState[s]; })) {
+    refreshCounts();
+    refreshTimer = setInterval(refreshCounts, REFRESH_MS);
+  }
+}
+
+// On load, pick up current server-side status (in case admin refreshed the page mid-session)
+SECTIONS.forEach(function(section) {
+  fetchWithTimeout(GAS_URL + '?action=get_session_status&section=' + section)
+    .then(function(r){ return r.json(); })
+    .then(function(d){
+      var isOpen = !!(d && d.open);
+      $('toggle_' + section).checked = isOpen;
+      sectionState[section] = isOpen;
+      updateCard(section, isOpen);
+      manageRefresh();
+    })
+    .catch(function(){});
+});
+</script>
+</body>
+</html>
