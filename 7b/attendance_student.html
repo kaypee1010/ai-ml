@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI &amp; ML Attendance — Sem 7</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Georgia',serif;background:linear-gradient(135deg,#f5f1e8,#e8e3d8);min-height:100vh;padding:16px}
+.card{max-width:460px;margin:0 auto;background:#fff;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,.12);overflow:hidden}
+.header{background:linear-gradient(135deg,#8B3A3A,#6B2D2D);color:#fff;padding:20px 24px}
+.header h1{font-size:18px;margin-bottom:2px}
+.header p{font-size:12px;opacity:.9}
+.body{padding:24px}
+.status-banner{border-radius:8px;padding:12px 14px;margin-bottom:18px;font-size:13px;line-height:1.5;display:none}
+.status-open{background:#d4edda;color:#155724;border:1px solid #c3e6cb}
+.status-closed{background:#f8d7da;color:#721c24;border:1px solid #f5c6cb}
+.status-marked{background:#cfe2ff;color:#084298;border:1px solid #b6d4fe}
+.gps-banner{background:#fff8e1;border:2px solid #f9a825;border-radius:8px;padding:14px 16px;margin-bottom:18px;font-size:12px;color:#555}
+.gps-result{padding:10px 14px;border-radius:6px;font-size:13px;margin-bottom:16px;display:none}
+.gps-ok{background:#d4edda;color:#155724;border:1px solid #c3e6cb}
+.gps-warn{background:#fff3cd;color:#856404;border:1px solid #ffeeba}
+.field{margin-bottom:16px}
+label{display:block;font-weight:600;font-size:13px;color:#444;margin-bottom:5px}
+input[type=text]{width:100%;padding:11px 13px;border:1px solid #d0c8b8;border-radius:5px;font-size:15px;background:#fafafa;font-family:inherit}
+input:focus{outline:none;border-color:#8B3A3A;box-shadow:0 0 0 3px rgba(139,58,58,.1);background:#fff}
+.name-box{background:#f0ebe0;border:1px solid #c8b89a;border-radius:5px;padding:11px 13px;font-size:15px;font-weight:600;color:#5a3a1a;min-height:44px;display:flex;align-items:center}
+.name-ok{color:#1a5c2a !important}
+.name-err{color:#7c1c24 !important}
+.hint{font-size:11px;color:#999;margin-top:4px}
+.btn-submit{width:100%;padding:14px;background:#8B3A3A;color:#fff;border:none;border-radius:5px;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:4px}
+.btn-submit:disabled{background:#aaa;cursor:not-allowed}
+.msg{padding:14px;border-radius:6px;margin-bottom:16px;font-size:14px;display:none;text-align:center;line-height:1.5}
+.msg.success{background:#d4edda;color:#155724;border:1px solid #c3e6cb}
+.msg.error{background:#f8d7da;color:#721c24;border:1px solid #f5c6cb}
+.footer{text-align:center;font-size:11px;color:#aaa;margin-top:18px;padding-top:14px;border-top:1px solid #eee}
+.segwrap{display:flex;gap:8px;margin-bottom:16px}
+.seg{flex:1;padding:12px 8px;text-align:center;border:2px solid #d0c8b8;border-radius:6px;font-weight:700;font-size:14px;color:#8B3A3A;background:#fafafa;cursor:pointer;font-family:inherit}
+.seg.active{background:#8B3A3A;color:#fff;border-color:#8B3A3A}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="header">
+    <h1>AI &amp; ML Attendance</h1>
+    <p>B.Tech Sem 7 · Section 7B · Mr. K.P. Singh</p>
+  </div>
+  <div class="body">
+    <div id="msg" class="msg" role="alert"></div>
+
+    <div class="field">
+      <label>Marking attendance for *</label>
+      <div class="segwrap">
+        <button type="button" class="seg" id="seg_7B_Lecture" onclick="selectSession('7B_Lecture')">Lecture</button>
+        <button type="button" class="seg" id="seg_7B_Lab" onclick="selectSession('7B_Lab')">Lab</button>
+      </div>
+    </div>
+
+    <div id="statusBanner" class="status-banner"></div>
+
+    <div class="gps-banner" id="gpsBanner">
+      &#128205; Checking your location for on-campus verification&hellip;
+    </div>
+    <div id="gpsResult" class="gps-result"></div>
+
+    <div class="field">
+      <label for="reg">Registration Number *</label>
+      <input type="text" id="reg" placeholder="e.g. 231302022" maxlength="16" autocomplete="off">
+    </div>
+    <div class="field">
+      <label>Name (auto-detected)</label>
+      <div class="name-box" id="nameBox">&mdash;</div>
+    </div>
+    <button class="btn-submit" id="submitBtn" onclick="submitAttendance()" disabled>Mark My Attendance</button>
+
+    <div class="footer">
+      Mr. K.P. Singh · AI &amp; Machine Learning · B.Tech Sem 7, Section 7B<br>
+      Attendance is only accepted while the session you selected is open.
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+// ══════════ CONFIG ══════════
+var GAS_URL = 'https://script.google.com/macros/s/AKfycbyt91R8qP2Q781JcdiNTHJeQHrSORYoX5f2m3IhMV_fvwQhfipPuUBlMjX0h2Ohc7IkxQ/exec';
+var CAMPUS_LAT = 28.478445, CAMPUS_LNG = 76.903845, RADIUS_M = 150;
+var FETCH_TIMEOUT_MS = 20000;
+var POLL_MS = 8000;
+
+// Roster: regNo -> name. Section 7B is one roster shared by both Lecture
+// and Lab — which of the two a submission counts for comes from the
+// Lecture/Lab picker above, not from the roster (see selectSession()).
+var ROSTER = {"231302022":"Himanshu","231302032":"Aditya","231302043":"Deepak","231302050":"Savitender Singh","231302108":"Riya Yadav","231302123":"Yusuf Safi","231302148":"Pratik Dagar","231302160":"Piyush Kumar","231302171":"Harsh Yadav","231302173":"Depinder Kumar","231302178":"Jasmeet","231302188":"Aman Yadav","231302191":"Nitin Kumar","231302200":"Vinit Sheetal","231302201":"Anshu","231302204":"Samarth Ratwaya","231302209":"Ankit","231302215":"Vishal","231302218":"Vansh Rana","231302222":"Neeraj Lodhi","231302224":"Rudransh Bhardwaj","231302226":"Siddharth Sehwag","231302235":"Naman Kumar","231302237":"Nishant Choudhary","231302245":"Parikshit Gulia","231302253":"Trish Dalal","231302258":"Priyanshu","231302262":"Ashish Verma","231302263":"Ranu Raj","241302030":"Archi-Leet","241302267":"Jatin-Leet","241302279":"Vimarsh-Leet","221302122":"Mayank","231302001":"Yash Gupta","231302013":"Kishlay Kisu","231302018":"Abhishek Pal","231302080":"Aryan Sharma","231302094":"Rohit Kumar","231302127":"Shubranshu Sekher Sahoo","231302129":"Kunal Vashist","231302137":"Muskan","231302138":"Pooja","231302177":"Adarsh Kumar","231302190":"Lakshay Sharma","231302193":"Usha","231302211":"Aditya Tokas","231302213":"Priyanshu","231302217":"Mukul Punia","231302220":"Mishra Suyansh Naresh","231302233":"Ayush Gupta","231302252":"Rohan","241302251":"Rait Ranvirsingh Surinder Singh","241302050":"Rajan"};
+
+// ══════════ STATE ══════════
+var resolvedSection = '', resolvedName = '';
+var gpsStatus = 'pending', gpsChecked = false;
+var sessionOpenForSection = false, alreadyMarked = false, submitting = false, pollTimer = null;
+
+function selectSession(section) {
+  resolvedSection = section;
+  document.getElementById('seg_7B_Lecture').classList.toggle('active', section === '7B_Lecture');
+  document.getElementById('seg_7B_Lab').classList.toggle('active', section === '7B_Lab');
+  alreadyMarked = false;
+  clearInterval(pollTimer);
+  $('statusBanner').style.display = 'none';
+  if (resolvedName) {
+    pollStudentStatus();
+    pollTimer = setInterval(pollStudentStatus, POLL_MS);
+  }
+  updateSubmitState();
+}
+
+function $(id){ return document.getElementById(id); }
+
+function sectionLabel(section) {
+  return section === '7B_Lecture' ? 'Lecture' : (section === '7B_Lab' ? 'Lab' : section);
+}
+
+function fetchWithTimeout(url, opts) {
+  var controller = new AbortController();
+  var timer = setTimeout(function(){ controller.abort(); }, FETCH_TIMEOUT_MS);
+  opts = opts || {};
+  opts.signal = controller.signal;
+  return fetch(url, opts).finally(function(){ clearTimeout(timer); });
+}
+
+function showMsg(text, type) {
+  var el = $('msg');
+  el.textContent = text;
+  el.className = 'msg ' + type;
+  el.style.display = 'block';
+  if (type === 'success') setTimeout(function(){ el.style.display = 'none'; }, 6000);
+}
+
+function showGPSResult(type, text) {
+  var el = $('gpsResult');
+  el.textContent = text;
+  el.className = 'gps-result ' + (type === 'ok' ? 'gps-ok' : 'gps-warn');
+  el.style.display = 'block';
+  clearTimeout(gpsHideTimer);
+  gpsHideTimer = setTimeout(function(){ el.style.display = 'none'; }, 6000);
+}
+var gpsHideTimer = null;
+
+// All statusBanner updates go through here so the auto-hide timer is
+// consistent — banner shows, then clears itself out after a few seconds
+// instead of staying stacked on screen indefinitely. The submit button's
+// own "Already Marked" disabled state (see updateSubmitState) is the
+// persistent signal — this banner is just a transient toast.
+var statusHideTimer = null;
+function showStatusBanner(cls, text) {
+  var el = $('statusBanner');
+  el.className = 'status-banner ' + cls;
+  el.textContent = text;
+  el.style.display = 'block';
+  clearTimeout(statusHideTimer);
+  statusHideTimer = setTimeout(function(){ el.style.display = 'none'; }, 6000);
+}
+
+function haversine(la1, lo1, la2, lo2) {
+  var R = 6371000, dL = (la2-la1)*Math.PI/180, dO = (lo2-lo1)*Math.PI/180;
+  var a = Math.sin(dL/2)*Math.sin(dL/2) +
+          Math.cos(la1*Math.PI/180)*Math.cos(la2*Math.PI/180)*Math.sin(dO/2)*Math.sin(dO/2);
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+// ══════════ GPS — only a status flag ever leaves this device ══════════
+function handleGPSSuccess(pos) {
+  var dist = haversine(pos.coords.latitude, pos.coords.longitude, CAMPUS_LAT, CAMPUS_LNG);
+  gpsStatus = dist <= RADIUS_M ? 'on-campus' : 'off-campus';
+  gpsChecked = true;
+  $('gpsBanner').style.display = 'none';
+  if (gpsStatus === 'on-campus') {
+    showGPSResult('ok', 'Location verified — you appear to be on campus.');
+  } else {
+    showGPSResult('warn', 'You appear to be off campus — this will be flagged (shown in red) for your teacher.');
+  }
+  updateSubmitState();
+}
+
+function handleGPSError() {
+  gpsStatus = 'unavailable';
+  gpsChecked = true;
+  $('gpsBanner').style.display = 'none';
+  showGPSResult('warn', 'Location unavailable — your submission will be marked unverified.');
+  updateSubmitState();
+}
+
+function requestGPS() {
+  if (!navigator.geolocation) { handleGPSError(); return; }
+  navigator.geolocation.getCurrentPosition(handleGPSSuccess, handleGPSError,
+    {enableHighAccuracy: true, timeout: 12000, maximumAge: 0});
+}
+window.addEventListener('load', requestGPS);
+
+// ══════════ ROSTER LOOKUP (auto-detects section) ══════════
+$('reg').addEventListener('input', function() {
+  var reg = $('reg').value.trim();
+  var box = $('nameBox');
+  box.textContent = '\u2014';
+  box.className = 'name-box';
+  resolvedName = ''; alreadyMarked = false;
+  clearInterval(pollTimer);
+  $('statusBanner').style.display = 'none';
+  updateSubmitState();
+  if (reg.length < 9) return;
+  var name = ROSTER[reg];
+  if (name) {
+    box.textContent = name;
+    box.className = 'name-box name-ok';
+    resolvedName = name;
+    if (resolvedSection) {
+      pollStudentStatus();
+      pollTimer = setInterval(pollStudentStatus, POLL_MS);
+    }
+  } else {
+    box.textContent = 'Not found in 7B roster';
+    box.className = 'name-box name-err';
+  }
+});
+
+// Single call returns BOTH the section's open/closed state AND whether this
+// specific student has already been marked present today — shown proactively
+// so a student sees "already marked" before they even try to submit again.
+function pollStudentStatus() {
+  if (!resolvedSection) return;
+  var reg = $('reg').value.trim();
+  fetchWithTimeout(GAS_URL + '?action=get_student_status&section=' + resolvedSection + '&reg=' + encodeURIComponent(reg))
+    .then(function(r){
+      return r.text().then(function(txt){
+        try { return JSON.parse(txt); }
+        catch (e) {
+          // Response wasn't JSON — almost always means the /exec URL redirected
+          // to a Google sign-in or "authorization needed" HTML page instead of
+          // running the script. Surface the raw start of it for debugging.
+          throw new Error('Non-JSON response (deployment access/auth issue?): ' + txt.slice(0, 120));
+        }
+      });
+    })
+    .then(function(d){
+      if (!d || !d.success) {
+        showStatusBanner('status-closed', 'Could not check session status' + (d && d.error ? (': ' + d.error) : '') + '. Pull to refresh or tell your teacher if this persists.');
+        return;
+      }
+      sessionOpenForSection = !!d.open;
+      alreadyMarked = !!d.marked;
+      if (alreadyMarked) {
+        showStatusBanner('status-marked', '\u2713 You are already marked present today (' + sectionLabel(resolvedSection) + '). No need to submit again.');
+      } else if (sessionOpenForSection) {
+        showStatusBanner('status-open', 'Attendance is OPEN for ' + sectionLabel(resolvedSection) + '. You can mark now.');
+      } else {
+        showStatusBanner('status-closed', 'Attendance is not open for ' + sectionLabel(resolvedSection) + ' right now. Wait for your teacher to start the session.');
+      }
+      updateSubmitState();
+    })
+    .catch(function(err){
+      console.error('pollStudentStatus failed:', err);
+      showStatusBanner('status-closed', err && err.name === 'AbortError'
+        ? 'Status check timed out — check your internet connection.'
+        : 'Network problem checking session status — check your internet connection.');
+    });
+}
+
+// ══════════ SUBMIT GATE ══════════
+function updateSubmitState() {
+  var ok = resolvedSection && resolvedName && sessionOpenForSection && !alreadyMarked && gpsChecked && !submitting;
+  $('submitBtn').disabled = !ok;
+  $('submitBtn').textContent = submitting ? 'Submitting...' : (alreadyMarked ? 'Already Marked' : 'Mark My Attendance');
+}
+
+function setSubmitting(on) {
+  submitting = on;
+  updateSubmitState();
+}
+
+function submitAttendance() {
+  if (submitting || alreadyMarked) return;
+  var reg = $('reg').value.trim();
+  if (!resolvedSection) { showMsg('Select Lecture or Lab above first.', 'error'); return; }
+  if (!resolvedName) { showMsg('Enter a valid registration number.', 'error'); return; }
+  if (!sessionOpenForSection) { showMsg('Attendance is not open right now.', 'error'); return; }
+
+  setSubmitting(true);
+
+  // NOTE: raw GPS coordinates are deliberately NOT included here — only
+  // reg no and the on/off-campus flag are sent.
+  var payload = {
+    type: 'mark_attendance',
+    section: resolvedSection,
+    reg: reg,
+    gpsStatus: gpsStatus
+  };
+
+  fetchWithTimeout(GAS_URL, {
+    method: 'POST',
+    redirect: 'follow',
+    headers: {'Content-Type': 'text/plain'},
+    body: JSON.stringify(payload)
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(result) {
+    if (result && result.success) {
+      showMsg('Attendance marked! ' + result.name + ' \u00B7 ' + sectionLabel(result.section), 'success');
+      alreadyMarked = true;
+      showStatusBanner('status-marked', '\u2713 You are already marked present today (' + sectionLabel(resolvedSection) + ').');
+      updateSubmitState();
+    } else if (result && /already marked/i.test(result.error || '')) {
+      // Two tabs / double-tap race: server caught it even though our last
+      // poll hadn't. Reflect it immediately instead of just showing an error.
+      showMsg(result.error, 'error');
+      alreadyMarked = true;
+      showStatusBanner('status-marked', '\u2713 You are already marked present today (' + sectionLabel(resolvedSection) + ').');
+      updateSubmitState();
+    } else {
+      showMsg((result && result.error) || 'Submission failed — try again.', 'error');
+    }
+  })
+  .catch(function(err) {
+    showMsg(err.name === 'AbortError' ? 'Request timed out — try again in a few seconds.' : 'Network problem — check internet and try again.', 'error');
+  })
+  .finally(function(){ setSubmitting(false); });
+}
+</script>
+</body>
+</html>
