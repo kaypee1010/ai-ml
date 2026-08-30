@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Student Notes — Neural Networks, Bayesian Learning &amp; KNN</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg1:#fdf6f0; --bg2:#f3f0fb; --bg3:#eaf6f3;
+  --ink:#22223b; --sub:#5b5b76;
+  --grad-sun:linear-gradient(135deg,#ff8a5b,#ff6b9d);
+  --grad-purp:linear-gradient(135deg,#7b2ff7,#c542f0);
+  --grad-teal:linear-gradient(135deg,#12c2a5,#7bf1a8);
+  --grad-gold:linear-gradient(135deg,#f7b733,#ff6b6b);
+  --glass:rgba(255,255,255,.62);
+  --glass-border:rgba(255,255,255,.85);
+}
+*{box-sizing:border-box}
+body{
+  margin:0; font-family:'Inter',sans-serif; color:var(--ink);
+  background:linear-gradient(160deg,var(--bg1),var(--bg2) 50%,var(--bg3));
+  background-attachment:fixed; min-height:100vh;
+}
+h1,h2,h3,.mascot-name{font-family:'Fredoka',sans-serif;}
+header.top{
+  padding:18px 24px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;
+}
+header.top h1{margin:0; font-size:1.3rem;}
+header.top p{margin:2px 0 0; color:var(--sub); font-size:.82rem;}
+nav.topics{
+  display:flex; gap:8px; padding:0 24px 14px; flex-wrap:wrap;
+}
+nav.topics button{
+  font-family:'Fredoka',sans-serif; font-weight:600; font-size:.85rem;
+  border:none; padding:9px 16px; border-radius:20px; cursor:pointer;
+  background:var(--glass); border:1px solid var(--glass-border); color:var(--ink);
+  box-shadow:0 2px 8px rgba(0,0,0,.06);
+}
+nav.topics button.active{ background:var(--grad-purp); color:#fff; box-shadow:0 4px 14px rgba(123,47,247,.35); }
+main{max-width:920px; margin:0 auto; padding:6px 20px 100px;}
+.page{display:none;}
+.page.active{display:block;}
+.card{
+  background:var(--glass); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+  border:1px solid var(--glass-border); border-radius:18px; padding:20px 22px;
+  margin-bottom:18px; box-shadow:0 6px 22px rgba(90,60,140,.08);
+}
+.card h2{margin:0 0 4px; font-size:1.3rem;}
+.card h3{margin:14px 0 6px; font-size:1.02rem; color:var(--ink);}
+.card p{line-height:1.6; margin:6px 0; color:var(--ink);}
+.tag{
+  display:inline-block; font-family:'Fredoka',sans-serif; font-weight:600; font-size:.72rem;
+  color:#fff; padding:4px 12px; border-radius:14px; margin-bottom:10px; letter-spacing:.3px;
+}
+.tag.hook{background:var(--grad-sun);}
+.tag.build{background:var(--grad-purp);}
+.tag.formal{background:linear-gradient(135deg,#3d5af1,#00c6fb);}
+.tag.interact{background:var(--grad-teal); color:#0a3d2c;}
+.tag.example{background:linear-gradient(135deg,#ff9966,#ff5e62);}
+.tag.real{background:linear-gradient(135deg,#43cea2,#185a9d);}
+.tag.exercise{background:var(--grad-gold);}
+.tag.pitfall{background:linear-gradient(135deg,#ff5f6d,#ffc371);}
+.tag.takeaway{background:var(--grad-purp);}
+
+.mascot-row{display:flex; gap:12px; align-items:flex-start; margin-top:6px;}
+.mascot{
+  min-width:46px; height:46px; border-radius:50%; background:var(--grad-purp);
+  display:flex; align-items:center; justify-content:center; font-size:1.4rem; position:relative; flex-shrink:0;
+  box-shadow:0 3px 10px rgba(123,47,247,.3);
+}
+.mascot .mood{
+  position:absolute; bottom:-4px; right:-4px; background:#fff; border-radius:50%;
+  width:20px; height:20px; display:flex; align-items:center; justify-content:center; font-size:.75rem;
+  box-shadow:0 1px 4px rgba(0,0,0,.2);
+}
+.bubble{
+  background:#fff; border-radius:14px; padding:10px 14px; font-size:.92rem; line-height:1.5;
+  box-shadow:0 2px 8px rgba(0,0,0,.06); flex:1; color:var(--ink);
+}
+
+.flipgrid{display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:14px; margin-top:8px;}
+.flipcard{ perspective:1000px; height:130px; cursor:pointer; }
+.flipcard .inner{position:relative; width:100%; height:100%; transition:transform .5s; transform-style:preserve-3d;}
+.flipcard.flipped .inner{transform:rotateY(180deg);}
+.flipface{
+  position:absolute; inset:0; border-radius:14px; backface-visibility:hidden;
+  display:flex; align-items:center; justify-content:center; text-align:center; padding:12px;
+  font-weight:600; box-shadow:0 4px 12px rgba(0,0,0,.1);
+}
+.flipfront{background:var(--grad-purp); color:#fff; font-family:'Fredoka',sans-serif; font-size:1.05rem;}
+.flipback{background:#fff; color:var(--ink); transform:rotateY(180deg); font-weight:400; font-size:.85rem; line-height:1.45;}
+.flip-hint{font-size:.68rem; opacity:.85; margin-top:4px; font-weight:400;}
+
+.quiz-q{background:rgba(255,255,255,.55); border-radius:14px; padding:14px; margin-bottom:12px;}
+.quiz-q p.qtext{font-weight:600; margin-bottom:8px;}
+.quiz-opt{
+  display:block; width:100%; text-align:left; background:#fff; border:2px solid #eee; border-radius:10px;
+  padding:9px 12px; margin-bottom:7px; cursor:pointer; font-family:'Inter',sans-serif; font-size:.87rem; color:var(--ink);
+}
+.quiz-opt:hover{border-color:#c542f0;}
+.quiz-opt.correct{background:#e4fbe9; border-color:#2fb85a; color:#155724;}
+.quiz-opt.incorrect{background:#fff0ef; border-color:#e2564f; color:#7a2420;}
+.quiz-fb{margin-top:6px; font-size:.85rem; padding:8px 10px; border-radius:8px; display:none;}
+.quiz-fb.show{display:block;}
+.quiz-fb.good{background:#e4fbe9; color:#155724;}
+.quiz-fb.bad{background:#fff0ef; color:#7a2420;}
+
+.exbox{background:rgba(255,246,224,.75); border:1px dashed #d99a10; border-radius:12px; padding:12px 14px; margin-top:8px;}
+.exbox summary{cursor:pointer; font-weight:600; color:#8a5a00;}
+.pitbox{background:rgba(255,232,232,.75); border-left:4px solid #e2564f; border-radius:8px; padding:10px 12px; margin-top:8px;}
+.takebox{
+  background:var(--grad-teal); color:#0a3d2c; border-radius:14px; padding:14px 16px; margin-top:10px;
+  font-family:'Fredoka',sans-serif; font-weight:600; font-size:1.02rem;
+}
+.bridgebox{background:rgba(255,255,255,.5); border-radius:10px; padding:10px 14px; margin-top:8px; font-style:italic; color:var(--sub);}
+
+.stepper{background:#fff; border-radius:14px; padding:16px; margin-top:10px;}
+.stepper .steps{display:flex; flex-direction:column; gap:8px; margin-bottom:12px;}
+.step-item{border-radius:10px; padding:10px 12px; background:#f4f2fb; font-size:.87rem; opacity:.4; transition:.3s;}
+.step-item.active{opacity:1; background:linear-gradient(135deg,#efe6ff,#e0f7f0); border:1px solid #c542f0;}
+.stepper-controls{display:flex; gap:10px;}
+.stepper-controls button{
+  font-family:'Fredoka',sans-serif; font-weight:600; border:none; border-radius:18px; padding:8px 16px;
+  cursor:pointer; background:var(--grad-purp); color:#fff; font-size:.82rem;
+}
+.stepper-controls button.secondary{background:#eee; color:#555;}
+
+svg.knn{width:100%; height:auto; background:#fff; border-radius:14px;}
+
+.footer-nav{display:flex; justify-content:space-between; margin-top:8px;}
+.footer-nav button{
+  font-family:'Fredoka',sans-serif; font-weight:600; background:var(--grad-purp); color:#fff; border:none;
+  padding:10px 20px; border-radius:22px; cursor:pointer; font-size:.86rem; box-shadow:0 4px 14px rgba(123,47,247,.3);
+}
+.footer-nav button:disabled{opacity:.3; cursor:default; box-shadow:none;}
+
+.compare-table{width:100%; border-collapse:collapse; margin-top:10px; font-size:.85rem;}
+.compare-table th,.compare-table td{border:1px solid #e4dff5; padding:8px 10px; text-align:left;}
+.compare-table th{background:var(--grad-purp); color:#fff; font-family:'Fredoka',sans-serif;}
+.compare-table tr:nth-child(even) td{background:rgba(255,255,255,.5);}
+
+.acc{margin-bottom:10px;}
+.acc summary{cursor:pointer; font-weight:600; padding:10px 14px; background:rgba(255,255,255,.55); border-radius:10px; list-style:none;}
+.acc summary::-webkit-details-marker{display:none;}
+.acc summary:before{content:"▸ "; color:#7b2ff7;}
+.acc[open] summary:before{content:"▾ "; }
+.acc .qbody{padding:10px 14px; font-size:.88rem; line-height:1.5;}
+.qlevel{display:inline-block; font-size:.68rem; font-weight:700; padding:2px 8px; border-radius:10px; margin-right:6px; color:#fff;}
+.qlevel.short{background:#43cea2;}
+.qlevel.medium{background:#f7b733;}
+.qlevel.long{background:#ff5e62;}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div>
+    <h1>🤖 Circuit's Study Notes — NN, Bayesian Learning &amp; KNN</h1>
+    <p>AI &amp; ML Teaching · Sem 7 · Interview-ready depth · Follow along at your own pace</p>
+  </div>
+</header>
+<nav class="topics" id="topNav"></nav>
+<main>
+  <div id="pageHost"></div>
+  <div class="footer-nav">
+    <button id="prevBtn">← Previous</button>
+    <button id="nextBtn">Next topic →</button>
+  </div>
+</main>
+
+<script>
+/* ---------- reusable component builders ---------- */
+function mascot(mood, text){
+  return `<div class="mascot-row"><div class="mascot">🤖<span class="mood">${mood}</span></div><div class="bubble">${text}</div></div>`;
+}
+function flipgrid(cards){
+  return `<div class="flipgrid">${cards.map((c,i)=>`
+    <div class="flipcard" onclick="this.classList.toggle('flipped')">
+      <div class="inner">
+        <div class="flipface flipfront">${c.term}<div class="flip-hint">(tap to flip)</div></div>
+        <div class="flipface flipback">${c.def}</div>
+      </div>
+    </div>`).join('')}</div>`;
+}
+let quizCounter=0;
+function quiz(questions){
+  return `<div class="quiz">${questions.map(q=>{
+    quizCounter++;
+    const qid = 'q'+quizCounter;
+    return `<div class="quiz-q">
+      <p class="qtext">${q.q}</p>
+      ${q.opts.map((o,i)=>`<button class="quiz-opt" onclick="answerQuiz('${qid}',${i},${q.correct},this)">${o}</button>`).join('')}
+      <div class="quiz-fb" id="${qid}-fb"></div>
+    </div>`;
+  }).join('')}</div>`;
+}
+function answerQuiz(qid, chosen, correct, btn){
+  const container = btn.parentElement;
+  const opts = container.querySelectorAll('.quiz-opt');
+  const fb = document.getElementById(qid+'-fb');
+  opts.forEach((o,i)=>{ o.disabled=true; if(i===correct) o.classList.add('correct'); });
+  if(chosen===correct){
+    fb.className='quiz-fb show good';
+    fb.innerHTML = '🎉 Correct! ' + btn.dataset.exp;
+  } else {
+    btn.classList.add('incorrect');
+    fb.className='quiz-fb show bad';
+    fb.innerHTML = '🙈 Close — here\'s why: ' + opts[correct].dataset.exp;
+  }
+}
+function exbox(setup, reveal){
+  return `<details class="exbox"><summary>🔍 Try it yourself first, then click to reveal</summary>
+    <p><b>Scenario:</b> ${setup}</p><p><b>Answer:</b> ${reveal}</p></details>`;
+}
+function pitbox(text){ return `<div class="pitbox">⚠️ <b>Common mistake:</b> ${text}</div>`; }
+function takebox(text){ return `<div class="takebox">🤖⭐ ${text}</div>`; }
+function bridgebox(text){ return `<div class="bridgebox">↷ ${text}</div>`; }
+
+/* ---------- Step animation: weight update (Topic 2) ---------- */
+function weightStepper(){
+  const steps = [
+    "Old weight = 0.50",
+    "Error tells us: this weight is pushing the output too high — gradient = 0.30 (positive means 'reduce it')",
+    "Learning rate = 0.1 (a small, cautious step size)",
+    "new_weight = old_weight − learning_rate × gradient = 0.50 − (0.1 × 0.30) = 0.47",
+    "Updated weight = 0.47 — a small nudge in the right direction. Repeat this for every weight, every example."
+  ];
+  return stepperHtml('wstep', steps);
+}
+function stepperHtml(id, steps){
+  window['steps_'+id] = steps;
+  window['idx_'+id] = 0;
+  return `<div class="stepper" id="${id}">
+    <div class="steps">${steps.map((s,i)=>`<div class="step-item ${i===0?'active':''}" id="${id}-s${i}">${i+1}. ${s}</div>`).join('')}</div>
+    <div class="stepper-controls">
+      <button onclick="stepNext('${id}')">Next step ▶</button>
+      <button class="secondary" onclick="stepReplay('${id}')">↺ Replay</button>
+    </div>
+  </div>`;
+}
+function stepNext(id){
+  const steps = window['steps_'+id]; let idx = window['idx_'+id];
+  if(idx < steps.length-1){
+    document.getElementById(id+'-s'+idx).classList.remove('active');
+    idx++; window['idx_'+id]=idx;
+    document.getElementById(id+'-s'+idx).classList.add('active');
+  }
+}
+function stepReplay(id){
+  const steps = window['steps_'+id];
+  for(let i=0;i<steps.length;i++) document.getElementById(id+'-s'+i).classList.remove('active');
+  document.getElementById(id+'-s0').classList.add('active');
+  window['idx_'+id]=0;
+}
+
+/* ---------- KNN step-through scatter (Topic 4) ---------- */
+function knnStepper(){
+  // points: [x,y,label,cls] in a 0-10 study-hours / 0-100 attendance space, scaled to svg coords
+  const pts = [
+    {x:2,y:40,label:'P1',cls:'Fail'}, {x:3,y:50,label:'P2',cls:'Fail'},
+    {x:5,y:60,label:'P5',cls:'Fail'}, {x:7,y:85,label:'P4',cls:'Pass'},
+    {x:8,y:90,label:'P3',cls:'Pass'}
+  ];
+  const nx=6, ny=80; // new point
+  const sx = x => 40 + x*38;
+  const sy = y => 320 - y*2.8;
+  const order = ['P4','P3','P5']; // nearest to farthest among the 3 nearest we reveal (K=3)
+  let svg = `<svg class="knn" viewBox="0 0 420 340" xmlns="http://www.w3.org/2000/svg">`;
+  svg += `<line x1="40" y1="320" x2="400" y2="320" stroke="#ccc"/><line x1="40" y1="10" x2="40" y2="320" stroke="#ccc"/>`;
+  svg += `<text x="180" y="335" font-size="11" fill="#888" font-family="Inter">Study Hours →</text>`;
+  svg += `<text x="8" y="20" font-size="11" fill="#888" font-family="Inter">Attn%</text>`;
+  pts.forEach(p=>{
+    const col = p.cls==='Pass' ? '#12c2a5' : '#ff6b9d';
+    svg += `<circle id="pt-${p.label}" cx="${sx(p.x)}" cy="${sy(p.y)}" r="7" fill="${col}" opacity="0.35"/>`;
+    svg += `<text x="${sx(p.x)+9}" y="${sy(p.y)+4}" font-size="10" fill="#555" font-family="Inter">${p.label} (${p.cls})</text>`;
+  });
+  svg += `<circle id="pt-new" cx="${sx(nx)}" cy="${sy(ny)}" r="8" fill="#7b2ff7"/>`;
+  svg += `<text x="${sx(nx)+10}" y="${sy(ny)-8}" font-size="11" fill="#7b2ff7" font-family="Inter" font-weight="bold">New point?</text>`;
+  order.forEach((label,i)=>{
+    const p = pts.find(pp=>pp.label===label);
+    svg += `<line id="ln-${label}" x1="${sx(nx)}" y1="${sy(ny)}" x2="${sx(p.x)}" y2="${sy(p.y)}" stroke="#c542f0" stroke-width="2" stroke-dasharray="4" opacity="0" />`;
+  });
+  svg += `</svg>`;
+
+  window.knnState = {order, idx:-1, pts};
+  const stepsText = [
+    "Step 1: Highlight the nearest neighbour — P4 (Pass) — closest by distance.",
+    "Step 2: Highlight the 2nd nearest — P3 (Pass).",
+    "Step 3: Highlight the 3rd nearest — P5 (Fail). That's K = 3 neighbours found.",
+    "Step 4: Majority vote among P4, P3, P5 → Pass, Pass, Fail → 2 votes Pass, 1 vote Fail → Predicted class = Pass 🎉"
+  ];
+  return `<div id="knnBox">${svg}
+    <div class="stepper" style="margin-top:-6px;">
+      <div class="steps"><div class="step-item active" id="knn-caption">Click "Next step" to reveal the 3 nearest neighbours one at a time (K = 3).</div></div>
+      <div class="stepper-controls">
+        <button onclick="knnNext()">Next step ▶</button>
+        <button class="secondary" onclick="knnReplay()">↺ Replay</button>
+      </div>
+    </div>
+  </div>`;
+}
+const knnCaptions = [
+  "Step 1: Highlight the nearest neighbour — P4 (Pass) — closest by distance.",
+  "Step 2: Highlight the 2nd nearest — P3 (Pass).",
+  "Step 3: Highlight the 3rd nearest — P5 (Fail). That's K = 3 neighbours found.",
+  "Step 4: Majority vote among P4, P3, P5 → Pass, Pass, Fail → 2 votes Pass, 1 vote Fail → Predicted class = Pass 🎉"
+];
+function knnNext(){
+  const st = window.knnState;
+  if(st.idx < st.order.length-1){
+    st.idx++;
+    const label = st.order[st.idx];
+    document.getElementById('ln-'+label).setAttribute('opacity','1');
+    document.getElementById('pt-'+label).setAttribute('opacity','1');
+    document.getElementById('pt-'+label).setAttribute('r','9');
+    document.getElementById('knn-caption').textContent = knnCaptions[st.idx];
+  } else if(st.idx === st.order.length-1){
+    st.idx++;
+    document.getElementById('knn-caption').textContent = knnCaptions[3];
+  }
+}
+function knnReplay(){
+  const st = window.knnState;
+  st.order.forEach(label=>{
+    document.getElementById('ln-'+label).setAttribute('opacity','0');
+    document.getElementById('pt-'+label).setAttribute('opacity','0.35');
+    document.getElementById('pt-'+label).setAttribute('r','7');
+  });
+  st.idx=-1;
+  document.getElementById('knn-caption').textContent = 'Click "Next step" to reveal the 3 nearest neighbours one at a time (K = 3).';
+}
+
+/* ---------- Comparison / infographic blocks ---------- */
+function backpropInfographic(){
+  return `<table class="compare-table">
+    <tr><th>Stage</th><th>What happens</th></tr>
+    <tr><td>1. Forward pass</td><td>Input flows through the network → produces a prediction</td></tr>
+    <tr><td>2. Error / Loss</td><td>Compare prediction vs actual answer → measure how wrong</td></tr>
+    <tr><td>3. Backward pass</td><td>Send the error back, layer by layer, to find each weight's share of blame</td></tr>
+    <tr><td>4. Weight update</td><td>Nudge each weight a little: new = old − (learning rate × gradient)</td></tr>
+    <tr><td>5. Repeat</td><td>Do this over many examples (epochs) until error shrinks</td></tr>
+  </table>`;
+}
+function bayesInfographic(){
+  return `<table class="compare-table">
+    <tr><th></th><th>Full Bayes (joint probability)</th><th>Naive Bayes</th></tr>
+    <tr><td>Assumption</td><td>Considers all features together, exactly as they interact</td><td>Assumes every feature is independent of the others</td></tr>
+    <tr><td>Cost</td><td>Explodes fast — needs huge data as features grow</td><td>Fast and simple — multiply individual probabilities</td></tr>
+    <tr><td>Accuracy</td><td>Technically more correct</td><td>Assumption is technically wrong, but works very well in practice</td></tr>
+  </table>`;
+}
+
+/* ---------- PAGE DATA ---------- */
+const pages = [
+{id:'p0', label:'🏁 Overview', title:'Welcome — What we\'re covering today', body:`
+  ${mascot('👋','Hi, I\'m Circuit! I\'ll be your guide through today\'s notes — look for me at every hook, prediction moment, quiz, and takeaway.')}
+  <div class="card"><h2>Today\'s journey</h2>
+    <p>1️⃣ <b>Neural Network Fundamentals</b> — how ANNs are structured</p>
+    <p>2️⃣ <b>Bias, Error &amp; Learning</b> — how a network fixes its own mistakes (Backpropagation)</p>
+    <p>3️⃣ <b>Bayesian Learning</b> — reasoning with probability (Naive Bayes)</p>
+    <p>4️⃣ <b>Instance-Based Learning</b> — learning by comparison (KNN)</p>
+    <p style="margin-top:10px;">Depth level: <b>interview-ready basic understanding</b> — enough to confidently answer exam and placement-interview questions, not textbook-deep. Use the tabs above (or "Next topic" below) to move through at your own pace.</p>
+  </div>
+`},
+
+{id:'p1', label:'1️⃣ Neural Networks', title:'Topic 1 — Neural Network Fundamentals', body:`
+  <div class="card">
+    ${mascot('💡','You\'ve used Netflix. It somehow suggests shows that fit YOUR taste out of millions of options — without anyone writing a rule for you specifically. How?')}
+  </div>
+  <div class="card"><span class="tag build">Concept build-up</span>
+    <p>The old way: hand-written rules ("if user watched comedy, suggest comedy"). This breaks down fast — too many combinations of genre, time, mood, history to write rules for all of them manually. We needed something that could <b>learn patterns on its own</b> instead of being told the rules. That's where the <b>Artificial Neural Network (ANN)</b> comes in.</p>
+  </div>
+  <div class="card"><span class="tag formal">Formal idea — What is an ANN?</span>
+    <p><b>ANN</b> = a system loosely inspired by brain neurons — made of small "processing units" that work together to make a decision.</p>
+  </div>
+  <div class="card"><span class="tag interact">🎤 Predict it</span>
+    ${mascot('🤔','If I feed a neural network 1000 movies you\'ve watched — what do you think it\'s actually learning? The movies themselves, or something else?')}
+    <p style="margin-top:8px;"><i>Think about it before scrolling — then check: it's learning a <b>pattern</b> of your taste, stored as numbers called <b>weights</b>, not the movies themselves.</i></p>
+  </div>
+  <div class="card"><h3>ANN Structure — the 3 layers</h3>
+    <div class="flipgrid">
+      <div class="flipcard" onclick="this.classList.toggle('flipped')"><div class="inner">
+        <div class="flipface flipfront">Input Layer<div class="flip-hint">(tap to flip)</div></div>
+        <div class="flipface flipback">Where raw information enters — e.g. "study hours", "genre watched". No processing yet, just receiving data.</div>
+      </div></div>
+      <div class="flipcard" onclick="this.classList.toggle('flipped')"><div class="inner">
+        <div class="flipface flipfront">Hidden Layer<div class="flip-hint">(tap to flip)</div></div>
+        <div class="flipface flipback">Where the real processing happens — combines inputs into internal patterns. "Hidden" because we don't directly see its output.</div>
+      </div></div>
+      <div class="flipcard" onclick="this.classList.toggle('flipped')"><div class="inner">
+        <div class="flipface flipfront">Output Layer<div class="flip-hint">(tap to flip)</div></div>
+        <div class="flipface flipback">The final decision — e.g. "Recommend" or "Don't recommend", "Pass" or "Fail".</div>
+      </div></div>
+    </div>
+  </div>
+  <div class="card"><span class="tag example">Worked example</span>
+    <p>Predicting Pass/Fail from <b>study hours</b> and <b>attendance %</b>: both go into the <b>input layer</b> → the <b>hidden layer</b> combines them into an internal score → the <b>output layer</b> gives the final call: Pass or Fail.</p>
+    <p style="color:var(--sub)"><i>Flow to remember: input → combine → decide.</i></p>
+  </div>
+  <div class="card"><span class="tag real">Real-world connection</span>
+    <p>Same 3-layer idea powers spam filters (spam/not-spam), face-unlock (match/no match), and Netflix-style recommendations.</p>
+  </div>
+  <div class="card"><span class="tag exercise">In-class exercise</span>
+    ${exbox("A network has ONLY an input layer and an output layer — no hidden layer — and is asked to do complex image recognition. Will it work well?",
+      "No — without a hidden layer, the network can only make simple, straight-line decisions. It can't combine features in complex ways, which is exactly what tasks like image recognition need.")}
+  </div>
+  <div class="card">
+    ${pitbox('Don\'t picture an ANN "neuron" as a real biological brain cell — it\'s just a math function, loosely inspired by biology. Also, more layers ≠ automatically better.')}
+  </div>
+  <div class="card"><h3>Quick check</h3>
+    ${quiz([
+      {q:"Which layer does the actual 'combining and processing' of the inputs?", opts:["Input layer","Hidden layer","Output layer"], correct:1},
+      {q:"Why did manual if-else rules stop working for recommendations?", opts:["They were too accurate","Too many combinations to write rules for manually","Computers can't run if-else"], correct:1},
+      {q:"A network with input + output layer only (no hidden layer) is best suited for:", opts:["Very simple, straight-line decisions","Complex image recognition","Both equally well"], correct:0}
+    ])}
+  </div>
+  <div class="card"><span class="tag takeaway">Takeaway</span>
+    ${takebox('ANN = layers of simple decisions stacked together to make one smart decision.')}
+    ${bridgebox('But networks don\'t always get it right the first time. How does a network fix its own mistakes? That\'s next.')}
+  </div>
+`},
+
+{id:'p2', label:'2️⃣ Bias &amp; Backprop', title:'Topic 2 — Bias, Error &amp; Learning', body:`
+  <div class="card">
+    ${mascot('💡','The network predicted "Pass" — but the student actually failed. Now what? How does the network know it was wrong, and fix itself?')}
+  </div>
+  <div class="card"><span class="tag build">Concept build-up</span>
+    <p>The naive approach: randomly nudge weights and hope for the best. It's slow and doesn't reliably converge. We need a <b>systematic</b> way to know exactly which weight was how wrong.</p>
+  </div>
+  <div class="card"><h3>Bias vs Variance</h3>
+    <div class="flipgrid">
+      <div class="flipcard" onclick="this.classList.toggle('flipped')"><div class="inner">
+        <div class="flipface flipfront">Bias<div class="flip-hint">(tap to flip)</div></div>
+        <div class="flipface flipback">Model is too simple/rigid, keeps making the <b>same kind of wrong</b> answer — like a friend who gives the same reply no matter the question. Underfitting.</div>
+      </div></div>
+      <div class="flipcard" onclick="this.classList.toggle('flipped')"><div class="inner">
+        <div class="flipface flipfront">Variance<div class="flip-hint">(tap to flip)</div></div>
+        <div class="flipface flipback">Model reacts too strongly to tiny details in training data — like a friend who totally changes their answer based on a small hint. Overfitting.</div>
+      </div></div>
+    </div>
+  </div>
+  <div class="card"><p><b>Why does a network make errors at all?</b> Random starting weights, noisy real-world data, and sometimes the wrong architecture (e.g. too few/many hidden layers) — all combine to produce error.</p></div>
+  <div class="card"><span class="tag interact">🎤 Predict it</span>
+    ${mascot('🤔','When there\'s an output error, are ALL weights blamed equally — or does each weight get blamed differently?')}
+    <p style="margin-top:8px;"><i>Answer: differently — proportional to how much each weight actually contributed to the error. That exact blame-sharing process is called <b>Backpropagation</b>.</i></p>
+  </div>
+  <div class="card"><span class="tag formal">Purpose of Backpropagation</span>
+    <p>Backprop has one job: figure out <b>which weight was how responsible</b> for the error, then adjust it accordingly. It's a feedback loop.</p>
+  </div>
+  <div class="card"><h3>The Backpropagation pipeline</h3>
+    ${backpropInfographic()}
+  </div>
+  <div class="card"><p><b>Weight update rule</b> (stated plainly, no derivation needed):</p>
+    <p style="font-family:monospace; background:#fff; padding:8px 12px; border-radius:8px; display:inline-block;">new_weight = old_weight − learning_rate × gradient</p>
+    <p>In words: the more a weight was to blame, the more it gets nudged — but only a little at a time.</p>
+  </div>
+  <div class="card"><span class="tag example">Worked example — watch a weight update happen</span>
+    ${weightStepper()}
+  </div>
+  <div class="card"><span class="tag real">Real-world connection</span>
+    <p>This is exactly what's happening when a typing keyboard app "gets better" at predicting your next word over time — its weights keep updating from your corrections.</p>
+  </div>
+  <div class="card"><span class="tag exercise">In-class exercise</span>
+    ${exbox("After 500 training epochs, the error still isn't decreasing. What could be wrong? (think of 2 reasons)",
+      "(1) Learning rate too high — the weight keeps overshooting instead of settling. (2) Bad or insufficient data — the pattern to learn just isn't clearly present.")}
+  </div>
+  <div class="card">${pitbox('Falling loss on training data does NOT automatically mean the model is "good" — if it\'s low on training data but high on new data, that\'s the variance/overfitting problem we just discussed.')}</div>
+  <div class="card"><h3>Quick check</h3>
+    ${quiz([
+      {q:"A model that gives the same wrong answer regardless of input is suffering from:", opts:["High variance","High bias","Perfect learning"], correct:1},
+      {q:"What does backpropagation actually compute for each weight?", opts:["A random new value","How much that weight contributed to the error","The total number of layers"], correct:1},
+      {q:"In new_weight = old_weight − learning_rate × gradient, what happens if learning_rate is too high?", opts:["Learning becomes perfectly stable","The weight can overshoot and never settle","Nothing changes"], correct:1}
+    ])}
+  </div>
+  <div class="card"><span class="tag takeaway">Takeaway</span>
+    ${takebox('Backprop = measure how wrong, blame the right weight, nudge it a little, repeat.')}
+    ${bridgebox('So far, the network learns by adjusting weights. But not every ML technique learns weights at all — some reason purely in probabilities instead.')}
+  </div>
+`},
+
+{id:'p3', label:'3️⃣ Bayesian Learning', title:'Topic 3 — Bayesian Learning', body:`
+  <div class="card">
+    ${mascot('💡','A message says "You\'ve WON a FREE prize, click now!" — you know it\'s spam before even finishing the sentence. How does your brain decide that so fast, using probability?')}
+  </div>
+  <div class="card"><span class="tag build">Concept build-up</span>
+    <p>Manual rule: "if it contains FREE → spam" — breaks for legit emails like "free delivery on your order". We need something that reasons in probability: given these words, what's the <b>chance</b> this is spam?</p>
+  </div>
+  <div class="card"><span class="tag formal">Bayes\' Theorem</span>
+    <p style="font-family:monospace; background:#fff; padding:8px 12px; border-radius:8px; display:inline-block;">P(A|B) = P(B|A) × P(A) / P(B)</p>
+    <div class="flipgrid" style="margin-top:12px;">
+      <div class="flipcard" onclick="this.classList.toggle('flipped')"><div class="inner">
+        <div class="flipface flipfront">Prior — P(A)<div class="flip-hint">(tap to flip)</div></div>
+        <div class="flipface flipback">What we believed BEFORE seeing new evidence — e.g. "90% of my emails aren't spam."</div>
+      </div></div>
+      <div class="flipcard" onclick="this.classList.toggle('flipped')"><div class="inner">
+        <div class="flipface flipfront">Likelihood — P(B|A)<div class="flip-hint">(tap to flip)</div></div>
+        <div class="flipface flipback">How common this evidence is, IF A were true — e.g. how often "FREE" appears in actual spam.</div>
+      </div></div>
+      <div class="flipcard" onclick="this.classList.toggle('flipped')"><div class="inner">
+        <div class="flipface flipfront">Evidence — P(B)<div class="flip-hint">(tap to flip)</div></div>
+        <div class="flipface flipback">How common this evidence is overall, across everything — spam and non-spam combined.</div>
+      </div></div>
+      <div class="flipcard" onclick="this.classList.toggle('flipped')"><div class="inner">
+        <div class="flipface flipfront">Posterior — P(A|B)<div class="flip-hint">(tap to flip)</div></div>
+        <div class="flipface flipback">The UPDATED belief after seeing the evidence — e.g. "given this word, spam chance is now 82%."</div>
+      </div></div>
+    </div>
+  </div>
+  <div class="card"><span class="tag interact">🎤 Predict it</span>
+    ${mascot('🤔','If 90% of your emails are normally NOT spam (the prior), does seeing one suspicious word instantly make you 100% sure it\'s spam?')}
+    <p style="margin-top:8px;"><i>No — the prior still matters. Bayes\' theorem blends old belief with new evidence, it doesn\'t throw the old belief away.</i></p>
+  </div>
+  <div class="card"><p><b>Application in ML:</b> classification tasks — spam detection, sentiment analysis, medical screening.</p></div>
+  <div class="card"><h3>Full Bayes vs Naive Bayes — the shortcut</h3>
+    <p>Problem: with 50 different words in an email, computing the <b>joint</b> probability of all words together explodes computationally — you'd need enormous amounts of data.</p>
+    <p>Fix: assume every word is <b>independent</b> of the others (technically false — hence "Naive") — this makes the math fast and simple, and works very well in practice.</p>
+    ${bayesInfographic()}
+  </div>
+  <div class="card"><span class="tag example">Simple worked example</span>
+    <p>Out of 100 spam emails, the word "lottery" appears in 8. Out of 100 non-spam emails, it appears in only 2. A new email contains "lottery" — using these counts, Naive Bayes leans strongly toward <b>spam</b>, because "lottery" is far more common in the spam group relative to non-spam.</p>
+  </div>
+  <div class="card"><span class="tag real">Real-world connection</span>
+    <p>Powers Gmail's spam filter, product-review sentiment analysis, and early disease-screening tools.</p>
+  </div>
+  <div class="card"><span class="tag exercise">In-class exercise</span>
+    ${exbox("If the word 'lottery' has ZERO occurrences in non-spam training data, what breaks in the calculation?",
+      "The probability becomes exactly zero for that class, which can wrongly override everything else. In practice, a small fix called Laplace smoothing is used to avoid this — just good to know it exists.")}
+  </div>
+  <div class="card">${pitbox('Don\'t confuse "Bayes\' theorem" with "Naive Bayes classifier" — the theorem is the math rule; Naive Bayes = theorem + the independence shortcut that makes it usable as a fast classifier.')}</div>
+  <div class="card"><h3>Quick check</h3>
+    ${quiz([
+      {q:"In Bayes' theorem, the Prior represents:", opts:["Belief before seeing new evidence","Belief after seeing new evidence","The evidence itself"], correct:0},
+      {q:"Why is 'Naive' Bayes called naive?", opts:["It's a beginner algorithm","It assumes features are independent, which is technically not true","It ignores probability entirely"], correct:1},
+      {q:"A word with zero occurrences in one class during training can cause:", opts:["Faster computation","The probability for that class to become exactly zero, overriding other evidence","No issue at all"], correct:1}
+    ])}
+  </div>
+  <div class="card"><span class="tag takeaway">Takeaway</span>
+    ${takebox('Naive Bayes = Bayes\' theorem + a shortcut assumption (treat every clue as independent) so we can compute fast.')}
+    ${bridgebox('Naive Bayes still builds a probability model from training data first. What if we skipped modelling entirely, and just compared to the nearest similar examples?')}
+  </div>
+`},
+
+{id:'p4', label:'4️⃣ KNN', title:'Topic 4 — Instance-Based Learning (KNN)', body:`
+  <div class="card">
+    ${mascot('💡','You move to a new city and want to know if a street is safe. You don\'t build a model — you just ask the 5 people who live closest to that street.')}
+  </div>
+  <div class="card"><span class="tag build">Concept build-up — Eager vs Lazy learning</span>
+    <p>ANN and Naive Bayes are <b>eager learners</b> — train first, build a model, then predict fast. KNN is different — <b>no training phase</b> at all; it compares the new point to stored data every single time.</p>
+  </div>
+  <div class="card"><span class="tag formal">What is KNN?</span>
+    <p><b>K-Nearest Neighbour (KNN)</b> classifies a new point by looking at its K closest stored examples.</p>
+  </div>
+  <div class="card"><h3>How KNN works</h3>
+    <p>1. Measure the <b>distance</b> from the new point to every stored point (commonly Euclidean distance).<br>
+    2. Pick the <b>K</b> closest points.<br>
+    3. Take a <b>majority vote</b> among those K points' classes — that's the prediction.</p>
+  </div>
+  <div class="card"><span class="tag interact">🎤 Predict it</span>
+    ${mascot('🤔','With K = 1, is the model MORE or LESS sensitive to a single noisy/outlier data point?')}
+    <p style="margin-top:8px;"><i>More sensitive — a single weird neighbour completely decides the answer. This connects right back to variance from Topic 2: small K = high-variance behaviour.</i></p>
+  </div>
+  <div class="card"><span class="tag example">Worked example — step through it</span>
+    <p>Same student dataset as Topic 1 (study hours, attendance%) — a new student (6 hrs, 80%) needs a Pass/Fail prediction using K = 3.</p>
+    ${knnStepper()}
+  </div>
+  <div class="card"><span class="tag real">Real-world connection</span>
+    <p>Powers "people similar to you also liked..." recommendations, and handwriting recognition.</p>
+  </div>
+  <div class="card"><span class="tag exercise">In-class exercise</span>
+    ${exbox("One feature is income (e.g. ₹50,000) and another is age (e.g. 25), used directly without scaling. What happens to the distance calculation?",
+      "Income's much larger numeric range completely dominates the distance calculation, making age almost irrelevant. Features need to be scaled/normalized first.")}
+  </div>
+  <div class="card">${pitbox('Choosing K matters: too small = noisy, overfits (high variance). Too large = oversmoothed, underfits (high bias). Same bias-variance trade-off from Topic 2, showing up again here.')}</div>
+  <div class="card"><h3>Quick check</h3>
+    ${quiz([
+      {q:"KNN is called a 'lazy learner' because:", opts:["It has no training phase — it compares at prediction time","It's slower than all other algorithms always","It never gives correct answers"], correct:0},
+      {q:"Not scaling features like income and age before KNN causes:", opts:["Perfectly balanced distances","The larger-range feature to dominate the distance calculation","No effect on results"], correct:1},
+      {q:"A very large K value tends to cause:", opts:["Overfitting / high variance","Underfitting / high bias (oversmoothed)","No prediction at all"], correct:1}
+    ])}
+  </div>
+  <div class="card"><span class="tag takeaway">Takeaway</span>
+    ${takebox('KNN doesn\'t learn a formula — it remembers everything and judges the new point by its closest neighbours.')}
+    ${bridgebox('That wraps our tour: networks that learn, Naive Bayes that reasons in probability, and KNN that simply compares. Next: how these show up in interview questions and your placement projects.')}
+  </div>
+`},
+
+{id:'p5', label:'📝 Practice Questions', title:'Practice Question Bank', body:`
+  <div class="card">${mascot('⭐','Try answering before you expand each one — that\'s how you actually find out what you know!')}</div>
+  <div class="card"><h2>Topic 1 — Neural Networks</h2>
+    <details class="acc"><summary><span class="qlevel short">Short</span>What is the role of the hidden layer in an ANN?</summary><div class="qbody">It performs the actual processing — combining inputs into internal patterns that the output layer uses to make its final decision.</div></details>
+    <details class="acc"><summary><span class="qlevel short">Short</span>Why can't a network without a hidden layer handle complex tasks well?</summary><div class="qbody">It can only represent simple, straight-line relationships between input and output — it can't combine features in complex ways.</div></details>
+    <details class="acc"><summary><span class="qlevel short">Short</span>Name two real-world applications of ANN.</summary><div class="qbody">Any two of: spam filtering, face-unlock, recommendation systems (e.g. Netflix/YouTube).</div></details>
+    <details class="acc"><summary><span class="qlevel medium">Medium (~5 marks)</span>Describe the three layers of an ANN and the flow of information between them.</summary><div class="qbody">Input layer receives raw data (e.g. study hours, attendance). Hidden layer(s) combine and process this data into internal patterns/representations — this is where most of the "learning" happens. Output layer produces the final decision or prediction. Data flows input → hidden → output, each layer transforming it further toward the final answer.</div></details>
+    <details class="acc"><summary><span class="qlevel long">Long (~10 marks)</span>Explain why manually written rule-based systems become impractical as a problem grows in complexity, and how an ANN addresses this.</summary><div class="qbody">Rule-based systems require a human to anticipate and encode every relevant combination of conditions (e.g. genre × time × mood × history for recommendations). As the number of input factors grows, the number of required rules grows explosively, becomes unmanageable to write and maintain, and still misses unseen combinations. An ANN instead learns patterns directly from data: its input layer takes in the raw factors, hidden layers automatically discover useful combinations of them (without being explicitly programmed), and the output layer produces a decision. This shifts the burden from "human writes every rule" to "network learns the pattern from examples," making it scalable to complex, high-dimensional problems.</div></details>
+  </div>
+  <div class="card"><h2>Topic 2 — Bias, Error &amp; Backpropagation</h2>
+    <details class="acc"><summary><span class="qlevel short">Short</span>Define bias and variance in one line each.</summary><div class="qbody">Bias: model is too simple, consistently wrong in the same way (underfitting). Variance: model is too sensitive to training data specifics, wrong differently each time (overfitting).</div></details>
+    <details class="acc"><summary><span class="qlevel short">Short</span>What is the purpose of backpropagation?</summary><div class="qbody">To determine how much each weight contributed to the output error, so it can be adjusted accordingly.</div></details>
+    <details class="acc"><summary><span class="qlevel short">Short</span>Write the weight update rule.</summary><div class="qbody">new_weight = old_weight − learning_rate × gradient</div></details>
+    <details class="acc"><summary><span class="qlevel medium">Medium (~5 marks)</span>List and briefly explain the steps of backpropagation.</summary><div class="qbody">1. Forward pass: input flows through the network to produce a prediction. 2. Error/loss calculation: compare prediction to actual value. 3. Backward pass: propagate the error backward layer by layer to determine each weight's contribution. 4. Weight update: adjust each weight slightly using the learning rate and gradient. 5. Repeat over many training examples (epochs) until error is acceptably low.</div></details>
+    <details class="acc"><summary><span class="qlevel medium">Medium (~5 marks)</span>Why is a very high learning rate problematic?</summary><div class="qbody">A high learning rate makes weight updates too large, causing the model to overshoot the optimal value repeatedly instead of settling — the error may fail to decrease or even increase, rather than converging smoothly.</div></details>
+    <details class="acc"><summary><span class="qlevel long">Long (~10 marks)</span>Explain, with an example, how bias and variance relate to underfitting and overfitting, and why both are undesirable.</summary><div class="qbody">High bias means the model is too simple to capture the underlying pattern — like always predicting the same class regardless of input — leading to underfitting: consistently poor performance on both training and new data. High variance means the model fits the training data's noise and specific quirks too closely — like memorizing individual examples — leading to overfitting: excellent performance on training data but poor generalization to new data. Both are undesirable because the goal of learning is to generalize well to unseen data; an ideal model balances the two (the bias-variance trade-off), being flexible enough to learn real patterns but not so flexible that it memorizes noise.</div></details>
+  </div>
+  <div class="card"><h2>Topic 3 — Bayesian Learning</h2>
+    <details class="acc"><summary><span class="qlevel short">Short</span>State Bayes' theorem.</summary><div class="qbody">P(A|B) = P(B|A) × P(A) / P(B)</div></details>
+    <details class="acc"><summary><span class="qlevel short">Short</span>What does "Prior" mean in Bayes' theorem?</summary><div class="qbody">The probability believed before observing any new evidence.</div></details>
+    <details class="acc"><summary><span class="qlevel short">Short</span>Why is Naive Bayes called "naive"?</summary><div class="qbody">Because it assumes all features are independent of one another, which is usually not true in reality, but simplifies computation greatly.</div></details>
+    <details class="acc"><summary><span class="qlevel medium">Medium (~5 marks)</span>Explain the four components of Bayes' theorem with an example.</summary><div class="qbody">Prior P(A): belief before evidence, e.g. 90% of emails are not spam. Likelihood P(B|A): how likely the evidence is if A is true, e.g. how often "FREE" appears in spam. Evidence P(B): overall likelihood of the evidence across all emails. Posterior P(A|B): the updated belief after seeing the evidence, e.g. given the word "FREE", the new probability the email is spam.</div></details>
+    <details class="acc"><summary><span class="qlevel medium">Medium (~5 marks)</span>What problem does Naive Bayes solve compared to computing full joint probabilities?</summary><div class="qbody">Computing the joint probability of many features together requires exponentially more data and computation as the number of features grows. Naive Bayes solves this by assuming features are conditionally independent, allowing the probability to be computed as a simple product of individual feature probabilities — fast and practical even with limited data.</div></details>
+    <details class="acc"><summary><span class="qlevel long">Long (~10 marks)</span>Using a spam-detection example, explain how Naive Bayes classifies a new email, and describe one practical limitation of the approach.</summary><div class="qbody">Given a new email containing certain words, Naive Bayes computes the posterior probability of "spam" and "not spam" for each word independently using training counts (how often each word appeared in spam vs non-spam emails), then combines these using Bayes' theorem under the independence assumption, and picks whichever class has the higher posterior probability. Example: if "lottery" appears far more often in spam emails historically, its presence pushes the posterior probability strongly toward spam. Limitation: if a word never appeared in one class during training, its probability for that class becomes exactly zero, which can wrongly dominate the entire calculation regardless of other evidence — in practice this is addressed with smoothing techniques (e.g. Laplace smoothing).</div></details>
+  </div>
+  <div class="card"><h2>Topic 4 — KNN</h2>
+    <details class="acc"><summary><span class="qlevel short">Short</span>What does "K" refer to in KNN?</summary><div class="qbody">The number of nearest neighbours considered when making a prediction.</div></details>
+    <details class="acc"><summary><span class="qlevel short">Short</span>Why is KNN called a "lazy learner"?</summary><div class="qbody">Because it does not build a model during a training phase — it stores the data and does all the comparison work only at prediction time.</div></details>
+    <details class="acc"><summary><span class="qlevel short">Short</span>What happens with a very small K, such as K=1?</summary><div class="qbody">The prediction becomes highly sensitive to noise or outliers — a single unusual neighbour can flip the result (high variance).</div></details>
+    <details class="acc"><summary><span class="qlevel medium">Medium (~5 marks)</span>Describe the three steps of the KNN algorithm.</summary><div class="qbody">1. Calculate the distance (commonly Euclidean) from the new point to every point in the stored dataset. 2. Select the K points with the smallest distance (the nearest neighbours). 3. Take a majority vote among those K neighbours' class labels (for classification) — the most common class becomes the prediction.</div></details>
+    <details class="acc"><summary><span class="qlevel long">Long (~10 marks)</span>Compare KNN to a model like Naive Bayes in terms of learning approach, and explain why feature scaling matters for KNN specifically.</summary><div class="qbody">Naive Bayes is an "eager learner" — it processes the training data once to build a probability model (word/feature counts per class), and afterward predicts quickly using that pre-built model. KNN is a "lazy learner" — it does no upfront modelling; it simply stores all training data and, for every new prediction, recalculates distances to all stored points. This makes KNN's prediction step slower as the dataset grows, but requires no separate training phase at all. Feature scaling matters for KNN specifically because its predictions are entirely distance-based: if one feature (e.g. income in tens of thousands) has a much larger numeric range than another (e.g. age in years), it will dominate the distance calculation, effectively making the smaller-range feature almost irrelevant to the outcome — even if that feature is actually more meaningful. Scaling/normalizing features to comparable ranges before applying KNN avoids this distortion.</div></details>
+  </div>
+`}
+];
+
+/* ---------- render engine ---------- */
+let current = 0;
+const nav = document.getElementById('topNav');
+const host = document.getElementById('pageHost');
+
+function renderNav(){
+  nav.innerHTML = pages.map((p,i)=>`<button data-i="${i}" class="${i===current?'active':''}">${p.label}</button>`).join('');
+  nav.querySelectorAll('button').forEach(b=>b.onclick=()=>{current=+b.dataset.i; render();});
+}
+function render(){
+  renderNav();
+  const p = pages[current];
+  host.innerHTML = `<div class="page active"><h2 style="margin:6px 0 14px;">${p.title}</h2>${p.body}</div>`;
+  document.getElementById('prevBtn').disabled = current===0;
+  document.getElementById('nextBtn').disabled = current===pages.length-1;
+  document.getElementById('nextBtn').textContent = current===pages.length-1 ? 'End of notes ✓' : (current===pages.length-2 ? 'Next: Practice Questions →' : 'Next topic →');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+document.getElementById('prevBtn').onclick = ()=>{ if(current>0){current--; render();} };
+document.getElementById('nextBtn').onclick = ()=>{ if(current<pages.length-1){current++; render();} };
+
+render();
+</script>
+</body>
+</html>
