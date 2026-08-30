@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Slides — Neural Networks, Bayesian Learning &amp; KNN</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1c1c28; --sub:#666;
+  --t1:#ff6b9d; --t2:#7b2ff7; --t3:#12c2a5; --t4:#f7b733;
+  --bg:#faf9fb;
+}
+*{box-sizing:border-box}
+body{margin:0; font-family:'Inter',sans-serif; background:var(--bg); color:var(--ink);}
+header{display:flex; justify-content:space-between; align-items:center; padding:12px 26px; flex-wrap:wrap; gap:8px; border-bottom:1px solid #eee;}
+header h1{font-family:'Fredoka',sans-serif; font-size:1.05rem; margin:0;}
+nav.topics{display:flex; gap:6px; flex-wrap:wrap;}
+nav.topics button{
+  font-family:'Fredoka',sans-serif; font-weight:600; font-size:.78rem; border:none; border-radius:16px;
+  padding:6px 14px; cursor:pointer; background:#eee; color:#444;
+}
+nav.topics button.active{color:#fff;}
+nav.topics button[data-t="0"].active{background:var(--t1);}
+nav.topics button[data-t="1"].active{background:var(--t2);}
+nav.topics button[data-t="2"].active{background:var(--t3);}
+nav.topics button[data-t="3"].active{background:var(--t4);}
+
+.stage{max-width:900px; margin:0 auto; padding:30px 24px 10px; min-height:56vh;}
+.slide{
+  background:#fff; border-radius:22px; padding:44px 48px; min-height:420px;
+  box-shadow:0 10px 40px rgba(0,0,0,.08); position:relative; border-top:10px solid var(--accent, #7b2ff7);
+  display:flex; flex-direction:column; justify-content:center;
+}
+.slide .kicker{font-family:'Fredoka',sans-serif; font-weight:600; font-size:.85rem; text-transform:uppercase; letter-spacing:1px; color:var(--accent,#7b2ff7); margin-bottom:6px;}
+.slide h2{font-family:'Fredoka',sans-serif; font-size:2rem; margin:0 0 18px; line-height:1.15;}
+.slide ul{font-size:1.25rem; line-height:1.7; margin:0; padding-left:26px;}
+.slide ul li{margin-bottom:6px;}
+.badge{
+  display:inline-block; font-family:'Fredoka',sans-serif; font-weight:700; font-size:.8rem; color:#fff;
+  background:var(--accent,#7b2ff7); padding:4px 14px; border-radius:14px; margin-bottom:14px;
+}
+.visual{margin-top:16px; text-align:center;}
+.visual svg{max-width:100%; height:auto;}
+.visual table{width:100%; border-collapse:collapse; font-size:.95rem; margin-top:6px;}
+.visual th,.visual td{border:1px solid #eee; padding:7px 10px; text-align:left;}
+.visual th{background:var(--accent,#7b2ff7); color:#fff; font-family:'Fredoka',sans-serif;}
+.meta{position:absolute; bottom:14px; right:20px; font-size:.75rem; color:#999; font-family:'Inter',sans-serif;}
+
+.controls{display:flex; justify-content:space-between; align-items:center; max-width:900px; margin:14px auto 40px; padding:0 24px;}
+.controls button{
+  font-family:'Fredoka',sans-serif; font-weight:600; border:none; border-radius:22px; padding:10px 22px;
+  cursor:pointer; background:var(--ink); color:#fff; font-size:.9rem;
+}
+.controls button:disabled{opacity:.25; cursor:default;}
+.progress{font-size:.82rem; color:var(--sub); font-family:'Inter',sans-serif;}
+
+.stepper{margin-top:14px; background:#f7f6fb; border-radius:14px; padding:14px 16px; text-align:left;}
+.stepper .steps{display:flex; flex-direction:column; gap:6px; margin-bottom:10px;}
+.step-item{border-radius:10px; padding:8px 12px; background:#efeaf9; font-size:.95rem; opacity:.35; transition:.3s;}
+.step-item.active{opacity:1; background:linear-gradient(135deg,#efe6ff,#e0f7f0); border:1px solid var(--accent,#7b2ff7); font-weight:600;}
+.stepper-controls{display:flex; gap:10px;}
+.stepper-controls button{
+  font-family:'Fredoka',sans-serif; font-weight:600; border:none; border-radius:18px; padding:7px 16px;
+  cursor:pointer; background:var(--accent,#7b2ff7); color:#fff; font-size:.8rem;
+}
+.stepper-controls button.secondary{background:#e2e2e2; color:#555;}
+</style>
+</head>
+<body>
+<header>
+  <h1>Slides — NN, Bayesian Learning &amp; KNN</h1>
+  <nav class="topics" id="topNav"></nav>
+</header>
+<div class="stage"><div id="slideHost"></div></div>
+<div class="controls">
+  <button id="prevBtn">Prev</button>
+  <span class="progress" id="progress"></span>
+  <button id="nextBtn">Next</button>
+</div>
+
+<script>
+const ACCENTS = ['#ff6b9d','#7b2ff7','#12c2a5','#f7b733'];
+const TOPIC_LABELS = ['1. Neural Networks','2. Bias & Backprop','3. Bayesian Learning','4. KNN'];
+
+const layersSVG = '<svg viewBox="0 0 360 160" xmlns="http://www.w3.org/2000/svg">' +
+  '<text x="40" y="16" font-size="11" fill="#888" font-family="Inter">Input</text>' +
+  '<text x="160" y="16" font-size="11" fill="#888" font-family="Inter">Hidden</text>' +
+  '<text x="290" y="16" font-size="11" fill="#888" font-family="Inter">Output</text>' +
+  '<circle cx="50" cy="50" r="12" fill="#7b2ff7"/><circle cx="50" cy="90" r="12" fill="#7b2ff7"/><circle cx="50" cy="130" r="12" fill="#7b2ff7"/>' +
+  '<circle cx="180" cy="35" r="12" fill="#12c2a5"/><circle cx="180" cy="80" r="12" fill="#12c2a5"/><circle cx="180" cy="125" r="12" fill="#12c2a5"/>' +
+  '<circle cx="310" cy="80" r="14" fill="#ff6b9d"/>' +
+  '<line x1="62" y1="50" x2="168" y2="35" stroke="#ddd"/><line x1="62" y1="50" x2="168" y2="80" stroke="#ddd"/><line x1="62" y1="50" x2="168" y2="125" stroke="#ddd"/>' +
+  '<line x1="62" y1="90" x2="168" y2="35" stroke="#ddd"/><line x1="62" y1="90" x2="168" y2="80" stroke="#ddd"/><line x1="62" y1="90" x2="168" y2="125" stroke="#ddd"/>' +
+  '<line x1="62" y1="130" x2="168" y2="35" stroke="#ddd"/><line x1="62" y1="130" x2="168" y2="80" stroke="#ddd"/><line x1="62" y1="130" x2="168" y2="125" stroke="#ddd"/>' +
+  '<line x1="192" y1="35" x2="296" y2="80" stroke="#ddd"/><line x1="192" y1="80" x2="296" y2="80" stroke="#ddd"/><line x1="192" y1="125" x2="296" y2="80" stroke="#ddd"/>' +
+  '</svg>';
+
+const backpropTable = '<table>' +
+  '<tr><th>Stage</th><th>What happens</th></tr>' +
+  '<tr><td>Forward pass</td><td>Input to prediction</td></tr>' +
+  '<tr><td>Error / Loss</td><td>Compare prediction vs actual</td></tr>' +
+  '<tr><td>Backward pass</td><td>Error travels back, layer by layer</td></tr>' +
+  '<tr><td>Weight update</td><td>new = old minus learning_rate times gradient</td></tr>' +
+  '<tr><td>Repeat</td><td>Over many epochs until error shrinks</td></tr>' +
+  '</table>';
+
+const bayesTable = '<table>' +
+  '<tr><th></th><th>Full Bayes</th><th>Naive Bayes</th></tr>' +
+  '<tr><td>Assumption</td><td>All features jointly</td><td>Features independent</td></tr>' +
+  '<tr><td>Cost</td><td>Explodes with features</td><td>Fast, simple</td></tr>' +
+  '<tr><td>Accuracy</td><td>More "correct"</td><td>Works well in practice</td></tr>' +
+  '</table>';
+
+function stepperHtml(id, steps){
+  window['steps_'+id] = steps;
+  window['idx_'+id] = 0;
+  let itemsHtml = '';
+  for(let i=0;i<steps.length;i++){
+    itemsHtml += '<div class="step-item ' + (i===0?'active':'') + '" id="' + id + '-s' + i + '">' + (i+1) + '. ' + steps[i] + '</div>';
+  }
+  return '<div class="stepper" id="' + id + '">' +
+    '<div class="steps">' + itemsHtml + '</div>' +
+    '<div class="stepper-controls">' +
+      '<button onclick="stepNext(&quot;' + id + '&quot;)">Next step</button>' +
+      '<button class="secondary" onclick="stepReplay(&quot;' + id + '&quot;)">Replay</button>' +
+    '</div></div>';
+}
+function stepNext(id){
+  const steps = window['steps_'+id]; let idx = window['idx_'+id];
+  if(idx === undefined) return;
+  if(idx < steps.length-1){
+    document.getElementById(id+'-s'+idx).classList.remove('active');
+    idx++; window['idx_'+id]=idx;
+    document.getElementById(id+'-s'+idx).classList.add('active');
+  }
+}
+function stepReplay(id){
+  const steps = window['steps_'+id];
+  if(!steps) return;
+  for(let i=0;i<steps.length;i++) document.getElementById(id+'-s'+i).classList.remove('active');
+  document.getElementById(id+'-s0').classList.add('active');
+  window['idx_'+id]=0;
+}
+
+function weightStepperHTML(){
+  const steps = [
+    "Old weight = 0.50",
+    "Gradient = 0.30 (positive means this weight is pushing the output too high)",
+    "Learning rate = 0.1 (a small, cautious step size)",
+    "new_weight = old_weight minus (learning_rate times gradient) = 0.50 minus (0.1 times 0.30) = 0.47",
+    "Updated weight = 0.47 -- repeat for every weight, every example"
+  ];
+  return stepperHtml('wstep', steps);
+}
+
+function knnStepperHTML(){
+  const pts = [
+    {x:2,y:40,label:'P1',cls:'Fail'}, {x:3,y:50,label:'P2',cls:'Fail'},
+    {x:5,y:60,label:'P5',cls:'Fail'}, {x:7,y:85,label:'P4',cls:'Pass'},
+    {x:8,y:90,label:'P3',cls:'Pass'}
+  ];
+  const nx=6, ny=80;
+  const sx = function(x){ return 40 + x*30; };
+  const sy = function(y){ return 200 - y*1.9; };
+  const order = ['P4','P3','P5'];
+  let svg = '<svg viewBox="0 0 320 210" xmlns="http://www.w3.org/2000/svg">';
+  svg += '<line x1="35" y1="195" x2="300" y2="195" stroke="#ccc"/><line x1="35" y1="10" x2="35" y2="195" stroke="#ccc"/>';
+  pts.forEach(function(p){
+    const col = p.cls==='Pass' ? '#12c2a5' : '#ff6b9d';
+    svg += '<circle id="pt-' + p.label + '" cx="' + sx(p.x) + '" cy="' + sy(p.y) + '" r="6" fill="' + col + '" opacity="0.35"/>';
+    svg += '<text x="' + (sx(p.x)+8) + '" y="' + (sy(p.y)+4) + '" font-size="9" fill="#555" font-family="Inter">' + p.label + ' (' + p.cls + ')</text>';
+  });
+  svg += '<circle id="pt-new" cx="' + sx(nx) + '" cy="' + sy(ny) + '" r="8" fill="#7b2ff7"/>';
+  svg += '<text x="' + (sx(nx)+9) + '" y="' + (sy(ny)-8) + '" font-size="10" fill="#7b2ff7" font-family="Inter" font-weight="bold">New?</text>';
+  order.forEach(function(label){
+    const p = pts.find(function(pp){ return pp.label===label; });
+    svg += '<line id="ln-' + label + '" x1="' + sx(nx) + '" y1="' + sy(ny) + '" x2="' + sx(p.x) + '" y2="' + sy(p.y) + '" stroke="#c542f0" stroke-width="2" stroke-dasharray="4" opacity="0"/>';
+  });
+  svg += '</svg>';
+  window.knnState = {order: order, idx: -1};
+  return '<div class="stepper" id="knnBox">' + svg +
+    '<div class="steps"><div class="step-item active" id="knn-caption">Click Next step to reveal the 3 nearest neighbours (K = 3), one at a time.</div></div>' +
+    '<div class="stepper-controls">' +
+      '<button onclick="knnNext()">Next step</button>' +
+      '<button class="secondary" onclick="knnReplay()">Replay</button>' +
+    '</div></div>';
+}
+const knnCaptions = [
+  "Step 1: nearest neighbour -- P4 (Pass).",
+  "Step 2: 2nd nearest -- P3 (Pass).",
+  "Step 3: 3rd nearest -- P5 (Fail). K = 3 neighbours found.",
+  "Step 4: Majority vote -- Pass, Pass, Fail -- 2 vs 1 -- Predicted class = Pass"
+];
+function knnNext(){
+  const st = window.knnState;
+  if(!st) return;
+  if(st.idx < st.order.length-1){
+    st.idx++;
+    const label = st.order[st.idx];
+    document.getElementById('ln-'+label).setAttribute('opacity','1');
+    document.getElementById('pt-'+label).setAttribute('opacity','1');
+    document.getElementById('pt-'+label).setAttribute('r','8');
+    document.getElementById('knn-caption').textContent = knnCaptions[st.idx];
+  } else if(st.idx === st.order.length-1){
+    st.idx++;
+    document.getElementById('knn-caption').textContent = knnCaptions[3];
+  }
+}
+function knnReplay(){
+  const st = window.knnState;
+  if(!st) return;
+  st.order.forEach(function(label){
+    document.getElementById('ln-'+label).setAttribute('opacity','0');
+    document.getElementById('pt-'+label).setAttribute('opacity','0.35');
+    document.getElementById('pt-'+label).setAttribute('r','6');
+  });
+  st.idx=-1;
+  document.getElementById('knn-caption').textContent = 'Click Next step to reveal the 3 nearest neighbours (K = 3), one at a time.';
+}
+
+const slides = [
+{t:0, n:'1.1', head:'The Netflix Question', bullets:['Netflix suggests shows that fit YOUR taste', 'Out of millions of options, no per-user rule written', 'How does a machine do this?']},
+{t:0, n:'1.2', head:'Why We Need Neural Networks', bullets:['Old way: hand-written if-else rules', 'Breaks down as combinations explode', 'Need something that learns patterns itself']},
+{t:0, n:'1.3', head:'What is an ANN?', bullets:['Units loosely inspired by brain neurons', 'Work together to make a decision', 'Layers of simple decisions, stacked into one smart decision']},
+{t:0, n:'1.4', head:'Predict It', tag:'Interaction -- Question', bullets:['Network sees 1000 movies you watched.', 'What is it actually learning: the movies, or something else?']},
+{t:0, n:'1.4', head:'The Reveal', tag:'Interaction -- Answer', bullets:["It's learning a pattern, not the movies themselves", 'That pattern is stored as numbers called weights']},
+{t:0, n:'1.5', head:'ANN Structure', bullets:['Input layer: raw data in', 'Hidden layer: combines and processes', 'Output layer: final decision'], visual:layersSVG},
+{t:0, n:'1.6', head:'Worked Example', bullets:['Inputs: study hours + attendance %', 'Hidden layer: internal score', 'Output: Pass / Fail']},
+{t:0, n:'1.7', head:'Where You See This', bullets:['Spam filters', 'Face-unlock', 'Recommendations']},
+{t:0, n:'1.8', head:'In-Class Exercise', tag:'Debug it', bullets:['No hidden layer, only input + output', 'Can it handle complex image recognition?']},
+{t:0, n:'1.9', head:'Common Pitfalls', tag:'Watch out', bullets:['"Neuron" is not a real brain cell', 'More layers does not always mean better']},
+{t:0, n:'1.10', head:'Takeaway', tag:'Takeaway', bullets:['ANN = layers of simple decisions stacked into one smart decision', 'Next: how does it fix its own mistakes?']},
+
+{t:1, n:'2.1', head:'From Prediction to Error', bullets:['Network predicted Pass, student actually failed', 'Now what?']},
+{t:1, n:'2.2', head:'Why Not Just Guess?', bullets:['Naive fix: randomly nudge weights', 'Slow, no guarantee of improvement', 'Need a systematic way']},
+{t:1, n:'2.3', head:'Bias vs Variance', bullets:['Bias: too simple, same wrong answer (underfitting)', 'Variance: too sensitive to data details (overfitting)']},
+{t:1, n:'2.4', head:'Why Networks Make Errors', bullets:['Random starting weights', 'Noisy real-world data', 'Wrong architecture']},
+{t:1, n:'2.5', head:'Predict It', tag:'Interaction -- Question', bullets:['When there is an error, are ALL weights blamed equally?', 'Or does each weight get blamed differently?']},
+{t:1, n:'2.5', head:'The Reveal', tag:'Interaction -- Answer', bullets:["Differently, proportional to each weight's contribution", 'This blame-sharing process is called Backpropagation']},
+{t:1, n:'2.6', head:'Purpose of Backpropagation', bullets:['Find which weight caused how much error', 'Adjust accordingly: a feedback loop']},
+{t:1, n:'2.7', head:'Backprop Steps', bullets:['Forward pass: prediction', 'Error / loss calculated', 'Backward pass: blame distributed'], visual:backpropTable},
+{t:1, n:'2.8', head:'Weight Update Rule', bullets:['new_weight = old_weight minus learning_rate times gradient', 'Bigger blame means bigger nudge, but small steps']},
+{t:1, n:'2.9', head:'Worked Example', bullets:['Watch a single weight update happen, step by step:'], visual:'STEPPER_WEIGHT'},
+{t:1, n:'2.10', head:'Where You See This', bullets:['Typing keyboards that improve over time']},
+{t:1, n:'2.11', head:'In-Class Exercise', tag:'Spot the flaw', bullets:['Error not decreasing after 500 epochs', 'What could be wrong? (2 reasons)']},
+{t:1, n:'2.12', head:'Common Pitfalls', tag:'Watch out', bullets:['Low training loss does not mean a good model', 'Watch for overfitting (variance)']},
+{t:1, n:'2.13', head:'Takeaway', tag:'Takeaway', bullets:['Backprop: measure how wrong, blame the right weight, nudge, repeat', 'Next: what if a technique does not learn weights at all?']},
+
+{t:2, n:'3.1', head:'The Spam Instinct', bullets:['"You have WON a FREE prize" feels like spam instantly', 'How does probability decide this so fast?']},
+{t:2, n:'3.2', head:'Why Rules Are Not Enough', bullets:['Rule "contains FREE = spam" breaks legit emails', 'Need probability-based reasoning']},
+{t:2, n:'3.3', head:"Bayes' Theorem", bullets:['P(A given B) = P(B given A) times P(A), divided by P(B)', 'Prior, Likelihood, Evidence, Posterior']},
+{t:2, n:'3.4', head:'Predict It', tag:'Interaction -- Question', bullets:['One suspicious word: does that mean 100% spam?']},
+{t:2, n:'3.4', head:'The Reveal', tag:'Interaction -- Answer', bullets:['No, the prior still matters', "Bayes' theorem blends old belief with new evidence, does not discard it"]},
+{t:2, n:'3.5', head:'Application in ML', bullets:['Spam detection', 'Sentiment analysis', 'Medical screening']},
+{t:2, n:'3.6', head:'The Naive Bayes Shortcut', bullets:['Full joint probability of many words is too expensive', 'Fix: assume words are independent', 'Fast, simple, works well in practice'], visual:bayesTable},
+{t:2, n:'3.7', head:'Worked Example', bullets:['"lottery": 8/100 spam vs 2/100 non-spam', 'New email with "lottery" leans spam']},
+{t:2, n:'3.8', head:'Where You See This', bullets:['Gmail spam filter', 'Sentiment analysis', 'Disease screening']},
+{t:2, n:'3.9', head:'In-Class Exercise', tag:'Debug it', bullets:['A word never seen in non-spam training data', 'What breaks in the calculation?']},
+{t:2, n:'3.10', head:'Common Pitfalls', tag:'Watch out', bullets:["Bayes' theorem is not the same as the Naive Bayes classifier", 'Naive Bayes = theorem + independence shortcut']},
+{t:2, n:'3.11', head:'Takeaway', tag:'Takeaway', bullets:["Naive Bayes = Bayes' theorem + independence shortcut, for speed", 'Next: what if we skip modelling entirely?']},
+
+{t:3, n:'4.1', head:'Judging by Neighbours', bullets:['New city, unsure if a street is safe', 'Just ask the 5 closest neighbours']},
+{t:3, n:'4.2', head:'Eager vs Lazy Learning', bullets:['ANN and Naive Bayes: train first, predict fast (eager)', 'KNN: no training, compare every time (lazy)']},
+{t:3, n:'4.3', head:'What is KNN?', bullets:['Classify a new point by its K closest stored examples']},
+{t:3, n:'4.4', head:'How KNN Works', bullets:['Measure distance to all points', 'Pick K nearest', 'Majority vote']},
+{t:3, n:'4.5', head:'Predict It', tag:'Interaction -- Question', bullets:['With K = 1, is the model MORE or LESS sensitive to outliers?']},
+{t:3, n:'4.5', head:'The Reveal', tag:'Interaction -- Answer', bullets:['More sensitive, one odd neighbour can flip the result', 'Connects back to variance from Topic 2']},
+{t:3, n:'4.6', head:'Worked Example', bullets:['New student: 6 hrs, 80% attendance, K = 3'], visual:'STEPPER_KNN'},
+{t:3, n:'4.7', head:'Where You See This', bullets:['"People similar to you also liked..."', 'Handwriting recognition']},
+{t:3, n:'4.8', head:'In-Class Exercise', tag:'Debug it', bullets:['Income (Rs 50,000) vs age (25), unscaled', 'What happens to the distance calculation?']},
+{t:3, n:'4.9', head:'Pitfalls and Takeaway', tag:'Takeaway', bullets:['K too small: overfits. K too large: underfits.', 'KNN remembers everything, judges by closest neighbours', 'Next: interview questions and placement projects']}
+];
+
+let current = 0;
+const nav = document.getElementById('topNav');
+const host = document.getElementById('slideHost');
+
+function renderNav(){
+  let navHtml = '';
+  for(let i=0;i<TOPIC_LABELS.length;i++){
+    navHtml += '<button data-t="' + i + '" class="' + (slides[current].t===i?'active':'') + '">' + TOPIC_LABELS[i] + '</button>';
+  }
+  nav.innerHTML = navHtml;
+  const btns = nav.querySelectorAll('button');
+  btns.forEach(function(b){
+    b.onclick = function(){
+      const t = +b.dataset.t;
+      for(let i=0;i<slides.length;i++){ if(slides[i].t===t){ current=i; break; } }
+      render();
+    };
+  });
+}
+
+function render(){
+  renderNav();
+  const s = slides[current];
+  const accent = ACCENTS[s.t];
+  let html = '<div class="slide" style="--accent:' + accent + '">';
+  if(s.tag) html += '<span class="badge">' + s.tag + '</span>';
+  html += '<div class="kicker">' + TOPIC_LABELS[s.t] + '</div>';
+  html += '<h2>' + s.head + '</h2>';
+  html += '<ul>';
+  for(let i=0;i<s.bullets.length;i++){ html += '<li>' + s.bullets[i] + '</li>'; }
+  html += '</ul>';
+  if(s.visual === 'STEPPER_WEIGHT'){
+    html += '<div class="visual">' + weightStepperHTML() + '</div>';
+  } else if(s.visual === 'STEPPER_KNN'){
+    html += '<div class="visual">' + knnStepperHTML() + '</div>';
+  } else if(s.visual){
+    html += '<div class="visual">' + s.visual + '</div>';
+  }
+  html += '<div class="meta">Slide ' + s.n + '</div></div>';
+  host.innerHTML = html;
+  document.getElementById('progress').textContent = (current+1) + ' / ' + slides.length;
+  document.getElementById('prevBtn').disabled = current===0;
+  document.getElementById('nextBtn').disabled = current===slides.length-1;
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+document.getElementById('prevBtn').onclick = function(){ if(current>0){current--; render();} };
+document.getElementById('nextBtn').onclick = function(){ if(current<slides.length-1){current++; render();} };
+document.addEventListener('keydown', function(e){
+  if(e.key==='ArrowRight' && current<slides.length-1){current++; render();}
+  if(e.key==='ArrowLeft' && current>0){current--; render();}
+});
+
+render();
+</script>
+</body>
+</html>
