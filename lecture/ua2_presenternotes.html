@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Presenter Notes — Neural Networks, Bayesian Learning & KNN</title>
+<style>
+  :root{
+    --ink:#1a1a1a; --sub:#555; --line:#ddd; --accent:#7a3ff2; --accent2:#0e7a63;
+    --bg:#fbfbfa; --stage:#f2f0ff; --warn:#fff4e5;
+  }
+  *{box-sizing:border-box}
+  body{font-family:Georgia, 'Times New Roman', serif; background:var(--bg); color:var(--ink); margin:0; line-height:1.5;}
+  header{background:var(--ink); color:#fff; padding:22px 28px; position:sticky; top:0; z-index:10;}
+  header h1{margin:0 0 4px; font-size:1.4rem; font-family:Arial, sans-serif;}
+  header p{margin:0; color:#ccc; font-family:Arial, sans-serif; font-size:.85rem;}
+  nav{display:flex; gap:0; background:#eee; border-bottom:2px solid var(--ink); position:sticky; top:74px; z-index:9; overflow-x:auto;}
+  nav button{font-family:Arial, sans-serif; font-size:.8rem; font-weight:bold; padding:10px 16px; border:none; background:transparent; cursor:pointer; white-space:nowrap; border-right:1px solid #ccc; color:#333;}
+  nav button.active{background:var(--ink); color:#fff;}
+  main{max-width:900px; margin:0 auto; padding:24px 28px 80px;}
+  .topic{display:none;}
+  .topic.active{display:block;}
+  .topic-title{font-family:Arial, sans-serif; font-size:1.6rem; border-bottom:3px solid var(--accent); padding-bottom:8px; margin-bottom:4px;}
+  .topic-meta{font-family:Arial, sans-serif; color:var(--sub); font-size:.85rem; margin-bottom:24px;}
+  .block{border:1px solid var(--line); border-radius:6px; margin-bottom:18px; overflow:hidden;}
+  .block-head{background:#f5f5f5; padding:8px 14px; font-family:Arial, sans-serif; font-weight:bold; display:flex; justify-content:space-between; font-size:.95rem; border-bottom:1px solid var(--line);}
+  .block-head .time{color:var(--accent); font-weight:bold;}
+  .block-body{padding:14px 16px;}
+  .script{font-size:1.02rem; margin-bottom:10px;}
+  .script b{color:var(--accent2)}
+  .stage{font-family:'Courier New', monospace; background:var(--stage); border-left:4px solid var(--accent); padding:8px 10px; font-size:.85rem; color:#444; margin:8px 0; border-radius:3px;}
+  .interact{background:#eafbf5; border:1px dashed var(--accent2); border-radius:6px; padding:10px 12px; margin:8px 0; font-family:Arial, sans-serif; font-size:.88rem;}
+  .interact b{display:block; margin-bottom:4px;}
+  .exercise{background:var(--warn); border:1px dashed #c98a1a; border-radius:6px; padding:10px 12px; margin:8px 0; font-family:Arial, sans-serif; font-size:.88rem;}
+  .pitfall{background:#fdeaea; border-left:4px solid #c94040; padding:8px 12px; font-family:Arial, sans-serif; font-size:.88rem; margin:8px 0;}
+  .takeaway{background:#eef1ff; border-left:4px solid var(--accent); padding:10px 12px; font-style:italic; font-family:Arial, sans-serif; margin-top:8px;}
+  .footer-nav{display:flex; justify-content:space-between; margin-top:24px;}
+  .footer-nav button{font-family:Arial, sans-serif; background:var(--ink); color:#fff; border:none; padding:10px 18px; border-radius:20px; cursor:pointer; font-size:.85rem;}
+  .footer-nav button:disabled{opacity:.3; cursor:default;}
+  .total-time{font-family:Arial, sans-serif; text-align:right; color:var(--sub); font-size:.8rem; margin-top:6px;}
+</style>
+</head>
+<body>
+<header>
+  <h1>Presenter Notes — Neural Networks, Bayesian Learning &amp; KNN</h1>
+  <p>AI &amp; ML Teaching · Sem 7 · Single session · 90 minutes total · Interview-ready depth (not exam-deep)</p>
+</header>
+<nav id="topNav"></nav>
+<main>
+  <div id="topicHost"></div>
+  <div class="footer-nav">
+    <button id="prevBtn">← Previous topic</button>
+    <button id="nextBtn">Next topic →</button>
+  </div>
+</main>
+
+<script>
+const topics = [
+{
+  id:"t1", label:"1. Neural Networks", title:"Topic 1 — Neural Network Fundamentals", time:"25 min (0:00–0:25)",
+  blocks:[
+    {n:"1.1", head:"Hook", time:"3 min", script:`Toh dekho, aap sabne Netflix use kiya hoga. Aapko kabhi socha hai — jab aap ek show dekhte ho, phir Netflix turant agla show suggest kar deta hai jo bilkul aapke taste ka hota hai. Poori duniya ke logon ka data hai, phir bhi yeh <b>aapke</b> liye specific suggestion deta hai. Ab sochiye — agar hum manually har user ke liye 'if-else' rules likhein, kitne rules chahiye honge? Hazaaron. Toh yeh kaam automatically kaun kar raha hai?`,
+     stage:"[Pause 2 sec after the question. Let silence sit. Don't answer yet — this tension carries into next slide.]"},
+    {n:"1.2", head:"Concept build-up", time:"3 min", script:`Purane approach mein hum manually rules likhte the — 'agar user ne comedy dekhi, toh comedy suggest karo'. Yeh chalta tha jab options kam the. Lekin jaise hi patterns complex ho gaye — genre, time of day, mood, watch-history — manual rules ka system tootne laga. Humein kuch chahiye tha jo <b>khud patterns pehchaane</b>, bina humein har rule likhe. Yahi zaroorat se janma Artificial Neural Network — ANN.`,
+     stage:"[Write on board: 'Manual rules → break down as complexity grows → need something that learns patterns itself']"},
+    {n:"1.3", head:"Formal intro — What is ANN?", time:"2 min", script:`Formally, ANN ek aisa system hai jo human brain ke neurons se loosely inspired hai — chhote-chhote 'processing units' jo mil kar decision lete hain. Simple bhasha mein — <b>ANN matlab layers of simple math decisions jo mil kar ek smart decision banate hain.</b>`,
+     stage:"[Write term 'ANN' on board with the plain-English line right next to it — never leave it standing alone.]"},
+    {n:"1.4", head:"🎤 Interaction Point", time:"3 min", script:`Ab ek predict-it sawaal — 'Agar main ek neural network ko 1000 movies ka data dun jo aapne dekhi, toh network asal mein kya seekh raha hai — movies khud, ya kuch aur?'`,
+     interact:{q:"What is the network actually learning from your 1000 movies?", answers:["Some may say 'the movies' — gently correct: it's not storing movies, it's learning patterns/weights (e.g., you like thrillers late at night).","Some may say 'your taste' — good, push further: how is 'taste' represented? As numbers (weights), not as a stored list.","Bridge: 'Exactly — it's learning a pattern, stored as numbers we call weights. That's the whole game today.'"]},
+     stage:"[Cold call 2-3 students. Don't reveal answer instantly — let 2 guesses happen first.]"},
+    {n:"1.5", head:"Structure — Input / Hidden / Output layers", time:"5 min", script:`Ab dekhte hain ANN banta kaise hai. Teen hisse hote hain. Pehla — <b>Input layer</b> — jahan se raw information andar aati hai, jaise 'kitni movies dekhi', 'kis genre mein'. Doosra — <b>Hidden layer</b> — yahan asli processing hoti hai, patterns combine hote hain, aur yeh layer 'hidden' isliye kehlati hai kyunki hum seedhe iska output nahi dekhte. Teesra — <b>Output layer</b> — final decision, jaise 'recommend' ya 'don't recommend'. [VISUAL: layered diagram — input dots feeding into hidden layer circles feeding into one output circle]`,
+     stage:"[Draw 3 columns of circles on the board while speaking — input, hidden, output — connect with lines as you name each.]"},
+    {n:"1.6", head:"Worked example", time:"3 min", script:`Chalo ek chhota example lete hain — student pass hoga ya fail, based on 'study hours' aur 'attendance'. Yeh dono input layer mein jaate hain. Hidden layer inhe combine karke ek 'internal score' banata hai. Output layer decide karta hai — pass ya fail. Numbers se mat uljhiye abhi — bas flow samajhna hai: <b>input → combine → decide</b>.`,
+     stage:"[Sketch simple numbers: study_hours=6, attendance=80% → arrow into hidden circle → arrow into output labelled 'Pass'.]"},
+    {n:"1.7", head:"Real-world connection", time:"2 min", script:`Yehi structure hai jo spam filter mein email ko spam/not-spam batata hai, jo face-unlock mein aapka chehra pehchanta hai, aur jo Netflix recommendation deta hai. Same 3-layer idea, alag-alag jagah use ho raha hai.`, stage:"[Name 2-3 apps students personally use, tie each to input→decision framing.]"},
+    {n:"1.8", head:"In-class exercise (debug-it)", time:"2 min", script:`Sawaal poocho: 'Agar ek network mein sirf input aur output layer hai, hidden layer bilkul nahi — kya yeh complex image recognition kar payega?'`, exercise:{setup:"Present a network with ONLY input + output layer, no hidden layer, asked to do image recognition.", reveal:"No — without a hidden layer, the network can only make very simple, straight-line decisions. It can't combine features in complex ways. That's why deep/complex tasks need hidden layers."},
+     stage:"[Give 1 min for pair discussion before revealing.]"},
+    {n:"1.9", head:"Common pitfalls", time:"1 min", script:`Bahut students sochte hain ki 'neuron' ka matlab bilkul biological brain cell jaisa hai — nahi, yeh sirf loosely inspired hai, ek math function hai. Aur yeh bhi mat sochiye ki 'zyada layers hamesha better hoti hain' — kabhi-kabhi zyada layers overkill ho jaati hain.`, pitfall:"Don't equate ANN 'neuron' with a biological neuron — it's just a math function, loosely inspired."},
+    {n:"1.10", head:"Takeaway + Connection forward", time:"1 min", script:`Takeaway line: <b>'ANN = layers of simple decisions stacked to make one smart decision.'</b> Lekin ek sawaal reh jaata hai — network kabhi galat prediction bhi karta hai. Woh apni galti se seekhta kaise hai? Yehi hum agle topic mein dekhenge.`, takeaway:"ANN = layers of simple decisions stacked to make one smart decision."}
+  ]
+},
+{
+  id:"t2", label:"2. Bias, Error & Backprop", title:"Topic 2 — Bias, Error &amp; Learning", time:"30 min (0:25–0:55)",
+  blocks:[
+    {n:"2.1", head:"Hook / Bridge from Topic 1", time:"2 min", script:`Pichhle topic mein humne dekha network 'Pass' predict karta hai. Maano asal mein student <b>fail</b> hua. Ab kya? Network ko pata kaise chale ki woh galat tha, aur kya karna chahiye isse theek karne ke liye?`,
+     stage:"[Point back to the board sketch from Topic 1's worked example.]"},
+    {n:"2.2", head:"Concept build-up", time:"2 min", script:`Naive tareeka yeh hoga — weights ko random idhar-udhar badalte raho aur ummeed karo ki sahi ho jaayenge. Yeh kaam karta hai kabhi-kabhi, lekin bahut slow hai aur kabhi converge hi nahi karta. Humein ek <b>systematic</b> tareeka chahiye — jo bataye exactly kaunsi weight kitni galat thi.`,
+     stage:"[Write 'random guessing = slow, no guarantee' on board and cross it out.]"},
+    {n:"2.3", head:"Bias & Variance", time:"4 min", script:`Do tarah ki galtiyan hoti hain. <b>Bias</b> — jab model bahut simple hai aur baar-baar wahi galti karta hai, jaise ek dost jo har sawaal ka same jawab de deta hai chahe sawaal kuch bhi ho. <b>Variance</b> — jab model training data ke chhote-chhote details pe bahut zyada react karta hai, jaise ek dost jo ek chhote se hint pe apna jawab poora badal deta hai. Dono hi problem hain — bias matlab underfitting, variance matlab overfitting.`,
+     stage:"[Two-column board sketch: 'Bias — same wrong answer always' | 'Variance — wildly different answers'.]"},
+    {n:"2.4", head:"Why does the network make errors?", time:"2 min", script:`Errors aate hain kyunki weights random se start hoti hain, real-world data mein noise hota hai, aur kabhi architecture (jaise hidden layers ki sankhya) sahi nahi hoti. Yeh sab milke error create karte hain.`, stage:"[Quick verbal list, no need to write.]"},
+    {n:"2.5", head:"🎤 Interaction Point", time:"2 min", script:`Predict-it sawaal: 'Agar output mein error hai, kya saari weights ko equally blame karenge, ya alag-alag weight ko alag blame milega?'`,
+     interact:{q:"Are all weights blamed equally for an error, or differently?", answers:["Many will guess 'equally' — that's the common misconception.","Correct answer: differently — proportional to how much each weight contributed to the error.","Bridge: 'That exact blame-distribution process is called backpropagation — that's our topic now.'"]},
+     stage:"[Let the wrong guess ('equally') surface first — it's the common one — then correct gently.]"},
+    {n:"2.6", head:"Purpose of Backpropagation", time:"2 min", script:`Backpropagation ka ek hi kaam hai — pata lagana ki <b>kaunsi weight kitni zimmedaar thi</b> galti ke liye, aur usi hisaab se use adjust karna. Yeh ek feedback loop hai.`, stage:"[Write: 'Backprop = find blame + fix it'.]"},
+    {n:"2.7", head:"Backprop steps", time:"5 min", script:`Teen steps hote hain. Ek — <b>Forward pass</b>: input se output tak data flow hota hai, prediction milti hai. Do — <b>Error calculate</b>: prediction aur actual answer ka farak nikalte hain (isse 'loss' kehte hain). Teen — <b>Backward pass</b>: yeh error output se wapas input ki taraf layer-by-layer bheja jaata hai, taaki har weight ko pata chale usne kitna contribute kiya galti mein.`,
+     stage:"[Draw arrow left-to-right for forward pass, then a big arrow right-to-left labelled 'error travels backward'.]"},
+    {n:"2.8", head:"Weight update", time:"2 min", script:`Formula ek baar dekh lete hain, bina derivation ke — <b>new_weight = old_weight − learning_rate × gradient</b>. Bas itna samajhna hai: jitni zyada galti thi us weight ki, utna zyada usse adjust kiya jaata hai, thoda-thoda karke.`, stage:"[Write formula once on board, plainly. Do NOT derive it.]"},
+    {n:"2.9", head:"Worked example — one weight update (step-by-step)", time:"4 min", script:`Chalo ek weight ko live update karke dikhate hain. Suppose weight = 0.5, error se pata chala ki isse thoda kam karna chahiye, learning rate chhota hai. Step by step dekhते hain kaise weight 0.5 se 0.47 ho jaati hai.`,
+     stage:"[Open the matching student-notes weight-update animation on your screen/projector if available, and click 'Next step' 3 times in sync with your narration. If not projecting, sketch the same 3 numbers on the board one at a time.]"},
+    {n:"2.10", head:"Real-world connection", time:"1 min", script:`Yehi process har baar hota hai jab aap ek app use karte ho aur woh 'improve' hoti hai over time — jaise typing keyboard jo aapke typing style se better suggestions deta jaata hai.`, stage:"[Quick, don't linger.]"},
+    {n:"2.11", head:"In-class exercise (spot-the-flaw)", time:"2 min", script:`Scenario do: 'Training ke 500 epochs ke baad bhi error kam nahi ho raha. Do possible reasons batao.'`, exercise:{setup:"Error isn't decreasing even after 500 epochs of training.", reveal:"Two common reasons: (1) learning rate too high — the weight keeps overshooting instead of settling; (2) bad/insufficient data — the pattern to learn just isn't clearly present in the data."},
+     stage:"[Give 90 sec buzz discussion in pairs before revealing.]"},
+    {n:"2.12", head:"Common pitfalls", time:"1 min", script:`Ek common galti — students sochte hain 'loss kam ho raha hai matlab model achha hai'. Lekin agar loss training data pe kam ho raha hai aur naye data pe zyada, toh yeh variance/overfitting ka sign hai — humne abhi discuss kiya tha.`, pitfall:"Falling loss on training data doesn't automatically mean a 'good' model — check if it generalizes (ties back to variance)."},
+    {n:"2.13", head:"Takeaway + Connection forward", time:"1 min", script:`Takeaway: <b>'Backprop matlab — kitna galat the naapo, sahi weight ko blame do, thoda adjust karo, repeat karo.'</b> Ab tak humne dekha network apne weights seekh ke error kam karta hai. Lekin har ML technique aisi nahi hoti — kuch techniques weights seekhti hi nahi, woh probability se sochti hain.`, takeaway:"Backprop = measure how wrong, blame the right weight, nudge it, repeat."}
+  ]
+},
+{
+  id:"t3", label:"3. Bayesian Learning", title:"Topic 3 — Bayesian Learning", time:"20 min (0:55–1:15)",
+  blocks:[
+    {n:"3.1", head:"Hook", time:"2 min", script:`Ek message aata hai — 'Aapne FREE prize jeeta hai, abhi click karo!' Aap poora message padhne se pehle hi bol dete ho 'yeh spam hai'. Aapka dimaag itni jaldi kaise decide kar leta hai, using probability?`, stage:"[Show/describe a cheesy spam message example.]"},
+    {n:"3.2", head:"Concept build-up", time:"2 min", script:`Agar hum manually rule likhein — 'agar word FREE hai toh spam' — yeh legit emails ko bhi spam bana dega jinme 'free shipping' likha ho. Humein kuch chahiye jo probability se soche — 'in words ko dekhte hue, spam hone ka chance kitna hai?'`, stage:"[Write a false-positive example: a real 'free delivery' email getting wrongly flagged.]"},
+    {n:"3.3", head:"Formal intro — Bayes' Theorem", time:"3 min", script:`Formula ek baar, plainly: <b>P(A|B) = P(B|A) × P(A) / P(B)</b>. Iske parts hain — <b>Prior</b> (pehle se maana gaya chance, bina naya sabut dekhe), <b>Likelihood</b> (yeh sabut kitna common hai agar A sach hai), <b>Evidence</b> (overall yeh sabut kitna common hai), aur result <b>Posterior</b> — naya, updated chance.`, stage:"[Write formula once, label each term directly under it in plain English — never leave symbols alone.]"},
+    {n:"3.4", head:"🎤 Interaction Point", time:"2 min", script:`Predict-it: 'Agar aapke 90% emails generally spam NAHI hote (prior), toh sirf ek suspicious word dekh kar kya turant 100% confirm ho jaayega ki spam hai?'`,
+     interact:{q:"Does one suspicious word alone make you 100% sure it's spam?", answers:["No — the prior still matters a lot. One clue shifts probability, doesn't guarantee it.","Bridge: 'Exactly — Bayes' theorem blends the old belief (prior) with new evidence, it doesn't throw the old belief away.'"]},
+     stage:"[Let a student answer 'yes' first if it comes up — good teaching moment to correct.]"},
+    {n:"3.5", head:"Application in ML", time:"1 min", script:`Bayes' theorem ka use hota hai classification mein — spam detection, sentiment analysis, medical screening jaise cases mein.`, stage:"[Quick, move on.]"},
+    {n:"3.6", head:"Drawback of full Bayes → Naive Bayes fix", time:"3 min", script:`Problem yeh hai — agar email mein 50 alag words hain, aur hum sabka <b>joint</b> probability nikalna chahein (sab words saath mein kitne common hain), toh yeh computationally bahut mushkil ho jaata hai — data explode ho jaata hai. Isliye ek shortcut liya gaya — maan lo har word <b>independently</b> spam/not-spam decide karta hai, ek doosre se bepravah. Yeh assumption technically galat hai — isiliye naam hi 'Naive' Bayes hai — lekin practically yeh bahut fast aur accurate result deta hai.`, stage:"[Write: 'Full Bayes = joint probability of ALL words = expensive' → cross out → 'Naive Bayes = assume independence = fast'.]"},
+    {n:"3.7", head:"Worked example", time:"3 min", script:`Chhota example: maano 'lottery' word 8 baar spam emails mein aaya, 2 baar non-spam mein, out of total 100 spam aur 100 non-spam emails. In numbers se hum seedha posterior probability nikal sakte hain ki nayi email jisme 'lottery' hai, spam hai ya nahi — step by step calculate karke dikhao.`, stage:"[Write the small counts table on board, compute posterior live with simple arithmetic.]"},
+    {n:"3.8", head:"Real-world connection", time:"1 min", script:`Yeh wahi tareeka hai jo Gmail ka spam filter, product review sentiment analysis, aur early disease-screening tools use karte hain.`, stage:"[Fast, one line each.]"},
+    {n:"3.9", head:"Exercise (debug-it)", time:"1 min", script:`Sawaal: 'Agar training data mein word "lottery" kabhi bhi non-spam email mein nahi aaya, toh calculation mein kya problem aayegi?'`, exercise:{setup:"Word 'lottery' has zero occurrences in non-spam training data.", reveal:"The probability becomes exactly zero for that class, which can wrongly override everything else in the calculation. Fix: a small smoothing trick (Laplace smoothing) is used in practice — just mention it exists, don't derive it."},
+     stage:"[Keep the fix to one line — don't derive smoothing.]"},
+    {n:"3.10", head:"Common pitfalls", time:"1 min", script:`Students often confuse 'Bayes theorem' with 'Naive Bayes classifier' — theorem is the math rule, Naive Bayes is theorem PLUS the independence shortcut that makes it usable as a fast classifier.`, pitfall:"Bayes' theorem alone isn't a classifier — Naive Bayes = theorem + independence assumption."},
+    {n:"3.11", head:"Takeaway + Connection forward", time:"1 min", script:`Takeaway: <b>'Naive Bayes = Bayes theorem + a shortcut assumption (treat every clue as independent) so we can compute fast.'</b> Ab tak humne dekha models jo pehle train hote hain, phir predict karte hain. Kya ho agar hum training skip hi kar dein, aur seedha similar purane examples se compare karein?`, takeaway:"Naive Bayes = Bayes' theorem + independence shortcut, for fast computation."}
+  ]
+},
+{
+  id:"t4", label:"4. KNN", title:"Topic 4 — Instance-Based Learning (KNN)", time:"15 min (1:15–1:30)",
+  blocks:[
+    {n:"4.1", head:"Hook", time:"1 min", script:`Aap ek naye city mein shift hote ho aur jaanna chahte ho ki ek street safe hai ya nahi. Aap koi model nahi banate — aap seedha us street ke 5 sabse najdeeki logon se pooch lete ho.`, stage:"[Quick, conversational.]"},
+    {n:"4.2", head:"Concept build-up — eager vs lazy learning", time:"2 min", script:`ANN aur Naive Bayes dono 'eager learners' hain — pehle training karte hain, ek model banate hain, phir fast predict karte hain. KNN bilkul alag hai — koi training phase hi nahi hota, har baar sirf naye point ko stored data se compare karte hain.`, stage:"[Write: 'Eager = train first, predict fast' vs 'Lazy (KNN) = no training, compare every time'.]"},
+    {n:"4.3", head:"Formal intro — What is KNN?", time:"1 min", script:`KNN — K-Nearest Neighbour — ek technique hai jo naye point ko uske sabse najdeeki 'K' purane examples dekh kar classify karta hai.`, stage:"[Write term + plain-English line beside it.]"},
+    {n:"4.4", head:"Basic working", time:"3 min", script:`Teen steps — ek, naye point se sab stored points ka <b>distance</b> naapo (aksar Euclidean distance). Do, sabse najdeeki <b>K</b> points chuno. Teen, un K points mein jo class sabse zyada common hai, wahi final answer — <b>majority vote</b>.`, stage:"[Draw a scatter plot with a new point + circle around nearest K points.]"},
+    {n:"4.5", head:"🎤 Interaction Point", time:"2 min", script:`Predict-it: 'Agar K=1 rakhein, kya model noisy/outlier data se zyada sensitive hoga ya kam?'`,
+     interact:{q:"With K=1, is the model more or less sensitive to noisy/outlier data?", answers:["More sensitive — a single weird neighbour completely decides the answer.","Bridge: 'This connects right back to variance from Topic 2 — small K = high variance behaviour.'"]},
+     stage:"[Explicit callback to Topic 2's bias-variance — point back if you drew it earlier.]"},
+    {n:"4.6", head:"Worked example", time:"3 min", script:`Chhota dataset lo — 4-5 points 2D graph pe, do classes. Ek naya point aata hai. K=3 lekar sabse najdeeki 3 points ka distance nikaalo, unme se majority class jo hai wahi final answer.`, stage:"[Open matching student-notes KNN step animation if projecting, click through 3 steps in sync; else sketch on board.]"},
+    {n:"4.7", head:"Real-world connection", time:"1 min", script:`Yehi idea 'log jaise aap unhone yeh bhi pasand kiya' type recommendations mein, aur handwriting recognition mein use hoti hai.`, stage:"[Fast.]"},
+    {n:"4.8", head:"Exercise (debug-it)", time:"1 min", script:`Sawaal: 'Agar ek feature income hai (jaise 50,000) aur doosra age hai (jaise 25), aur hum scale/normalize nahi karte — distance calculation pe kya asar padega?'`, exercise:{setup:"Income (in thousands) vs age (in years) used directly without scaling.", reveal:"Income's large numeric range dominates the distance calculation completely, making age almost irrelevant — features need to be scaled/normalized first."},
+     stage:"[Let them guess before revealing — this is a genuinely common real mistake.]"},
+    {n:"4.9", head:"Common pitfalls + Takeaway + Connection forward", time:"1 min", script:`Pitfall — K choose karna matter karta hai: bahut chhota K = noisy/overfit, bahut bada K = oversmoothed/underfit — phir se bias-variance ka connection. Takeaway: <b>'KNN koi formula nahi seekhta — yeh sab kuch yaad rakhta hai aur najdeeki neighbours dekh kar judge karta hai.'</b> Aaj humne dekha neural networks jo seekhte hain, Naive Bayes jo probability se sochta hai, aur KNN jo sirf compare karta hai. Agli baar dekhenge yeh concepts interview questions aur placement projects mein kaise aate hain.`, pitfall:"Choosing K matters — too small = overfits/noisy, too large = underfits/oversmoothed.", takeaway:"KNN doesn't learn a formula — it remembers everything and judges by closest neighbours."}
+  ]
+}
+];
+
+let current = 0;
+const nav = document.getElementById('topNav');
+const host = document.getElementById('topicHost');
+
+function renderNav(){
+  nav.innerHTML = topics.map((t,i)=>`<button data-i="${i}" class="${i===current?'active':''}">${t.label}</button>`).join('');
+  nav.querySelectorAll('button').forEach(b=>b.onclick=()=>{current=+b.dataset.i; render();});
+}
+
+function blockHtml(b){
+  let html = `<div class="block"><div class="block-head"><span>${b.n} — ${b.head}</span><span class="time">${b.time}</span></div><div class="block-body">`;
+  html += `<div class="script">${b.script}</div>`;
+  if(b.interact){
+    html += `<div class="interact"><b>🎤 Ask: "${b.interact.q}"</b>${b.interact.answers.map(a=>`<div>• ${a}</div>`).join('')}</div>`;
+  }
+  if(b.exercise){
+    html += `<div class="exercise"><b>Exercise setup:</b> ${b.exercise.setup}<br><b>Reveal:</b> ${b.exercise.reveal}</div>`;
+  }
+  if(b.stage) html += `<div class="stage">${b.stage}</div>`;
+  if(b.pitfall) html += `<div class="pitfall"><b>⚠ Pitfall:</b> ${b.pitfall}</div>`;
+  if(b.takeaway) html += `<div class="takeaway">★ ${b.takeaway}</div>`;
+  html += `</div></div>`;
+  return html;
+}
+
+function render(){
+  renderNav();
+  const t = topics[current];
+  let html = `<div class="topic active"><div class="topic-title">${t.title}</div><div class="topic-meta">Time budget: ${t.time}</div>`;
+  html += t.blocks.map(blockHtml).join('');
+  html += `<div class="total-time">Total this topic: ${t.time}</div></div>`;
+  host.innerHTML = html;
+  document.getElementById('prevBtn').disabled = current===0;
+  document.getElementById('nextBtn').disabled = current===topics.length-1;
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+document.getElementById('prevBtn').onclick = ()=>{ if(current>0){current--; render();} };
+document.getElementById('nextBtn').onclick = ()=>{ if(current<topics.length-1){current++; render();} };
+
+render();
+</script>
+</body>
+</html>
