@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Understanding KNN — Simple Notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg1:#F2F0FB; --bg2:#FBF7EF;
+    --ink:#2B2640; --ink-soft:#5D5875;
+    --panel:rgba(255,255,255,0.72); --panel-line:rgba(255,255,255,0.9);
+    --violet:#6C5CE7; --violet-soft:#E7E3FB;
+    --coral:#FF9F68; --coral-soft:#FFEADA;
+    --green:#3FBF8F; --green-soft:#DFF6EC;
+    --font-h:'Quicksand',sans-serif; --font-b:'Inter',sans-serif;
+    --shadow:0 10px 30px rgba(108,92,231,0.08);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; font-family:var(--font-b); color:var(--ink); line-height:1.7;
+    background:linear-gradient(150deg,var(--bg1),var(--bg2) 70%);
+  }
+  .wrap{max-width:700px; margin:0 auto; padding:34px 20px 70px;}
+  .top{text-align:center; margin-bottom:30px;}
+  .mascot{
+    width:64px; height:64px; border-radius:50%; background:var(--violet-soft); border:2px solid var(--violet);
+    display:flex; align-items:center; justify-content:center; font-size:32px; margin:0 auto 12px;
+  }
+  h1{font-family:var(--font-h); font-size:1.7rem; font-weight:700; margin:0 0 6px; color:var(--ink);}
+  .lede{color:var(--ink-soft); font-size:1rem; max-width:480px; margin:0 auto;}
+  .card{
+    background:var(--panel); border:1px solid var(--panel-line); border-radius:20px; padding:26px 28px;
+    box-shadow:var(--shadow); margin-bottom:26px;
+  }
+  h2{font-family:var(--font-h); font-size:1.25rem; font-weight:700; margin:0 0 14px; color:var(--violet);}
+  p{margin:0 0 14px; font-size:1.02rem;}
+  .story p{font-size:1.06rem;}
+  .analogy{
+    background:var(--coral-soft); border-radius:14px; padding:14px 18px; font-size:.98rem; margin:14px 0 4px;
+    border-left:4px solid var(--coral);
+  }
+  .analogy b{color:#B5541A;}
+  .diagram-wrap{background:var(--violet-soft); border-radius:16px; padding:18px; text-align:center;}
+  .diagram-controls{margin-top:12px; display:flex; gap:10px; justify-content:center; align-items:center; flex-wrap:wrap;}
+  .btn{
+    background:var(--violet); color:#fff; border:none; padding:9px 18px; border-radius:22px; cursor:pointer;
+    font-family:var(--font-h); font-weight:600; font-size:.88rem;
+  }
+  .btn:disabled{background:#C6C1EC; cursor:not-allowed;}
+  .btn.ghost{background:transparent; color:var(--violet); border:1.5px solid var(--violet);}
+  .stepnote{font-size:.88rem; color:var(--ink-soft); min-width:200px; text-align:left;}
+  .chart-wrap{background:var(--green-soft); border-radius:16px; padding:18px; text-align:center;}
+  .note-small{font-size:.82rem; color:var(--ink-soft); margin-top:10px;}
+  ul{margin:0 0 6px; padding-left:22px;}
+  li{margin-bottom:8px; font-size:1rem;}
+  .recap{
+    background:linear-gradient(120deg,var(--violet-soft),var(--coral-soft)); border-radius:18px; padding:22px 26px;
+  }
+  .recap h2{color:var(--ink);}
+  .recap li{font-weight:500;}
+  footer{text-align:center; color:var(--ink-soft); font-size:.82rem; margin-top:30px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top">
+    <div class="mascot">🔍</div>
+    <h1>Understanding KNN — In Plain Words</h1>
+    <p class="lede">The idea behind K-Nearest Neighbours, explained the simple way — using the same patient example from lab.</p>
+  </div>
+
+  <!-- THE STORY -->
+  <div class="card story">
+    <h2>The story so far</h2>
+    <p>You work in a small clinic. A new patient walks in with a tumour that needs checking. The clinic already has records of <b>569 old patients</b> — for each one, a doctor already decided: malignant (dangerous) or benign (safe).</p>
+    <p>The question is simple: <b>can we use those 569 old records to help the new patient, quickly?</b></p>
+  </div>
+
+  <!-- WHAT IS KNN -->
+  <div class="card">
+    <h2>So, what is KNN?</h2>
+    <p>KNN stands for <b>K-Nearest Neighbours</b>. The idea is honestly very simple:</p>
+    <p style="font-family:var(--font-h); font-weight:600; font-size:1.1rem; color:var(--violet); text-align:center; margin:18px 0;">
+      "Find the old patients most similar to the new one, and go with what most of them were."
+    </p>
+    <div class="analogy">
+      <b>Think of it like this:</b> you just moved into a new neighbourhood and want to know the best pizza place nearby. You ask your 5 nearest neighbours. If 4 out of 5 say the same place — you'd probably try that one too. You didn't need a formula. You just asked the people closest to you.
+    </div>
+    <p style="margin-top:14px;">That's it. No complicated equation is built ahead of time. KNN simply looks at "who is closest?" every single time a new patient arrives.</p>
+  </div>
+
+  <!-- ANIMATED DIAGRAM -->
+  <div class="card">
+    <h2>Watch it happen</h2>
+    <p>Green dots = old patients who were <b>benign</b>. Red dots = old patients who were <b>malignant</b>. The star ⭐ is the new patient. Press play and watch KNN find its neighbours.</p>
+    <div class="diagram-wrap">
+      <svg id="knnsvg" viewBox="0 0 460 300" width="100%" style="max-width:420px;"></svg>
+      <div class="diagram-controls">
+        <button class="btn ghost" id="knnReset">⟲ Restart</button>
+        <button class="btn" id="knnPlay">▶ Play animation</button>
+        <span class="stepnote" id="knnNote">Press play to begin</span>
+      </div>
+    </div>
+    <p class="note-small">Prefer to go step by step yourself? Use the buttons below instead.</p>
+    <div class="diagram-controls">
+      <button class="btn ghost" id="knnPrev">← Back</button>
+      <button class="btn ghost" id="knnNext">Next →</button>
+    </div>
+  </div>
+
+  <!-- WHY SCALE -->
+  <div class="card">
+    <h2>Why do we "scale" the numbers first?</h2>
+    <p>Imagine comparing two patients using just two numbers: <b>height in centimetres</b> (say, 150–190) and <b>a small measurement</b> like cell smoothness (say, 0.05–0.15).</p>
+    <div class="analogy">
+      If you just subtract the numbers directly, height differences (which can be 20, 30, 40) will always look "bigger" than smoothness differences (which are tiny, like 0.02) — even if smoothness actually matters just as much for diagnosis.
+    </div>
+    <p style="margin-top:14px;">Scaling simply puts every measurement on the same footing, so no single number unfairly dominates the comparison just because it happens to be a bigger number.</p>
+  </div>
+
+  <!-- CHOOSING K -->
+  <div class="card">
+    <h2>How many neighbours should we ask? (Choosing K)</h2>
+    <p><b>K</b> just means "how many nearest neighbours do we listen to?"</p>
+    <ul>
+      <li><b>Too few (K = 1):</b> you're trusting just one neighbour. If that one happens to be a bit unusual, you get a bad answer.</li>
+      <li><b>Too many (K = 50):</b> you start listening to people who aren't really "neighbours" anymore — their opinions drown out the ones who actually matter.</li>
+      <li><b>Somewhere in the middle</b> usually works best — enough opinions to be reliable, but not so many that it gets noisy.</li>
+    </ul>
+    <div class="chart-wrap">
+      <svg viewBox="0 0 420 220" width="100%" style="max-width:400px;">
+        <line x1="40" y1="180" x2="400" y2="180" stroke="#8FA89A" stroke-width="1.5"/>
+        <line x1="40" y1="180" x2="40" y2="20" stroke="#8FA89A" stroke-width="1.5"/>
+        <text x="220" y="208" text-anchor="middle" font-size="12" font-family="Inter" fill="#4A5D59">K (number of neighbours asked) →</text>
+        <text x="18" y="100" text-anchor="middle" font-size="12" font-family="Inter" fill="#4A5D59" transform="rotate(-90 18 100)">how reliable ↑</text>
+        <path d="M45,150 C90,60 140,45 190,48 C260,52 320,80 395,120" fill="none" stroke="#2E9E76" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="190" cy="48" r="6" fill="#FF9F68" stroke="#B5541A" stroke-width="1.5"/>
+        <text x="190" y="35" text-anchor="middle" font-size="11" font-family="Inter" font-weight="600" fill="#B5541A">a good middle K</text>
+        <text x="55" y="165" font-size="10" font-family="Inter" fill="#4A5D59">K too small</text>
+        <text x="330" y="135" font-size="10" font-family="Inter" fill="#4A5D59">K too large</text>
+      </svg>
+      <p class="note-small">This is a simple sketch of the idea, not exact numbers from the lab — the real shape depends on your actual data.</p>
+    </div>
+  </div>
+
+  <!-- WHEN IT STRUGGLES -->
+  <div class="card">
+    <h2>When does KNN struggle?</h2>
+    <ul>
+      <li><b>Too many old patients:</b> KNN compares the new patient to everyone, every single time. With millions of records, that gets slow.</li>
+      <li><b>Too many measurements:</b> when you're comparing across hundreds of numbers at once, "closeness" starts to lose its meaning — everyone starts looking equally far from everyone else.</li>
+      <li><b>Forgetting to scale:</b> as we saw above, one large-numbered measurement can quietly take over the whole comparison.</li>
+    </ul>
+  </div>
+
+  <!-- RECAP -->
+  <div class="card recap">
+    <h2>Quick recap</h2>
+    <ul>
+      <li>KNN looks at the K closest old cases and goes with the majority answer.</li>
+      <li>No formula is built in advance — it compares fresh, every time.</li>
+      <li>Scale your numbers first, so every measurement gets a fair say.</li>
+      <li>Choosing K is a balance — not too small, not too large.</li>
+      <li>KNN isn't great for huge datasets or huge numbers of measurements.</li>
+    </ul>
+  </div>
+
+  <footer>Exp 3 · AI &amp; ML Lab · Sem 7 — Student Notes on K-Nearest Neighbours</footer>
+</div>
+
+<script>
+const pts = [
+  {x:120,y:90,c:'g'},{x:150,y:60,c:'g'},{x:100,y:140,c:'g'},{x:170,y:130,c:'g'},{x:90,y:200,c:'g'},
+  {x:320,y:80,c:'r'},{x:340,y:150,c:'r'},{x:300,y:190,c:'r'},{x:360,y:110,c:'r'},{x:280,y:230,c:'r'}
+];
+const query = {x:230,y:150};
+pts.forEach(p=>{ p.d = Math.hypot(p.x-query.x, p.y-query.y); });
+const sorted = [...pts].sort((a,b)=>a.d-b.d);
+const K = 3;
+let step = 0;
+const totalSteps = sorted.length + 2;
+let playing = false, playTimer = null;
+
+function colorFor(c){ return c==='g' ? '#3FBF8F' : '#E8544A'; }
+
+function renderKnn(){
+  const el = [];
+  for(let i=0;i<step && i<sorted.length;i++){
+    const p = sorted[i];
+    const isNeighbor = i < K;
+    el.push(`<line x1="${query.x}" y1="${query.y}" x2="${p.x}" y2="${p.y}" stroke="${isNeighbor?'#6C5CE7':'#D8D4F2'}" stroke-width="${isNeighbor?2.5:1.3}" stroke-dasharray="${isNeighbor?'0':'4,3'}"/>`);
+  }
+  pts.forEach(p=>{
+    const revealedIdx = sorted.indexOf(p);
+    const revealed = revealedIdx < step;
+    const isNeighbor = revealed && revealedIdx < K;
+    el.push(`<circle cx="${p.x}" cy="${p.y}" r="${isNeighbor?9:7}" fill="${colorFor(p.c)}" opacity="${revealed?1:0.35}" stroke="${isNeighbor?'#3B2E9E':'none'}" stroke-width="${isNeighbor?2:0}"/>`);
+  });
+  const showResult = step >= sorted.length + 1;
+  let starFill = '#5D5875';
+  if(showResult){
+    const neighborClasses = sorted.slice(0,K).map(p=>p.c);
+    const rCount = neighborClasses.filter(c=>c==='r').length;
+    starFill = rCount > K/2 ? '#E8544A' : '#3FBF8F';
+  }
+  el.push(`<path d="M230,132 l5,15 l16,0 l-13,10 l5,15 l-13,-10 l-13,10 l5,-15 l-13,-10 l16,0 z" fill="${starFill}" stroke="#2B2640" stroke-width="1"/>`);
+  el.push(`<text x="230" y="120" text-anchor="middle" font-size="11" font-family="Inter,sans-serif" fill="#5D5875">new patient</text>`);
+  document.getElementById('knnsvg').innerHTML = el.join('');
+
+  const note = document.getElementById('knnNote');
+  if(step===0){ note.textContent = 'Press play to begin'; }
+  else if(step <= sorted.length){
+    const p = sorted[step-1];
+    note.textContent = `Checking point ${step} of ${sorted.length}... ${step<=K?'this one is close! ✅':'too far, skip'}`;
+  } else if(step === sorted.length+1){
+    const neighborClasses = sorted.slice(0,K).map(p=>p.c);
+    const rCount = neighborClasses.filter(c=>c==='r').length;
+    const gCount = K - rCount;
+    note.textContent = `${K} closest neighbours: ${gCount} green, ${rCount} red → prediction: ${rCount>gCount?'malignant':'benign'}`;
+  }
+  document.getElementById('knnPrev').disabled = step===0;
+  document.getElementById('knnNext').disabled = step>=totalSteps-1;
+  document.getElementById('knnPlay').textContent = step>=totalSteps-1 ? '✓ Done' : '▶ Play animation';
+}
+
+function stepForward(){
+  if(step<totalSteps-1){ step++; renderKnn(); }
+  else { stopPlaying(); }
+}
+function stopPlaying(){
+  playing = false; clearInterval(playTimer);
+  document.getElementById('knnPlay').textContent = '▶ Play animation';
+}
+document.getElementById('knnPlay').addEventListener('click', ()=>{
+  if(playing){ stopPlaying(); return; }
+  if(step>=totalSteps-1){ step=0; renderKnn(); }
+  playing = true;
+  document.getElementById('knnPlay').textContent = '⏸ Pause';
+  playTimer = setInterval(stepForward, 900);
+});
+document.getElementById('knnReset').addEventListener('click', ()=>{ stopPlaying(); step=0; renderKnn(); });
+document.getElementById('knnNext').addEventListener('click', ()=>{ stopPlaying(); stepForward(); });
+document.getElementById('knnPrev').addEventListener('click', ()=>{ stopPlaying(); if(step>0){ step--; renderKnn(); } });
+
+renderKnn();
+</script>
+</body>
+</html>
