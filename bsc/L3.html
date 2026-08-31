@@ -1,0 +1,557 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lecture 3 | Introduction to AI — Student Notes</title>
+<style>
+:root{--accent:#ff8a3d;--accent2:#12b3a8;--accent3:#ffc857;--ink:#33301f;--muted:#8a8270;--bg:#fffdf6;--card:#ffffff;--line:#f3e6cf;--soft:#fff4e0;--good:#0d9c6b;--bad:#e15b5b}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.65}
+.wrap{max-width:1050px;margin:auto;padding:24px 20px 70px}
+.hero{background:linear-gradient(120deg,#ff8a3d,#ffc857 55%,#12b3a8);color:#2c2410;border-radius:22px;padding:34px;margin-bottom:22px;box-shadow:0 8px 24px rgba(255,138,61,.25)}
+.hero .tag{font-size:.82rem;text-transform:uppercase;letter-spacing:.12em;opacity:.8;font-weight:700}
+h1{font-size:2rem;margin:.25rem 0 .5rem;color:#2c2410}
+h2{margin-top:38px;color:#3a2f1a;display:flex;align-items:center;gap:10px}
+h3{color:#4a3d24}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px;margin:16px 0;box-shadow:0 3px 14px rgba(51,48,31,.06)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+.callout{background:var(--soft);border-left:5px solid var(--accent);padding:15px 18px;border-radius:9px;margin:16px 0}
+.callout.tip{border-left-color:var(--accent2);background:#e5faf7}
+.callout.warn{border-left-color:var(--bad);background:#fdecec}
+code{background:#fbeed9;border-radius:5px;padding:2px 6px}
+.badge{display:inline-block;background:#fff0dc;color:#c25a10;border-radius:999px;padding:4px 10px;font-size:.82rem;font-weight:700}
+footer{margin-top:35px;color:var(--muted);font-size:.9rem;border-top:1px solid var(--line);padding-top:15px}
+
+.progress-wrap{position:sticky;top:0;z-index:40;background:var(--bg);padding-top:8px;padding-bottom:6px}
+.progress-track{height:8px;background:var(--line);border-radius:999px;overflow:hidden}
+.progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .25s}
+.progress-label{font-size:.78rem;color:var(--muted);margin-top:4px;text-align:right}
+
+.mascot{display:inline-flex;align-items:center;justify-content:center;font-size:1.5rem;background:var(--soft);border:2px solid var(--accent);border-radius:50%;width:44px;height:44px;flex-shrink:0}
+.mascot-row{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.mascot-row .say{font-weight:700;color:#3a2f1a}
+
+.flip-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin:16px 0}
+.flip-card{perspective:1000px;height:180px;cursor:pointer}
+.flip-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d}
+.flip-card.flipped .flip-inner{transform:rotateY(180deg)}
+.flip-front,.flip-back{position:absolute;inset:0;backface-visibility:hidden;border-radius:16px;padding:16px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center}
+.flip-front{background:linear-gradient(135deg,#ff8a3d,#ffb35c);color:#fff}
+.flip-front .emoji{font-size:2.1rem;margin-bottom:6px}
+.flip-back{background:#fff6e6;color:var(--ink);transform:rotateY(180deg);border:1px solid var(--line);font-size:.9rem}
+.flip-hint{font-size:.72rem;opacity:.85;margin-top:8px}
+
+.loop{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:8px;margin:18px 0}
+.loop .node{background:var(--soft);border:2px solid var(--accent);border-radius:12px;padding:12px 16px;font-weight:700;font-size:.92rem;text-align:center;min-width:110px}
+.loop .arrow{font-size:1.4rem;color:var(--accent)}
+
+/* Search animation widgets */
+.search-widget{margin:14px 0}
+.sw-layout{display:grid;grid-template-columns:1fr 220px;gap:16px}
+@media (max-width:700px){.sw-layout{grid-template-columns:1fr}}
+.sw-svg-box{background:#fffaf0;border:1px solid var(--line);border-radius:14px;padding:8px}
+.sw-panel{background:var(--soft);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.sw-panel .ptitle{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700}
+.sw-frontier{display:flex;flex-wrap:wrap;gap:6px;min-height:34px}
+.sw-frontier .chip{background:#fff;border:2px solid var(--accent2);color:var(--accent2);border-radius:8px;padding:4px 9px;font-size:.82rem;font-weight:700}
+.sw-status{font-weight:700;font-size:.95rem;min-height:44px}
+.sw-status .visiting{color:var(--accent)}
+.sw-status .found{color:var(--good)}
+.sw-controls{display:flex;gap:8px;margin-top:4px}
+.sw-btn{background:var(--accent);color:#fff;border:none;border-radius:999px;padding:8px 16px;font-weight:700;cursor:pointer;font-size:.85rem}
+.sw-btn.secondary{background:#e8e0ce;color:var(--ink)}
+.sw-btn:disabled{opacity:.4;cursor:default}
+.sw-steplabel{font-size:.78rem;color:var(--muted)}
+.sw-node-circle{transition:fill .3s, stroke .3s}
+.sw-node-label{font-size:11px;font-weight:700;fill:var(--ink);pointer-events:none}
+.sw-edge{stroke:#d9c9a3;stroke-width:2.5}
+
+.compare-table{width:100%;border-collapse:collapse;margin:14px 0;font-size:.92rem}
+.compare-table th{background:var(--accent);color:#fff;padding:10px 12px;text-align:left}
+.compare-table td{padding:10px 12px;border-bottom:1px solid var(--line)}
+.compare-table tr:nth-child(even) td{background:#fff8ec}
+
+.quiz-q{margin:18px 0;padding:16px;border:1px solid var(--line);border-radius:14px;background:var(--card)}
+.quiz-q p.qtext{font-weight:700;margin:0 0 10px}
+.opt{display:block;width:100%;text-align:left;background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin:7px 0;cursor:pointer;font-size:.95rem;color:var(--ink)}
+.opt:hover{border-color:var(--accent)}
+.opt.correct{background:#e6f9f0;border-color:var(--good);color:#0a6b48;font-weight:700}
+.opt.wrong{background:#fdecec;border-color:var(--bad);color:#a13a3a;font-weight:700}
+.opt[disabled]{cursor:default}
+.feedback{margin-top:8px;font-size:.88rem;font-weight:700}
+.feedback.good{color:var(--good)}
+.feedback.bad{color:var(--bad)}
+#quiz-score{font-weight:800;color:var(--accent)}
+
+.reveal{border:1px solid var(--line);border-radius:14px;margin:10px 0;overflow:hidden;background:var(--card)}
+.reveal summary{cursor:pointer;padding:13px 16px;font-weight:700;list-style:none;display:flex;align-items:center;justify-content:space-between}
+.reveal summary::-webkit-details-marker{display:none}
+.reveal summary:after{content:"+";font-size:1.3rem;color:var(--accent)}
+.reveal[open] summary:after{content:"–"}
+.reveal .ans{padding:0 16px 16px;color:var(--muted)}
+
+.check li{margin:8px 0}
+
+.nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:16px;background:rgba(255,253,246,.92);backdrop-filter:saturate(180%) blur(10px);border-bottom:1px solid var(--line);padding:10px 22px;margin:-24px -20px 22px -20px}
+.nav-brand{display:flex;align-items:center;gap:10px;min-width:0}
+.nav-logo{width:38px;height:38px;border-radius:9px;object-fit:cover;flex-shrink:0;background:#fff}
+.nav-name{font-weight:700;font-size:.98rem;color:var(--ink);line-height:1.15}
+.nav-sub{font-size:.76rem;color:var(--muted);white-space:nowrap}
+.nav-cta{background:var(--accent);color:#fff !important;text-decoration:none;font-size:.85rem;font-weight:700;padding:8px 14px;border-radius:999px;white-space:nowrap;transition:opacity .15s}
+.nav-cta:hover{opacity:.88}
+@media print{.nav{display:none}}
+
+@media (max-width:700px){
+  .nav{padding:10px 14px;margin:-16px -12px 16px -12px;flex-wrap:wrap}
+  .nav-sub{display:none}
+}
+@media (max-width:700px){
+  .wrap{padding:16px 12px 50px}
+  .hero{padding:22px 17px;border-radius:16px}
+  h1{font-size:1.55rem}
+  h2{font-size:1.25rem;margin-top:28px}
+  .card{padding:16px}
+  .loop{gap:5px}
+  .loop .node{min-width:88px;font-size:.8rem;padding:9px 10px}
+  .loop .arrow{font-size:1.1rem}
+}
+</style>
+</head>
+<body>
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-brand">
+    <img class="nav-logo" src="KP_Singh.png" alt="K.P. Singh"/>
+    <div>
+      <div class="nav-name">K.P. Singh</div>
+      <div class="nav-sub">SGT University · Unit 1 · Lecture 3</div>
+    </div>
+  </div>
+  <a class="nav-cta" href="https://kpsingh.in" target="_blank">kpsingh.in ↗</a>
+</nav>
+<main class="wrap">
+
+<div class="progress-wrap">
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="progress-label" id="progressLabel">0% read</div>
+</div>
+
+<section class="hero">
+<div class="tag">Unit 1 · Lecture 3 of 3 · Student Notes</div>
+<h1>Searching, BFS &amp; DFS</h1>
+<p style="font-size:1.1rem;margin:0">No maps, no signs, no shortcuts told to you — just a systematic way to explore. Click through the animations below to watch it happen.</p>
+</section>
+
+<div class="card">
+<span class="badge">📘 BSc Data Science · Non-Technical</span>
+<p style="margin:10px 0 0"><strong>Quick recap:</strong> Last time — an AI Technique organizes knowledge, and a Production System uses IF-THEN rule cards. But we ended on a cliffhanger: what if there's <em>no rule card</em> for the situation at all?</p>
+</div>
+
+<h2>🏢 1. The Hostel With No Directory</h2>
+<div class="card">
+<div class="mascot-row"><span class="mascot">🤖</span><span class="say">Here's today's problem...</span></div>
+<p>You're visiting a friend in a large hostel. There's <strong>no directory, no signs, no Google Maps for the inside of a building</strong>. All you know is: you start at Reception, and somewhere ahead is your friend's room.</p>
+<p style="text-align:center;font-weight:700">How do you explore, systematically, without wandering the same corridor twice?</p>
+</div>
+
+<h2>🚶 2. Wandering Randomly Doesn't Work</h2>
+<div class="card">
+<p>The naive approach: just walk wherever feels right, turn randomly, hope for the best.</p>
+<div class="callout warn">This breaks down fast — you might walk the same corridor three times, miss a wing entirely, or never even realize you're going in circles. There's no <em>guarantee</em> you'll ever find the room.</div>
+<p style="text-align:center;font-weight:700">Felt need: a systematic method that guarantees you'll eventually explore everywhere, without repeating yourself.</p>
+</div>
+
+<h2>🗺️ 3. Turning a Building Into a Diagram</h2>
+<div class="card">
+<p>Here's the trick AI uses: turn the problem into a simple diagram of dots and lines.</p>
+<div class="grid">
+<div class="card" style="margin:0"><h3>⚪ State</h3><p>A "dot" — one possible situation you could be in (a junction, a room, a corridor end).</p></div>
+<div class="card" style="margin:0"><h3>➖ Path / Action</h3><p>A "line" connecting two dots — moving from one situation to the next (walking down a corridor).</p></div>
+</div>
+<div class="callout">This whole diagram is called a <strong>state space</strong>. Your Reception is the <strong>start state</strong>. Your friend's room is the <strong>goal state</strong>. <strong>Searching</strong> in AI simply means: systematically exploring this diagram until you reach the goal.</div>
+</div>
+
+<h2>💭 4. Quick Check — Predict First</h2>
+<div class="card">
+<div class="mascot-row"><span class="mascot">🤔</span><span class="say">Think before you scroll...</span></div>
+<p>If you have zero extra clues (no signs, no map, nothing) — what's a systematic way you could still <em>guarantee</em> finding your friend eventually, given enough time?</p>
+<details class="reveal"><summary>Reveal answer</summary><div class="ans">Explore every possible corridor and junction in some fixed, non-repeating order — check every path once. That "no extra clues, just explore systematically" idea is exactly what <strong>Uninformed Search</strong> means. (If you *did* have a clue — like "the room numbers get bigger this way" — that's a different family called <em>Informed Search</em>, for a future lecture.)</div></details>
+</div>
+
+<div class="callout tip">
+<strong>Uninformed Search</strong> = exploring the state space using only the start state and the rules of movement — no extra hints, no shortcuts, no "getting warmer" clues. Today we cover the two most basic uninformed strategies: <strong>BFS</strong> and <strong>DFS</strong>.
+</div>
+
+<hr style="border:none;border-top:2px dashed var(--line);margin:36px 0">
+
+<h2>🌊 5. Breadth-First Search (BFS) — Explore Like Ripples</h2>
+<div class="card">
+<div class="mascot-row"><span class="mascot">🌊</span><span class="say">Strategy 1...</span></div>
+<p>Drop a stone in still water — the ripples spread out evenly, covering the nearest ring completely before reaching the next ring. BFS explores exactly like that: <strong>check everything one step away first, then everything two steps away, then three...</strong></p>
+<div class="callout">
+<strong>Breadth-First Search (BFS)</strong> — plain English: "explore level by level, nearest first." It keeps a waiting line of places-to-visit-next, always visiting the one that's been waiting longest. That waiting line is called a <strong>Queue</strong> (First In, First Out — FIFO): whoever joined the line first gets served first.
+</div>
+</div>
+
+<h2>▶️ 6. Watch BFS Explore the Hostel</h2>
+<div class="card">
+<p>Reception (S) leads to two wings. <strong>Wing A</strong> is a long dead-end corridor. <strong>Wing B</strong> leads straight to your friend's room 🎯. Click <strong>Next Step</strong> and watch the Queue.</p>
+<div class="search-widget">
+<div class="sw-layout">
+  <div class="sw-svg-box">
+    <svg id="bfsSvg" viewBox="0 0 640 340" xmlns="http://www.w3.org/2000/svg"></svg>
+  </div>
+  <div class="sw-panel">
+    <div>
+      <div class="ptitle">Queue (FIFO — first in, first out)</div>
+      <div class="sw-frontier" id="bfsFrontier"></div>
+    </div>
+    <div class="sw-status" id="bfsStatus"></div>
+    <div class="sw-steplabel" id="bfsStepLabel"></div>
+    <div class="sw-controls">
+      <button class="sw-btn secondary" id="bfsReplay">Replay</button>
+      <button class="sw-btn" id="bfsNext">Next Step ▶</button>
+    </div>
+  </div>
+</div>
+</div>
+<div class="callout tip" style="margin-top:14px">Notice: BFS checks <em>both wings at Reception's level</em> before going deep into either one. That's why it reaches the goal in Wing B without wasting time deep inside Wing A.</div>
+</div>
+
+<h2>📲 7. BFS in Real Life</h2>
+<div class="card">
+<div class="grid">
+<div class="card" style="margin:0"><h3>🔗 "Degrees of connection"</h3><p>LinkedIn/Facebook showing "2nd-degree connections" — it checks your direct friends first, then their friends, ring by ring.</p></div>
+<div class="card" style="margin:0"><h3>📨 Forward chains</h3><p>Tracing how a WhatsApp forward spread — who got it first, then who they sent it to, level by level.</p></div>
+</div>
+</div>
+
+<h2>🕳️ 8. Depth-First Search (DFS) — Commit to One Path</h2>
+<div class="card">
+<div class="mascot-row"><span class="mascot">🕳️</span><span class="say">Strategy 2 — the opposite idea...</span></div>
+<p>Now imagine the opposite instinct: pick one corridor and <strong>follow it all the way to the end</strong> before trying anything else. Only when you hit a dead end do you turn back and try the next option.</p>
+<div class="callout">
+<strong>Depth-First Search (DFS)</strong> — plain English: "commit fully to one path, backtrack only when stuck." Instead of a waiting line, it keeps a <strong>Stack</strong> (Last In, First Out — LIFO) — like a pile of plates: whichever option was added most recently gets tried next.
+</div>
+</div>
+
+<h2>▶️ 9. Watch DFS Explore the Same Hostel</h2>
+<div class="card">
+<p>Same building, same goal — but a completely different strategy. Watch the Stack this time.</p>
+<div class="search-widget">
+<div class="sw-layout">
+  <div class="sw-svg-box">
+    <svg id="dfsSvg" viewBox="0 0 640 340" xmlns="http://www.w3.org/2000/svg"></svg>
+  </div>
+  <div class="sw-panel">
+    <div>
+      <div class="ptitle">Stack (LIFO — last in, first out)</div>
+      <div class="sw-frontier" id="dfsFrontier"></div>
+    </div>
+    <div class="sw-status" id="dfsStatus"></div>
+    <div class="sw-steplabel" id="dfsStepLabel"></div>
+    <div class="sw-controls">
+      <button class="sw-btn secondary" id="dfsReplay">Replay</button>
+      <button class="sw-btn" id="dfsNext">Next Step ▶</button>
+    </div>
+  </div>
+</div>
+</div>
+<div class="callout warn" style="margin-top:14px">Notice: DFS commits to Wing A first and walks its <em>entire dead-end corridor</em> before ever trying Wing B — even though the goal was in Wing B the whole time. Same building, same goal, more steps.</div>
+</div>
+
+<h2>📲 10. DFS in Real Life</h2>
+<div class="card">
+<div class="grid">
+<div class="card" style="margin:0"><h3>📁 Folder drilling</h3><p>Opening a folder, then its subfolder, then *its* subfolder — fully exploring one branch before checking a sibling folder.</p></div>
+<div class="card" style="margin:0"><h3>🧩 Solving a maze by hand</h3><p>Following one path with your finger until it's a dead end, then backtracking to the last junction.</p></div>
+</div>
+</div>
+
+<h2>⚖️ 11. BFS vs DFS — Side by Side</h2>
+<div class="card">
+<table class="compare-table">
+<tr><th></th><th>BFS</th><th>DFS</th></tr>
+<tr><td>Explores using</td><td>Queue (FIFO)</td><td>Stack (LIFO)</td></tr>
+<tr><td>Style</td><td>Wide first, level by level</td><td>Deep first, one path at a time</td></tr>
+<tr><td>Finds the <em>nearest</em> goal?</td><td>Yes — guaranteed shortest number of steps</td><td>Not guaranteed — may find a longer path first</td></tr>
+<tr><td>Memory use</td><td>Can be high (keeps a wide waiting line)</td><td>Usually lower (keeps only the current path)</td></tr>
+<tr><td>Risk</td><td>Slow if the building is very wide</td><td>Can waste time deep in a dead-end branch</td></tr>
+</table>
+<div class="callout tip">Both are <strong>uninformed</strong> — neither uses any clue about where the goal actually is. They just differ in the <em>order</em> they check things.</div>
+</div>
+
+<div class="callout warn">
+<strong>Common mix-up:</strong> Students often think DFS is "wrong" or "worse" because it took more steps in our example. It isn't — DFS is simply a different trade-off (lower memory use). Whether BFS or DFS is "better" always depends on the shape of the actual problem.
+</div>
+
+<div class="callout tip" style="text-align:center;font-weight:700">
+"BFS checks everywhere nearby before going far. DFS commits to one direction fully before trying another. Neither one 'looks ahead' — they just differ in the order they explore."
+</div>
+
+<h2>✅ 12. Test Yourself</h2>
+<p>Answer each question — you'll get instant feedback. <span id="quiz-score">Score: 0 / 5</span></p>
+
+<div class="quiz-q" data-answer="2">
+<p class="qtext">Q1. In AI, a "state space" is best described as:</p>
+<button class="opt" data-idx="0">The computer's storage capacity</button>
+<button class="opt" data-idx="1">A single correct answer to a problem</button>
+<button class="opt" data-idx="2">A diagram of all possible situations (states) connected by possible moves</button>
+<div class="feedback"></div>
+</div>
+
+<div class="quiz-q" data-answer="1">
+<p class="qtext">Q2. Which data structure does BFS use to decide what to explore next?</p>
+<button class="opt" data-idx="0">Stack (LIFO)</button>
+<button class="opt" data-idx="1">Queue (FIFO)</button>
+<button class="opt" data-idx="2">Rule card</button>
+<div class="feedback"></div>
+</div>
+
+<div class="quiz-q" data-answer="0">
+<p class="qtext">Q3. Which search strategy is guaranteed to find the goal in the fewest steps (shallowest depth)?</p>
+<button class="opt" data-idx="0">BFS</button>
+<button class="opt" data-idx="1">DFS</button>
+<button class="opt" data-idx="2">Both always take the same number of steps</button>
+<div class="feedback"></div>
+</div>
+
+<div class="quiz-q" data-answer="2">
+<p class="qtext">Q4. In our hostel example, why did DFS take more steps than BFS to find the goal?</p>
+<button class="opt" data-idx="0">DFS made a mistake</button>
+<button class="opt" data-idx="1">The building layout changed</button>
+<button class="opt" data-idx="2">DFS fully explored the dead-end Wing A before trying Wing B</button>
+<div class="feedback"></div>
+</div>
+
+<div class="quiz-q" data-answer="1">
+<p class="qtext">Q5. "Uninformed search" means the strategy:</p>
+<button class="opt" data-idx="0">Uses hints about how close the goal is</button>
+<button class="opt" data-idx="1">Uses no extra clues beyond the start state and the rules of movement</button>
+<button class="opt" data-idx="2">Only works on small problems</button>
+<div class="feedback"></div>
+</div>
+
+<h2>🎯 13. Exam-Angle Questions</h2>
+<p>Click each question to reveal a model answer. Try to answer in your head first!</p>
+
+<details class="reveal">
+<summary>What is meant by "searching" in Artificial Intelligence?</summary>
+<div class="ans">Systematically exploring a state space (a diagram of possible situations connected by possible moves) starting from a start state, in order to reach a goal state.</div>
+</details>
+
+<details class="reveal">
+<summary>Define state, start state, and goal state.</summary>
+<div class="ans">A state is one possible situation in the problem. The start state is where the search begins. The goal state is the situation the search is trying to reach.</div>
+</details>
+
+<details class="reveal">
+<summary>What does "Uninformed Search" mean? Name two examples.</summary>
+<div class="ans">Search that uses no extra information about the problem beyond the start state and the rules of movement — no hints about how close the goal is. Examples: Breadth-First Search (BFS) and Depth-First Search (DFS).</div>
+</details>
+
+<details class="reveal">
+<summary>Explain Breadth-First Search in your own words.</summary>
+<div class="ans">BFS explores level by level, checking everything one step away before anything two steps away, using a Queue (FIFO) to always visit whichever place has been waiting longest.</div>
+</details>
+
+<details class="reveal">
+<summary>Explain Depth-First Search in your own words.</summary>
+<div class="ans">DFS commits fully to one path, going as deep as possible, and only backtracks to try another path once it hits a dead end. It uses a Stack (LIFO), always trying the most recently added option next.</div>
+</details>
+
+<details class="reveal">
+<summary>Compare BFS and DFS on: (a) data structure used, (b) whether the shortest path is guaranteed, (c) memory usage.</summary>
+<div class="ans">(a) BFS uses a Queue, DFS uses a Stack. (b) BFS guarantees the shortest number of steps to the goal; DFS does not. (c) BFS can use more memory (wide waiting line); DFS generally uses less (only the current path is kept).</div>
+</details>
+
+<details class="reveal">
+<summary>With the help of a diagram, trace BFS and DFS on a simple tree and show the order in which nodes are visited.</summary>
+<div class="ans">Using the hostel tree (S → A, B; A → A1 → A2 → A3; B → Goal): BFS visits S, A, B, A1, Goal (5 steps — checks both wings at each level before going deeper). DFS visits S, A, A1, A2, A3, B, Goal (7 steps — fully exhausts Wing A first). See the animated diagrams above for the full step-by-step trace.</div>
+</details>
+
+<h2>🔁 Quick Recap</h2>
+<ul class="check">
+<li>Searching = exploring a state space (dots = states, lines = moves) from a start state to a goal state.</li>
+<li>Uninformed search = no extra clues, just a systematic order of exploring.</li>
+<li>BFS = level by level, using a Queue (FIFO) — guarantees the shortest path, but can use more memory.</li>
+<li>DFS = commit to one path fully, using a Stack (LIFO) — lower memory, but no shortest-path guarantee.</li>
+</ul>
+
+<div class="callout tip">
+<div class="mascot-row" style="margin-bottom:0"><span class="mascot">🎉</span><span class="say">Looking ahead:</span></div>
+Both BFS and DFS search "blindly" — no clue about which direction is actually closer to the goal. What if the search could use a smart hint, like "the room numbers get bigger this way," to skip the wrong turns entirely? That family of strategies is called <strong>Informed Search</strong> — a story for a future lecture.
+</div>
+
+<footer>Introduction to AI · Unit 1 · Lecture 3 of 3 · Student Notes.</footer>
+</main>
+
+<script>
+document.querySelectorAll('.flip-card').forEach(card=>{
+  card.addEventListener('click', ()=> card.classList.toggle('flipped'));
+});
+
+let score = 0;
+const scored = new Set();
+document.querySelectorAll('.quiz-q').forEach((q, qi)=>{
+  const correctIdx = parseInt(q.dataset.answer, 10);
+  const fb = q.querySelector('.feedback');
+  q.querySelectorAll('.opt').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const chosen = parseInt(btn.dataset.idx, 10);
+      q.querySelectorAll('.opt').forEach(b=>b.disabled = true);
+      if(chosen === correctIdx){
+        btn.classList.add('correct');
+        fb.textContent = '✅ Correct!';
+        fb.className = 'feedback good';
+        if(!scored.has(qi)){ score++; scored.add(qi); }
+      } else {
+        btn.classList.add('wrong');
+        q.querySelectorAll('.opt')[correctIdx].classList.add('correct');
+        fb.textContent = '❌ Not quite — correct answer highlighted.';
+        fb.className = 'feedback bad';
+      }
+      document.getElementById('quiz-score').textContent = `Score: ${score} / 5`;
+    });
+  });
+});
+
+/* ---------- Shared hostel tree ---------- */
+const treeNodes = {
+  S:  {label:"Reception",        x:320, y:35},
+  A:  {label:"Wing A entrance",  x:150, y:120},
+  B:  {label:"Wing B entrance",  x:490, y:120},
+  A1: {label:"Corridor A1",      x:90,  y:205},
+  A2: {label:"Corridor A2",      x:90,  y:275},
+  A3: {label:"Dead End",         x:90,  y:315},
+  G:  {label:"Friend's Room 🎯", x:490, y:220}
+};
+const treeEdges = [["S","A"],["S","B"],["A","A1"],["A1","A2"],["A2","A3"],["B","G"]];
+
+function buildBaseSvg(svgEl){
+  svgEl.innerHTML = "";
+  const ns = "http://www.w3.org/2000/svg";
+  treeEdges.forEach(([a,b])=>{
+    const n1 = treeNodes[a], n2 = treeNodes[b];
+    const line = document.createElementNS(ns,"line");
+    line.setAttribute("x1", n1.x); line.setAttribute("y1", n1.y);
+    line.setAttribute("x2", n2.x); line.setAttribute("y2", n2.y);
+    line.setAttribute("class","sw-edge");
+    svgEl.appendChild(line);
+  });
+  Object.entries(treeNodes).forEach(([id, n])=>{
+    const isGoal = id === "G";
+    const circle = document.createElementNS(ns,"circle");
+    circle.setAttribute("cx", n.x); circle.setAttribute("cy", n.y);
+    circle.setAttribute("r", isGoal ? 20 : 16);
+    circle.setAttribute("fill", "#fff");
+    circle.setAttribute("stroke", isGoal ? "#ffc857" : "#c9b98a");
+    circle.setAttribute("stroke-width", isGoal ? 4 : 2.5);
+    circle.setAttribute("class","sw-node-circle");
+    circle.setAttribute("id", svgEl.id + "-node-" + id);
+    svgEl.appendChild(circle);
+
+    const text = document.createElementNS(ns,"text");
+    text.setAttribute("x", n.x);
+    text.setAttribute("y", n.y - (isGoal ? 28 : 24));
+    text.setAttribute("text-anchor","middle");
+    text.setAttribute("class","sw-node-label");
+    text.textContent = n.label;
+    svgEl.appendChild(text);
+  });
+}
+
+function setNodeState(svgEl, id, state){
+  const el = document.getElementById(svgEl.id + "-node-" + id);
+  if(!el) return;
+  if(state === "visited"){ el.setAttribute("fill","#12b3a8"); el.setAttribute("stroke","#0d9c6b"); }
+  else if(state === "current"){ el.setAttribute("fill","#ff8a3d"); el.setAttribute("stroke","#c25a10"); }
+  else if(state === "queued"){ el.setAttribute("fill","#fff4e0"); el.setAttribute("stroke","#ff8a3d"); }
+  else { el.setAttribute("fill","#fff"); el.setAttribute("stroke", id === "G" ? "#ffc857" : "#c9b98a"); }
+}
+
+/* ---------- BFS trace ---------- */
+// step: node being visited now; frontierAfter: queue snapshot AFTER visiting+expanding
+const bfsSteps = [
+  { visit:"S",  frontierAfter:["A","B"] },
+  { visit:"A",  frontierAfter:["B","A1"] },
+  { visit:"B",  frontierAfter:["A1","G"] },
+  { visit:"A1", frontierAfter:["G","A2"] },
+  { visit:"G",  frontierAfter:["A2"], found:true }
+];
+
+/* ---------- DFS trace ---------- */
+const dfsSteps = [
+  { visit:"S",  frontierAfter:["B","A"] },
+  { visit:"A",  frontierAfter:["B","A1"] },
+  { visit:"A1", frontierAfter:["B","A2"] },
+  { visit:"A2", frontierAfter:["B","A3"] },
+  { visit:"A3", frontierAfter:["B"] },
+  { visit:"B",  frontierAfter:["G"] },
+  { visit:"G",  frontierAfter:[], found:true }
+];
+
+function initWidget(prefix, svgId, steps, structureName){
+  const svgEl = document.getElementById(svgId);
+  buildBaseSvg(svgEl);
+  const frontierEl = document.getElementById(prefix+"Frontier");
+  const statusEl = document.getElementById(prefix+"Status");
+  const stepLabelEl = document.getElementById(prefix+"StepLabel");
+  const nextBtn = document.getElementById(prefix+"Next");
+  const replayBtn = document.getElementById(prefix+"Replay");
+  let idx = -1; // -1 = not started
+
+  function render(){
+    Object.keys(treeNodes).forEach(id=>setNodeState(svgEl, id, "default"));
+    for(let i=0;i<=idx;i++){
+      setNodeState(svgEl, steps[i].visit, i===idx ? "current" : "visited");
+    }
+    if(idx >= 0){
+      steps[idx].frontierAfter.forEach(id=>{
+        if(id !== steps[idx].visit) setNodeState(svgEl, id, "queued");
+      });
+    } else {
+      setNodeState(svgEl, "S", "queued");
+    }
+
+    if(idx === -1){
+      frontierEl.innerHTML = `<span class="chip">S</span>`;
+      statusEl.innerHTML = `Ready — click Next Step to begin.`;
+      stepLabelEl.textContent = `Step 0 of ${steps.length}`;
+    } else {
+      const step = steps[idx];
+      frontierEl.innerHTML = step.frontierAfter.map(id=>`<span class="chip">${id}</span>`).join("") || "<span class='chip'>empty</span>";
+      if(step.found){
+        statusEl.innerHTML = `<span class="found">🎉 Goal found at "${step.visit}"!</span>`;
+      } else {
+        statusEl.innerHTML = `<span class="visiting">Visiting: ${step.visit}</span>`;
+      }
+      stepLabelEl.textContent = `Step ${idx+1} of ${steps.length}`;
+    }
+    nextBtn.disabled = idx >= steps.length - 1;
+    nextBtn.textContent = idx >= steps.length - 1 ? "Done ✔" : "Next Step ▶";
+  }
+
+  nextBtn.addEventListener("click", ()=>{
+    if(idx < steps.length - 1){ idx++; render(); }
+  });
+  replayBtn.addEventListener("click", ()=>{ idx = -1; render(); });
+  render();
+}
+
+initWidget("bfs", "bfsSvg", bfsSteps, "Queue");
+initWidget("dfs", "dfsSvg", dfsSteps, "Stack");
+
+function updateProgress(){
+  const scrollTop = window.scrollY;
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  const pct = docHeight > 0 ? Math.min(100, Math.round((scrollTop/docHeight)*100)) : 0;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = pct + '% read';
+}
+window.addEventListener('scroll', updateProgress);
+window.addEventListener('resize', updateProgress);
+updateProgress();
+</script>
+</body></html>
