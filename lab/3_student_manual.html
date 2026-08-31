@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exp 3 — Diagnosing with Neighbours (KNN Classification)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-1:#EAF4F2; --bg-2:#F6FAF4;
+    --ink:#1E2A28; --ink-soft:#4A5D59;
+    --card-bg:rgba(255,255,255,0.62); --card-border:rgba(255,255,255,0.85);
+    --teal:#2E8B84; --teal-dark:#1F615C; --teal-pale:#D8EEEA;
+    --coral:#FF6F59; --coral-dark:#D8432F; --coral-pale:#FFE3DD;
+    --amber:#E8A33D; --amber-pale:#FBEBD2;
+    --green:#3FA796; --green-pale:#DCF3ED;
+    --font-d:'Space Grotesk',sans-serif; --font-b:'Inter',sans-serif; --font-m:'JetBrains Mono',monospace;
+    --shadow: 0 8px 30px rgba(31,74,69,0.08);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; font-family:var(--font-b); color:var(--ink);
+    background:linear-gradient(165deg,var(--bg-1),var(--bg-2) 60%);
+    min-height:100vh; line-height:1.6;
+  }
+  .wrap{max-width:760px; margin:0 auto; padding:28px 20px 90px;}
+  header.top{
+    display:flex; align-items:center; gap:14px; margin-bottom:6px;
+  }
+  .mascot{
+    width:52px; height:52px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    font-size:26px; background:var(--teal-pale); border:2px solid var(--teal); flex-shrink:0;
+    transition:transform .2s;
+  }
+  .mascot.puzzled{background:var(--amber-pale); border-color:var(--amber);}
+  .mascot.celebrate{background:var(--green-pale); border-color:var(--green);}
+  h1{font-family:var(--font-d); font-size:1.55rem; font-weight:700; margin:0 0 2px; letter-spacing:-0.01em;}
+  .subtitle{color:var(--ink-soft); font-size:.92rem; margin:0;}
+  .meta-row{display:flex; gap:10px; flex-wrap:wrap; margin:18px 0 28px;}
+  .pill{
+    font-size:.78rem; padding:5px 12px; border-radius:20px; background:var(--card-bg);
+    border:1px solid var(--card-border); color:var(--ink-soft); font-family:var(--font-b);
+  }
+  section{margin-bottom:34px;}
+  .stage-card{
+    background:var(--card-bg); border:1px solid var(--card-border); border-radius:16px;
+    padding:22px 24px; box-shadow:var(--shadow); backdrop-filter:blur(6px);
+  }
+  .stage-label{
+    font-family:var(--font-d); font-weight:600; font-size:.72rem; letter-spacing:.04em;
+    color:var(--teal-dark); margin-bottom:6px; text-transform:uppercase;
+  }
+  h2{font-family:var(--font-d); font-size:1.22rem; margin:0 0 12px; font-weight:600;}
+  h3{font-family:var(--font-d); font-size:1.02rem; margin:18px 0 8px; font-weight:600;}
+  p{margin:0 0 12px;}
+  ul,ol{margin:0 0 12px; padding-left:22px;}
+  li{margin-bottom:6px;}
+  code{font-family:var(--font-m); background:rgba(46,139,132,0.1); padding:1px 6px; border-radius:4px; font-size:.88em;}
+  pre{
+    font-family:var(--font-m); background:#1B2523; color:#E8F3F0; padding:16px 18px; border-radius:10px;
+    overflow-x:auto; font-size:.85rem; line-height:1.55; margin:10px 0 14px; position:relative;
+  }
+  pre .cmt{color:#7FB8AE;}
+  .copybtn{
+    position:absolute; top:8px; right:8px; background:rgba(255,255,255,0.12); color:#E8F3F0; border:none;
+    padding:4px 10px; border-radius:6px; font-size:.72rem; cursor:pointer; font-family:var(--font-b);
+  }
+  .copybtn:hover{background:rgba(255,255,255,0.22);}
+  .predict-box{
+    border:2px dashed var(--coral); background:var(--coral-pale); border-radius:12px; padding:14px 16px; margin:14px 0;
+  }
+  .predict-box .ptitle{font-family:var(--font-d); font-weight:600; color:var(--coral-dark); font-size:.88rem; margin-bottom:6px; display:flex; align-items:center; gap:6px;}
+  .predict-box textarea{
+    width:100%; border:1px solid rgba(216,67,47,0.35); border-radius:8px; padding:8px 10px; font-family:var(--font-b);
+    font-size:.88rem; resize:vertical; min-height:44px; background:rgba(255,255,255,0.7);
+  }
+  .checkpoint{border-left:4px solid var(--teal); padding-left:16px; margin:20px 0;}
+  .checkpoint .cp-head{display:flex; align-items:center; gap:8px; margin-bottom:4px;}
+  .cp-badge{
+    font-family:var(--font-d); font-size:.72rem; font-weight:700; color:#fff; background:var(--teal);
+    padding:2px 9px; border-radius:12px;
+  }
+  .expect-box{
+    background:var(--teal-pale); border-radius:8px; padding:10px 14px; font-size:.86rem; margin:10px 0;
+    color:var(--teal-dark);
+  }
+  .expect-box b{color:var(--teal-dark);}
+  .mic{
+    background:var(--amber-pale); border-radius:10px; padding:12px 14px; margin:12px 0; font-size:.88rem;
+  }
+  .mic .mtitle{font-weight:600; color:#8A5F16; margin-bottom:4px; font-family:var(--font-d); font-size:.82rem;}
+  .debug-card{
+    background:linear-gradient(135deg,#2B1810,#3A1F14); color:#FCE8DE; border-radius:14px; padding:20px 22px; margin:18px 0;
+    border:1px solid var(--coral);
+  }
+  .debug-card h3{color:#FFD9CC; margin-top:0;}
+  .debug-card pre{background:#1A0F0A;}
+  details.reveal{margin-top:12px;}
+  details.reveal summary{
+    cursor:pointer; color:#FFB199; font-weight:600; font-size:.86rem; list-style:none;
+  }
+  details.reveal summary::-webkit-details-marker{display:none;}
+  .keyreveal{
+    margin-top:14px; padding:12px; background:rgba(255,255,255,0.06); border-radius:10px; font-size:.84rem;
+  }
+  .keybtn{
+    background:var(--coral); color:#fff; border:none; padding:8px 16px; border-radius:20px; font-family:var(--font-b);
+    font-weight:600; cursor:pointer; font-size:.85rem;
+  }
+  .keybtn:active{transform:scale(0.97);}
+  .keystatus{font-size:.78rem; color:#C9A99A; margin-top:6px;}
+  .solution-body{display:none; margin-top:12px; padding:14px; background:rgba(0,0,0,0.25); border-radius:10px;}
+  .quiz-q{margin-bottom:18px;}
+  .quiz-opt{
+    display:block; width:100%; text-align:left; padding:9px 14px; margin:5px 0; border-radius:8px;
+    border:1px solid rgba(31,97,92,0.25); background:rgba(255,255,255,0.55); cursor:pointer; font-family:var(--font-b);
+    font-size:.88rem; color:var(--ink);
+  }
+  .quiz-opt:hover{border-color:var(--teal);}
+  .quiz-opt.correct{background:var(--green-pale); border-color:var(--green); font-weight:600;}
+  .quiz-opt.wrong{background:var(--coral-pale); border-color:var(--coral);}
+  .quiz-fb{font-size:.85rem; margin-top:6px; padding:8px 12px; border-radius:8px; display:none;}
+  .quiz-fb.show{display:block;}
+  .quiz-fb.ok{background:var(--green-pale); color:#1F6155;}
+  .quiz-fb.no{background:var(--coral-pale); color:#8A3524;}
+  .viva details{
+    background:rgba(255,255,255,0.5); border-radius:10px; padding:10px 14px; margin-bottom:8px;
+  }
+  .viva summary{cursor:pointer; font-weight:600; font-size:.9rem;}
+  .viva .a{margin-top:8px; font-size:.87rem; color:var(--ink-soft);}
+  .wrongtool{
+    background:var(--amber-pale); border-radius:14px; padding:20px 22px; border:1px solid var(--amber);
+  }
+  .checklist label{display:flex; align-items:flex-start; gap:8px; margin-bottom:8px; font-size:.9rem;}
+  .checklist input{margin-top:3px;}
+  .diagram-wrap{
+    background:rgba(255,255,255,0.55); border-radius:14px; padding:16px; margin:14px 0; text-align:center;
+  }
+  .diagram-controls{margin-top:10px; display:flex; gap:10px; justify-content:center; align-items:center;}
+  .stepbtn{
+    background:var(--teal); color:#fff; border:none; padding:8px 18px; border-radius:20px; cursor:pointer;
+    font-family:var(--font-b); font-weight:600; font-size:.85rem;
+  }
+  .stepbtn:disabled{background:#B7CFCB; cursor:not-allowed;}
+  .stepnote{font-size:.82rem; color:var(--ink-soft); min-width:180px; text-align:left;}
+  footer{text-align:center; color:var(--ink-soft); font-size:.8rem; margin-top:40px;}
+  .badge-c6{
+    display:inline-block; background:var(--teal-dark); color:#fff; font-size:.7rem; padding:2px 9px; border-radius:10px;
+    font-family:var(--font-d); margin-left:8px; vertical-align:middle;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <div class="mascot" id="mascot">🔎</div>
+  <div>
+    <h1>Exp 3 — Diagnosing with Neighbours</h1>
+    <p class="subtitle">K-Nearest Neighbours Classification in Python · AI &amp; ML Lab, Sem 7</p>
+  </div>
+</header>
+
+<div class="meta-row">
+  <span class="pill">⏱ 60-minute session</span>
+  <span class="pill">🐍 Python + scikit-learn (Colab/Jupyter)</span>
+  <span class="pill">🎯 Focus: Evaluation<span class="badge-c6">C6</span></span>
+</div>
+
+<!-- STAGE 1: HOOK -->
+<section id="stage-1">
+  <div class="stage-card">
+    <div class="stage-label">Stage 1 · The Broken Workflow</div>
+    <h2>A tumour just came in. Malignant or benign?</h2>
+    <p>You're helping a small diagnostic lab. Every week, a new patient's biopsy comes back with ten measurements — radius, texture, smoothness, and so on — describing the cells under the microscope. Somewhere in the last few years, this lab has already recorded <b>569 such cases</b>, each one labelled by a pathologist as malignant or benign.</p>
+    <p>Now a new, unlabelled case lands on your desk. You want to compare it against the 569 past cases and decide: which past patients does this one <i>resemble most closely</i>?</p>
+    <p>Try doing that by hand. For <b>3 past cases</b>, you could eyeball the ten numbers and guess which is closest. For <b>569 cases</b>, each with 10 numbers to compare — that's over 5,600 individual number-comparisons, before you've even decided how to combine them into one "closeness" score, and before the next patient walks in tomorrow.</p>
+    <p><b>So here's the question we can't yet answer:</b> if "closeness" is what matters, how do we get a computer to find the closest matches for us — fast, and reliably enough to trust with something this serious?</p>
+  </div>
+</section>
+
+<!-- STAGE 2: NAIVE FIX -->
+<section id="stage-2">
+  <div class="stage-card">
+    <div class="stage-label">Stage 2 · Why Not the Obvious Fix</div>
+    <h2>What a resourceful student tries first</h2>
+    <p><b>"I'll just average one feature and set a threshold."</b> Pick the scariest-looking column (say, <code>mean radius</code>), and say "above X → malignant." This ignores the other nine measurements entirely. Two tumours with the same radius but very different textures get treated identically — you'll misclassify cases sitting near your threshold, and you have no principled way to even choose X.</p>
+    <p><b>"I'll just eyeball it in Excel."</b> Sort by a couple of columns, scroll, guess. Works maybe for 10 rows. At 569 rows × 30 features (the real dataset has 30, not 10 — we'll simplify), no human can hold that comparison in their head, and two different people will "eyeball" two different answers for the same patient.</p>
+    <p>Both patches share the same failure: they don't actually use <i>distance across all the measurements at once</i>. That's precisely the gap today's tool fills.</p>
+  </div>
+</section>
+
+<!-- STAGE 3: MEET THE TOOL -->
+<section id="stage-3">
+  <div class="stage-card">
+    <div class="stage-label">Stage 3 · Meet the Tool</div>
+    <h2>K-Nearest Neighbours (KNN)</h2>
+    <p>KNN solves exactly one problem: <b>given a new point, find the K most similar points you've already seen, and let them vote.</b> No formula is fitted, no line is drawn in advance — the "model" is really just the stored data plus a distance calculation done at prediction time. This is called a <b>lazy learner</b>: all the work happens when you ask a question, not when you "train."</p>
+    <p>Step through the diagram below to see it happen on a small example (green = benign, red = malignant, star = new patient):</p>
+
+    <div class="diagram-wrap">
+      <svg id="knnsvg" viewBox="0 0 460 300" width="100%" style="max-width:440px;"></svg>
+      <div class="diagram-controls">
+        <button class="stepbtn" id="knnPrev" disabled>← Back</button>
+        <span class="stepnote" id="knnNote">Click "Next step" to begin</span>
+        <button class="stepbtn" id="knnNext">Next step →</button>
+      </div>
+    </div>
+
+    <p>Two things you get to choose: <b>K</b> (how many neighbours vote) and the <b>distance metric</b> (usually straight-line "Euclidean" distance across all features). Change either one and you can get a different answer for the same new point.</p>
+
+    <div class="predict-box">
+      <div class="ptitle">🔮 Predict before you continue</div>
+      <p style="margin:0 0 6px;">In the diagram above, would the vote change if K were increased from 3 to 7? Why or why not — write a one-line guess before scrolling on.</p>
+      <textarea placeholder="My guess..."></textarea>
+    </div>
+  </div>
+</section>
+
+<!-- STAGE 4: SETUP -->
+<section id="stage-4">
+  <div class="stage-card">
+    <div class="stage-label">Stage 4 · Setup Checkpoint</div>
+    <h2>Confirm you're ready</h2>
+    <p>Same Colab/Jupyter setup as Labs 1–2. Run this cell first and check you get no errors:</p>
+    <pre><span class="cmt"># confirm libraries are available</span>
+import numpy as np
+import pandas as pd
+from sklearn.datasets import load_breast_cancer
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+print("Ready ✅")<button class="copybtn" onclick="copyCode(this)">Copy</button></pre>
+    <div class="expect-box"><b>Expected:</b> prints <code>Ready ✅</code> with no red error text. If you see <code>ModuleNotFoundError</code>, you're likely not on the Colab runtime — restart it from the Runtime menu.</div>
+  </div>
+</section>
+
+<!-- CHECKPOINT 1 -->
+<section id="stage-5a">
+  <div class="stage-card">
+    <div class="stage-label">Stage 5 · Apply It — Checkpoint 1</div>
+    <div class="checkpoint">
+      <div class="cp-head"><span class="cp-badge">CP 1</span><h3 style="margin:0;">Load and explore the data</h3></div>
+      <p>We're using <code>load_breast_cancer()</code> — a real diagnostic dataset built into scikit-learn, 569 patients, 30 measured features, label 0 = malignant, 1 = benign.</p>
+      <div class="predict-box">
+        <div class="ptitle">🔮 Predict before you run</div>
+        <p style="margin:0;">Before running the cell below, guess: roughly how many of the 569 cases do you think are malignant vs benign? (It's rarely a 50/50 split in real medical data.)</p>
+      </div>
+      <pre><span class="cmt"># load and inspect</span>
+data = load_breast_cancer()
+X = pd.DataFrame(data.data, columns=data.feature_names)
+y = data.target
+print(X.shape)
+print(pd.Series(y).value_counts())<button class="copybtn" onclick="copyCode(this)">Copy</button></pre>
+      <div class="expect-box"><b>Expected shape:</b> <code>(569, 30)</code>. <b>Expected split:</b> noticeably imbalanced — more benign than malignant, roughly a 5:8 ratio, not 50/50. Keep this in mind for Checkpoint 4.</div>
+      <div class="mic">
+        <div class="mtitle">🎤 Discuss</div>
+        Was your guess close? Someone share their guess and how far off it was — this imbalance matters a lot later, so it's worth noticing now.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CHECKPOINT 2 -->
+<section id="stage-5b">
+  <div class="stage-card">
+    <div class="checkpoint">
+      <div class="cp-head"><span class="cp-badge">CP 2</span><h3 style="margin:0;">Split, then scale — fill in the blanks</h3></div>
+      <p>KNN measures raw distance across all 30 features. A feature measured in the hundreds (like <code>mean area</code>) will silently dominate one measured in tiny decimals (like <code>mean smoothness</code>) unless we put every feature on the same scale first.</p>
+      <pre><span class="cmt"># fill in the ___ blanks</span>
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=____, random_state=42, stratify=y
+)
+
+scaler = StandardScaler()
+X_train_scaled = scaler.____(X_train)      <span class="cmt"># learns mean/std AND transforms</span>
+X_test_scaled  = scaler.____(X_test)       <span class="cmt"># only transforms — no re-learning!</span>
+print(X_train_scaled.shape, X_test_scaled.shape)<button class="copybtn" onclick="copyCode(this)">Copy</button></pre>
+      <div class="expect-box"><b>Expected:</b> two shapes printed, roughly <code>(455, 30) (114, 30)</code> for a 20% test split. <code>stratify=y</code> keeps the malignant/benign ratio consistent across both sets.</div>
+      <div class="mic">
+        <div class="mtitle">🎤 Discuss</div>
+        Why do we call <code>scaler.transform()</code> (not <code>fit_transform()</code>) on the test set? What would go wrong if we let the scaler "look at" the test data too?
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CHECKPOINT 3 -->
+<section id="stage-5c">
+  <div class="stage-card">
+    <div class="checkpoint">
+      <div class="cp-head"><span class="cp-badge">CP 3</span><h3 style="margin:0;">Train and predict</h3></div>
+      <p>Complete the script — instantiate a classifier with <code>k=5</code>, fit it on the scaled training data, and predict on the scaled test data.</p>
+      <div class="predict-box">
+        <div class="ptitle">🔮 Predict before you run</div>
+        <p style="margin:0;">Guess a number: what accuracy (as a %) do you expect a first, unturned KNN model to get on this dataset? Write it down before running.</p>
+      </div>
+      <pre><span class="cmt"># complete this script</span>
+knn = KNeighborsClassifier(n_neighbors=___)
+knn.fit(___, ___)
+y_pred = knn.predict(___)
+
+acc = accuracy_score(y_test, y_pred)
+print(f"Accuracy: {acc:.3f}")<button class="copybtn" onclick="copyCode(this)">Copy</button></pre>
+      <div class="expect-box"><b>Expected shape of result:</b> a single float between 0 and 1, typically in the <b>0.93–0.98</b> range for this dataset with k=5. If yours is far outside that band, something upstream (scaling, split) is likely off — don't just re-run and hope.</div>
+    </div>
+  </div>
+</section>
+
+<!-- DEBUG-IT -->
+<section id="stage-6">
+  <div class="debug-card">
+    <div class="stage-label" style="color:#FFB199;">Stage 6 · 🐞 Debug-It</div>
+    <h3>Your labmate's accuracy is suspiciously perfect</h3>
+    <p style="color:#F3D6C9;">Your labmate ran the same task but proudly reports <b>99.9% accuracy</b> — better than yours. Here's their code. Before touching it, read it line by line: what's different from what you wrote in CP2/CP3, and why might that number be misleading rather than impressive?</p>
+    <pre>X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42, stratify=y
+)
+
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled  = scaler.fit_transform(X_test)   <span class="cmt" style="color:#E8A386;">&larr; suspect this line</span>
+
+knn = KNeighborsClassifier(n_neighbors=5)
+knn.fit(X_train_scaled, y_train)
+y_pred = knn.predict(X_test_scaled)
+print(accuracy_score(y_test, y_pred))</pre>
+    <div class="predict-box" style="background:rgba(255,255,255,0.08); border-color:#FFB199;">
+      <div class="ptitle" style="color:#FFB199;">🔮 Diagnose first</div>
+      <p style="margin:0; color:#F3D6C9;">Write your diagnosis before expanding the reveal below: what exactly does <code>fit_transform</code> do differently from <code>transform</code>, and why does calling it on <code>X_test</code> inflate the accuracy?</p>
+    </div>
+    <details class="reveal">
+      <summary>Reveal the diagnosis + fix ▸</summary>
+      <div class="keyreveal">
+        <b>The bug:</b> calling <code>scaler.fit_transform(X_test)</code> makes the scaler re-learn a new mean/standard-deviation from the <i>test</i> data instead of reusing the one learned from training data. This is a mild form of <b>data leakage</b> — the test set's own statistics quietly influence how it gets scaled, so the evaluation is no longer a fair test of "unseen" data.
+        <br><br><b>The fix:</b> <code>X_test_scaled = scaler.transform(X_test)</code> — reuse the already-fitted scaler, don't refit it.
+        <br><br><b>Why the accuracy looked better, not worse:</b> when both train and test are each scaled using their <i>own</i> mean, the two distributions end up looking more artificially similar to each other than they truly are, which can flatter this metric — the takeaway isn't "leakage always inflates accuracy" in every dataset, but "any leak on the test side makes the number untrustworthy," which is the real lesson.
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- CHECKPOINT 4 -->
+<section id="stage-7">
+  <div class="stage-card">
+    <div class="checkpoint">
+      <div class="cp-head"><span class="cp-badge">CP 4</span><h3 style="margin:0;">Evaluate rigorously <span class="badge-c6">C6 — this is the core skill today</span></h3></div>
+      <p>Accuracy alone can hide something dangerous in medical data. With this class imbalance (more benign than malignant), a lazy model could get high accuracy just by leaning toward "benign" — and a missed malignant case (a <b>false negative</b>) is far costlier than a false alarm.</p>
+      <p>Run this, using your CP3 predictions:</p>
+      <pre>cm = confusion_matrix(y_test, y_pred)
+print(cm)
+print(classification_report(y_test, y_pred, target_names=data.target_names))<button class="copybtn" onclick="copyCode(this)">Copy</button></pre>
+      <div class="expect-box"><b>Expected shape:</b> a 2×2 confusion matrix, plus a table with precision/recall/F1 for each class. Values will differ slightly by machine due to floating-point/version differences — the pattern matters more than the exact digits.</div>
+      <div class="mic">
+        <div class="mtitle">🎤 Discuss — this is the graded judgement call</div>
+        Look at the <b>recall</b> row for the <i>malignant</i> class specifically. If you had to choose one single number from this report to report to a hospital as "how good is this model," would you pick overall accuracy or malignant-class recall? Defend your choice out loud to your neighbour.
+      </div>
+      <p style="margin-top:14px;"><b>Now, without changing anything else, try k=1 and k=15</b> (re-run CP3 with each) and compare their classification reports side by side. Which k would you actually recommend deploying, and why — in terms of both numbers, not gut feeling?</p>
+      <div class="expect-box"><b>Expected pattern:</b> k=1 tends to fit training quirks too tightly (can look great on training data, shakier on test); very high k tends to smooth over the minority (malignant) class. There's rarely one "correct" k — the graded skill here is justifying your pick with the metric that matters for this problem.</div>
+    </div>
+  </div>
+</section>
+
+<!-- STRETCH (optional) -->
+<section id="stage-7b">
+  <div class="stage-card" style="border-style:dashed;">
+    <div class="stage-label">Optional Stretch — only if time remains</div>
+    <h3 style="margin-top:0;">Sweep k from 1 to 15</h3>
+    <p>Loop over <code>k = range(1, 16)</code>, record test accuracy for each, and plot k vs accuracy. Where does it start to plateau or dip? This isn't required for submission today — if you don't get to it, you'll see this idea again.</p>
+  </div>
+</section>
+
+<!-- STAGE 8: WRONG TOOL -->
+<section id="stage-8">
+  <div class="wrongtool">
+    <div class="stage-label" style="color:#8A5F16;">Stage 8 · When KNN Is the Wrong Tool</div>
+    <h2 style="margin-top:0;">Not a universal hammer</h2>
+    <p>KNN stores the entire training set and computes distance to <i>all of it</i> for every single prediction — there's no compact "model" to fall back on. On this dataset (569 rows) that's instant. On a hospital system with <b>5 million patient records</b>, every prediction would mean comparing against millions of stored cases in real time — far too slow for practical use.</p>
+    <p>KNN also struggles as the number of features grows very large (the <b>curse of dimensionality</b>): in high dimensions, "distance" stops being meaningful because every point ends up roughly equally far from every other point. And it's highly sensitive to irrelevant or unscaled features, as you just saw in the debug-it task.</p>
+    <p><b>What you'd reach for instead:</b> for large datasets or high-dimensional data, a tree-based model like Random Forest builds a compact set of rules once and predicts quickly afterward, without needing to store or scan the whole dataset each time.</p>
+  </div>
+</section>
+
+<!-- STAGE 9: CLOSE THE LOOP -->
+<section id="stage-9">
+  <div class="stage-card">
+    <div class="stage-label">Stage 9 · Close the Loop</div>
+    <h2>Back to the opening question</h2>
+    <p>We asked: how do we get a computer to find the closest-matching past patients, fast and reliably enough to trust? In your own words (say it to your neighbour, or jot one line): what changed about your ability to answer that in the last hour?</p>
+    <p><b>One loose end for next time:</b> today we used all 30 features equally. What if only 5 of them actually matter for diagnosis, and the other 25 are just adding noise (and slowing distance calculations down)? That question — which features actually deserve a vote — is where we pick up next.</p>
+  </div>
+</section>
+
+<!-- EXIT TICKET -->
+<section id="stage-10">
+  <div class="stage-card">
+    <div class="stage-label">Stage 10 · Exit Ticket</div>
+    <h2>Before you leave — 3 quick ones</h2>
+    <ol>
+      <li>In one sentence, what does the "K" in K-Nearest Neighbours actually control?</li>
+      <li>True or false: a higher accuracy score always means a better model for this cancer dataset. Why?</li>
+      <li>Name one reason KNN might struggle if this dataset had 5,000 features instead of 30.</li>
+    </ol>
+    <p style="color:var(--ink-soft); font-size:.85rem;">Answer these on paper / verbally as your instructor asks — no need to type them.</p>
+  </div>
+</section>
+
+<!-- SELF-CHECK QUIZ -->
+<section id="quiz">
+  <div class="stage-card">
+    <h2>✅ Self-check quiz</h2>
+    <div id="quizArea"></div>
+  </div>
+</section>
+
+<!-- VIVA SELF CHECK -->
+<section id="viva">
+  <div class="stage-card viva">
+    <h2>🎓 Before your viva, ask yourself</h2>
+    <details><summary>Why is KNN called a "lazy learner"?</summary><div class="a">Because it does no real work at training time — it just stores the data. All the computation (distance, sorting, voting) happens when a prediction is actually requested.</div></details>
+    <details><summary>Why did we scale the features before running KNN?</summary><div class="a">KNN's distance calculation treats all features as directly comparable numbers. Without scaling, a feature with naturally large values (e.g. area) would dominate the distance over a feature with naturally small values (e.g. smoothness), even if the smaller one is more diagnostically important.</div></details>
+    <details><summary>Why might you prefer an odd value of K in a two-class problem?</summary><div class="a">An odd K avoids exact ties in the majority vote between the two classes.</div></details>
+    <details><summary>Why does malignant-class recall matter more than overall accuracy here?</summary><div class="a">A false negative (missing a real malignant case) has a much higher real-world cost than a false positive, and with class imbalance, accuracy alone can look good while quietly missing malignant cases.</div></details>
+    <details><summary>What would happen if you accidentally fit the scaler on the test set?</summary><div class="a">The test set's own statistics would leak into the scaling process, making your evaluation number untrustworthy even if it looks good — as seen in the debug-it task.</div></details>
+  </div>
+</section>
+
+<!-- REFERENCE SOLUTION -->
+<section id="refsol">
+  <div class="stage-card">
+    <h2>🗝️ Reference solution</h2>
+    <p style="color:var(--ink-soft); font-size:.88rem;">Try the checkpoints yourself first. This unlocks after a few taps — genuinely attempt it before peeking.</p>
+    <button class="keybtn" id="unlockBtn" onclick="tryUnlock()">🗝️ Lab Exercise — tap to unlock (3 taps)</button>
+    <div class="keystatus" id="unlockStatus"></div>
+    <div class="solution-body" id="solutionBody">
+      <pre>X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42, stratify=y
+)
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled  = scaler.transform(X_test)
+
+knn = KNeighborsClassifier(n_neighbors=5)
+knn.fit(X_train_scaled, y_train)
+y_pred = knn.predict(X_test_scaled)
+
+print(accuracy_score(y_test, y_pred))
+print(confusion_matrix(y_test, y_pred))
+print(classification_report(y_test, y_pred, target_names=data.target_names))</pre>
+    </div>
+  </div>
+</section>
+
+<!-- SUBMISSION CHECKLIST -->
+<section id="submission">
+  <div class="stage-card">
+    <h2>📋 Lab record — what to submit</h2>
+    <div class="checklist">
+      <label><input type="checkbox"><span><b>Aim</b> — one line stating what this experiment implements.</span></label>
+      <label><input type="checkbox"><span><b>Problem statement</b> — the diagnostic scenario from Stage 1, in your own words.</span></label>
+      <label><input type="checkbox"><span><b>Program</b> — your completed CP1–CP4 code.</span></label>
+      <label><input type="checkbox"><span><b>Output</b> — accuracy, confusion matrix, and classification report for at least k=5.</span></label>
+      <label><input type="checkbox"><span><b>Interpretation</b> — 3–4 lines: which k you'd recommend and why, referencing recall, not just accuracy.</span></label>
+    </div>
+  </div>
+</section>
+
+<footer>Exp 3 · AI &amp; ML Lab · Sem 7 — K-Nearest Neighbours Classification</footer>
+</div>
+
+<script>
+function copyCode(btn){
+  const pre = btn.closest('pre');
+  const text = pre.innerText.replace('Copy','').trim();
+  navigator.clipboard.writeText(text);
+  btn.textContent = 'Copied!';
+  setTimeout(()=>btn.textContent='Copy', 1200);
+}
+
+// --- Unlock reference solution (deliberate friction) ---
+let taps = 0, tapTimer = null;
+function tryUnlock(){
+  taps++;
+  document.getElementById('unlockStatus').textContent = taps < 3 ? `Tap ${taps}/3...` : '';
+  clearTimeout(tapTimer);
+  tapTimer = setTimeout(()=>{ taps = 0; document.getElementById('unlockStatus').textContent=''; }, 2500);
+  if(taps >= 3){
+    document.getElementById('solutionBody').style.display = 'block';
+    document.getElementById('unlockBtn').textContent = '🔓 Unlocked';
+    document.getElementById('unlockBtn').disabled = true;
+    clearTimeout(tapTimer);
+  }
+}
+
+// --- Quiz ---
+const quizData = [
+  {
+    q: "What does KNN do at prediction time?",
+    opts: ["Solves an equation fitted during training","Finds the K closest stored points and lets them vote","Builds a decision tree on the fly","Randomly samples from the training set"],
+    correct: 1,
+    exp: "KNN has no fitted equation — it stores the training data and, for each new point, finds its K nearest neighbours and takes a majority vote."
+  },
+  {
+    q: "Why must you call scaler.transform() (not fit_transform()) on the test set?",
+    opts: ["transform() is faster","fit_transform() would relearn scaling stats from test data, leaking test info into evaluation","transform() gives higher accuracy","There's no real difference"],
+    correct: 1,
+    exp: "Refitting the scaler on test data lets the test set's own statistics influence scaling — exactly the debug-it bug from today."
+  },
+  {
+    q: "In this cancer dataset, why is malignant-class recall often more important than overall accuracy?",
+    opts: ["Recall is always more important, in every domain","A false negative (missed malignant case) is far more costly than a false positive here","Accuracy can't be computed for imbalanced data","Recall and accuracy are the same thing"],
+    correct: 1,
+    exp: "With class imbalance, a model can post high accuracy while still missing many malignant cases — the costlier error in this specific problem."
+  },
+  {
+    q: "Why might a very large K (e.g. K=100) hurt performance on the minority (malignant) class?",
+    opts: ["Large K always improves accuracy","It has no effect on minority classes","Votes get diluted by the more numerous benign points nearby, smoothing over the minority class","K only affects training time, not predictions"],
+    correct: 2,
+    exp: "As K grows, more of the numerous benign neighbours get pulled into each vote, which can overwhelm genuine malignant signals."
+  }
+];
+const quizArea = document.getElementById('quizArea');
+quizData.forEach((item, qi)=>{
+  const div = document.createElement('div');
+  div.className='quiz-q';
+  div.innerHTML = `<p style="font-weight:600;">${qi+1}. ${item.q}</p>`;
+  item.opts.forEach((opt, oi)=>{
+    const b = document.createElement('button');
+    b.className='quiz-opt'; b.textContent = opt;
+    b.onclick = ()=>{
+      const fb = div.querySelector('.quiz-fb');
+      const allBtns = div.querySelectorAll('.quiz-opt');
+      allBtns.forEach(x=>x.disabled=true);
+      if(oi === item.correct){
+        b.classList.add('correct');
+        fb.textContent = '✅ Nice — ' + item.exp;
+        fb.className = 'quiz-fb show ok';
+        setMascot('celebrate');
+      } else {
+        b.classList.add('wrong');
+        allBtns[item.correct].classList.add('correct');
+        fb.textContent = "🙈 Close — here's why: " + item.exp;
+        fb.className = 'quiz-fb show no';
+        setMascot('puzzled');
+      }
+    };
+    div.appendChild(b);
+  });
+  const fb = document.createElement('div'); fb.className='quiz-fb';
+  div.appendChild(fb);
+  quizArea.appendChild(div);
+});
+
+function setMascot(mode){
+  const m = document.getElementById('mascot');
+  m.className = 'mascot' + (mode ? ' '+mode : '');
+  m.textContent = mode==='celebrate' ? '🎉' : mode==='puzzled' ? '🤔' : '🔎';
+  if(mode) setTimeout(()=>{ m.className='mascot'; m.textContent='🔎'; }, 2500);
+}
+
+// --- KNN animated step diagram ---
+const pts = [
+  {x:120,y:90,c:'g'},{x:150,y:60,c:'g'},{x:100,y:140,c:'g'},{x:170,y:130,c:'g'},{x:90,y:200,c:'g'},
+  {x:320,y:80,c:'r'},{x:340,y:150,c:'r'},{x:300,y:190,c:'r'},{x:360,y:110,c:'r'},{x:280,y:230,c:'r'}
+];
+const query = {x:230,y:150};
+pts.forEach(p=>{ p.d = Math.hypot(p.x-query.x, p.y-query.y); });
+const sorted = [...pts].sort((a,b)=>a.d-b.d);
+const K = 3;
+let step = 0;
+const totalSteps = sorted.length + 2; // reveal each point's distance, then vote, then result
+
+function colorFor(c){ return c==='g' ? '#3FA796' : '#E8544A'; }
+
+function renderKnn(){
+  const svg = document.getElementById('knnsvg');
+  let s = `<line x1="0" y1="0" x2="0" y2="0"/>`; // placeholder
+  let el = [];
+  // axes-ish background
+  el.push(`<rect x="0" y="0" width="460" height="300" fill="transparent"/>`);
+  // lines for revealed points
+  for(let i=0;i<step && i<sorted.length;i++){
+    const p = sorted[i];
+    const isNeighbor = i < K;
+    el.push(`<line x1="${query.x}" y1="${query.y}" x2="${p.x}" y2="${p.y}" stroke="${isNeighbor?'#2E8B84':'#C9D6D3'}" stroke-width="${isNeighbor?2.5:1.3}" stroke-dasharray="${isNeighbor?'0':'4,3'}"/>`);
+  }
+  // points
+  pts.forEach(p=>{
+    const revealedIdx = sorted.indexOf(p);
+    const revealed = revealedIdx < step;
+    const isNeighbor = revealed && revealedIdx < K;
+    el.push(`<circle cx="${p.x}" cy="${p.y}" r="${isNeighbor?9:7}" fill="${colorFor(p.c)}" opacity="${revealed?1:0.35}" stroke="${isNeighbor?'#1F615C':'none'}" stroke-width="${isNeighbor?2:0}"/>`);
+  });
+  // query point
+  const showResult = step >= sorted.length + 1;
+  let starFill = '#333';
+  if(showResult){
+    const neighborClasses = sorted.slice(0,K).map(p=>p.c);
+    const rCount = neighborClasses.filter(c=>c==='r').length;
+    starFill = rCount > K/2 ? '#E8544A' : '#3FA796';
+  }
+  el.push(`<path d="M230,132 l5,15 l16,0 l-13,10 l5,15 l-13,-10 l-13,10 l5,-15 l-13,-10 l16,0 z" fill="${starFill}" stroke="#1E2A28" stroke-width="1"/>`);
+  el.push(`<text x="230" y="120" text-anchor="middle" font-size="11" font-family="Inter,sans-serif" fill="#4A5D59">new patient</text>`);
+  document.getElementById('knnsvg').innerHTML = el.join('');
+
+  const note = document.getElementById('knnNote');
+  if(step===0){ note.textContent = 'Click "Next step" to begin'; }
+  else if(step <= sorted.length){
+    const p = sorted[step-1];
+    note.textContent = `Distance to point ${step}: ${p.d.toFixed(0)}px ${step<=K?'→ among closest '+K:'→ too far, ignored'}`;
+  } else if(step === sorted.length+1){
+    const neighborClasses = sorted.slice(0,K).map(p=>p.c);
+    const rCount = neighborClasses.filter(c=>c==='r').length;
+    const gCount = K - rCount;
+    note.textContent = `Vote among ${K} nearest: ${gCount} green, ${rCount} red → predicted: ${rCount>gCount?'malignant':'benign'}`;
+  }
+  document.getElementById('knnPrev').disabled = step===0;
+  document.getElementById('knnNext').disabled = step>=totalSteps-1;
+}
+document.getElementById('knnNext').addEventListener('click', ()=>{ if(step<totalSteps-1){ step++; renderKnn(); }});
+document.getElementById('knnPrev').addEventListener('click', ()=>{ if(step>0){ step--; renderKnn(); }});
+document.addEventListener('keydown', (e)=>{
+  if(e.code==='Space' || e.code==='ArrowRight'){ if(step<totalSteps-1){ step++; renderKnn(); e.preventDefault(); } }
+  if(e.code==='ArrowLeft'){ if(step>0){ step--; renderKnn(); } }
+});
+renderKnn();
+</script>
+</body>
+</html>
