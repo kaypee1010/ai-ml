@@ -79,6 +79,22 @@
     <p>The question is simple: <b>can we use those 569 old records to help the new patient, quickly?</b></p>
   </div>
 
+  <!-- ABOUT THE DATASET -->
+  <div class="card">
+    <h2>About the dataset</h2>
+    <p>This isn't a made-up story — it's based on a real, well-known dataset called the <b>Breast Cancer Wisconsin dataset</b>. The good news: you don't need to download or upload anything. It comes built right into scikit-learn, the Python library we're already using.</p>
+    <ul>
+      <li><b>569 patients</b>, each already labelled by a doctor as malignant or benign.</li>
+      <li><b>30 measurements per patient</b> — things like the size, texture, and smoothness of the cells seen in a biopsy image.</li>
+      <li>Loading it takes one line of code:</li>
+    </ul>
+    <div class="analogy" style="font-family:'Courier New',monospace; font-size:.92rem; background:#F0EEFA; border-left-color:var(--violet); color:#3B2E9E;">
+      from sklearn.datasets import load_breast_cancer<br>
+      data = load_breast_cancer()
+    </div>
+    <p style="margin-top:14px;">That's it — <code style="background:#EEE9FB; padding:1px 6px; border-radius:4px;">data</code> now holds all 569 patients and their 30 measurements, ready to use.</p>
+  </div>
+
   <!-- WHAT IS KNN -->
   <div class="card">
     <h2>So, what is KNN?</h2>
