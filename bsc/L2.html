@@ -1,0 +1,502 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lecture 2 | Introduction to AI — Student Notes</title>
+<style>
+:root{--accent:#ff8a3d;--accent2:#12b3a8;--accent3:#ffc857;--ink:#33301f;--muted:#8a8270;--bg:#fffdf6;--card:#ffffff;--line:#f3e6cf;--soft:#fff4e0;--good:#0d9c6b;--bad:#e15b5b}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.65}
+.wrap{max-width:1000px;margin:auto;padding:24px 20px 70px}
+.hero{background:linear-gradient(120deg,#ff8a3d,#ffc857 55%,#12b3a8);color:#2c2410;border-radius:22px;padding:34px;margin-bottom:22px;box-shadow:0 8px 24px rgba(255,138,61,.25)}
+.hero .tag{font-size:.82rem;text-transform:uppercase;letter-spacing:.12em;opacity:.8;font-weight:700}
+h1{font-size:2rem;margin:.25rem 0 .5rem;color:#2c2410}
+h2{margin-top:38px;color:#3a2f1a;display:flex;align-items:center;gap:10px}
+h3{color:#4a3d24}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px;margin:16px 0;box-shadow:0 3px 14px rgba(51,48,31,.06)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+.callout{background:var(--soft);border-left:5px solid var(--accent);padding:15px 18px;border-radius:9px;margin:16px 0}
+.callout.tip{border-left-color:var(--accent2);background:#e5faf7}
+.callout.warn{border-left-color:var(--bad);background:#fdecec}
+code{background:#fbeed9;border-radius:5px;padding:2px 6px}
+.badge{display:inline-block;background:#fff0dc;color:#c25a10;border-radius:999px;padding:4px 10px;font-size:.82rem;font-weight:700}
+footer{margin-top:35px;color:var(--muted);font-size:.9rem;border-top:1px solid var(--line);padding-top:15px}
+
+.progress-wrap{position:sticky;top:0;z-index:40;background:var(--bg);padding-top:8px;padding-bottom:6px}
+.progress-track{height:8px;background:var(--line);border-radius:999px;overflow:hidden}
+.progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .25s}
+.progress-label{font-size:.78rem;color:var(--muted);margin-top:4px;text-align:right}
+
+.mascot{display:inline-flex;align-items:center;justify-content:center;font-size:1.5rem;background:var(--soft);border:2px solid var(--accent);border-radius:50%;width:44px;height:44px;flex-shrink:0}
+.mascot-row{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.mascot-row .say{font-weight:700;color:#3a2f1a}
+
+.flip-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin:16px 0}
+.flip-card{perspective:1000px;height:180px;cursor:pointer}
+.flip-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d}
+.flip-card.flipped .flip-inner{transform:rotateY(180deg)}
+.flip-front,.flip-back{position:absolute;inset:0;backface-visibility:hidden;border-radius:16px;padding:16px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center}
+.flip-front{background:linear-gradient(135deg,#ff8a3d,#ffb35c);color:#fff}
+.flip-front .emoji{font-size:2.1rem;margin-bottom:6px}
+.flip-back{background:#fff6e6;color:var(--ink);transform:rotateY(180deg);border:1px solid var(--line);font-size:.9rem}
+.flip-hint{font-size:.72rem;opacity:.85;margin-top:8px}
+
+.loop{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:8px;margin:18px 0}
+.loop .node{background:var(--soft);border:2px solid var(--accent);border-radius:12px;padding:12px 16px;font-weight:700;font-size:.92rem;text-align:center;min-width:110px}
+.loop .arrow{font-size:1.4rem;color:var(--accent)}
+
+.board{background:linear-gradient(135deg,#12b3a8,#0d9c6b);color:#fff;border-radius:16px;padding:20px;text-align:center;margin:14px 0}
+.board .state{font-size:1.15rem;font-weight:800;letter-spacing:.02em}
+.board .label{font-size:.78rem;text-transform:uppercase;letter-spacing:.1em;opacity:.85}
+.trace-controls{display:flex;gap:10px;justify-content:center;margin:12px 0 4px}
+.trace-btn{background:var(--accent);color:#fff;border:none;border-radius:999px;padding:9px 18px;font-weight:700;cursor:pointer;font-size:.88rem}
+.trace-btn:disabled{opacity:.4;cursor:default}
+.trace-btn.secondary{background:#e8e0ce;color:var(--ink)}
+.rule-card{background:var(--soft);border:2px solid var(--line);border-radius:12px;padding:12px 16px;margin:8px 0;font-weight:600;font-size:.92rem;transition:all .25s}
+.rule-card.active{border-color:var(--accent2);background:#e5faf7;box-shadow:0 0 0 3px rgba(18,179,168,.15)}
+.trace-step-label{text-align:center;color:var(--muted);font-size:.85rem;margin-top:6px}
+
+.pros-cons{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin:16px 0}
+.pros{border:2px solid var(--good);background:#e6f9f0}
+.cons{border:2px solid var(--accent);background:#fff4e0}
+.pros-cons .card{margin:0}
+
+.quiz-q{margin:18px 0;padding:16px;border:1px solid var(--line);border-radius:14px;background:var(--card)}
+.quiz-q p.qtext{font-weight:700;margin:0 0 10px}
+.opt{display:block;width:100%;text-align:left;background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin:7px 0;cursor:pointer;font-size:.95rem;color:var(--ink)}
+.opt:hover{border-color:var(--accent)}
+.opt.correct{background:#e6f9f0;border-color:var(--good);color:#0a6b48;font-weight:700}
+.opt.wrong{background:#fdecec;border-color:var(--bad);color:#a13a3a;font-weight:700}
+.opt[disabled]{cursor:default}
+.feedback{margin-top:8px;font-size:.88rem;font-weight:700}
+.feedback.good{color:var(--good)}
+.feedback.bad{color:var(--bad)}
+#quiz-score{font-weight:800;color:var(--accent)}
+
+.reveal{border:1px solid var(--line);border-radius:14px;margin:10px 0;overflow:hidden;background:var(--card)}
+.reveal summary{cursor:pointer;padding:13px 16px;font-weight:700;list-style:none;display:flex;align-items:center;justify-content:space-between}
+.reveal summary::-webkit-details-marker{display:none}
+.reveal summary:after{content:"+";font-size:1.3rem;color:var(--accent)}
+.reveal[open] summary:after{content:"–"}
+.reveal .ans{padding:0 16px 16px;color:var(--muted)}
+
+.check li{margin:8px 0}
+
+.nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:16px;background:rgba(255,253,246,.92);backdrop-filter:saturate(180%) blur(10px);border-bottom:1px solid var(--line);padding:10px 22px;margin:-24px -20px 22px -20px}
+.nav-brand{display:flex;align-items:center;gap:10px;min-width:0}
+.nav-logo{width:38px;height:38px;border-radius:9px;object-fit:cover;flex-shrink:0;background:#fff}
+.nav-name{font-weight:700;font-size:.98rem;color:var(--ink);line-height:1.15}
+.nav-sub{font-size:.76rem;color:var(--muted);white-space:nowrap}
+.nav-cta{background:var(--accent);color:#fff !important;text-decoration:none;font-size:.85rem;font-weight:700;padding:8px 14px;border-radius:999px;white-space:nowrap;transition:opacity .15s}
+.nav-cta:hover{opacity:.88}
+@media print{.nav{display:none}}
+
+@media (max-width:700px){
+  .nav{padding:10px 14px;margin:-16px -12px 16px -12px;flex-wrap:wrap}
+  .nav-sub{display:none}
+}
+@media (max-width:700px){
+  .wrap{padding:16px 12px 50px}
+  .hero{padding:22px 17px;border-radius:16px}
+  h1{font-size:1.55rem}
+  h2{font-size:1.25rem;margin-top:28px}
+  .card{padding:16px}
+  .loop{gap:5px}
+  .loop .node{min-width:88px;font-size:.8rem;padding:9px 10px}
+  .loop .arrow{font-size:1.1rem}
+}
+</style>
+</head>
+<body>
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-brand">
+    <img class="nav-logo" src="KP_Singh.png" alt="K.P. Singh"/>
+    <div>
+      <div class="nav-name">K.P. Singh</div>
+      <div class="nav-sub">SGT University · Unit 1 · Lecture 2</div>
+    </div>
+  </div>
+  <a class="nav-cta" href="https://kpsingh.in" target="_blank">kpsingh.in ↗</a>
+</nav>
+<main class="wrap">
+
+<div class="progress-wrap">
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="progress-label" id="progressLabel">0% read</div>
+</div>
+
+<section class="hero">
+<div class="tag">Unit 1 · Lecture 2 of 3 · Student Notes</div>
+<h1>AI Technique &amp; Production System Characteristics</h1>
+<p style="font-size:1.1rem;margin:0">Still no coding, no jargon — just how AI actually organizes and uses what it knows.</p>
+</section>
+
+<div class="card">
+<span class="badge">📘 BSc Data Science · Non-Technical</span>
+<p style="margin:10px 0 0"><strong>Quick recap:</strong> Last lecture — Knowledge (facts stored) vs Intelligence (using facts to solve new problems), and AI = teaching machines to think. Today we open up the "think" step.</p>
+</div>
+
+<h2>🍳 1. Same Recipe Book, Different Result</h2>
+<div class="card">
+<div class="mascot-row"><span class="mascot">🤖</span><span class="say">Here's the puzzle for today...</span></div>
+<p>Riya and Aman are handed the <strong>exact same recipe book</strong>.</p>
+<div class="grid">
+<div class="card" style="margin:0;text-align:center"><div style="font-size:2.2rem">😋</div><p><strong>Riya's dish</strong> comes out perfect</p></div>
+<div class="card" style="margin:0;text-align:center"><div style="font-size:2.2rem">😵</div><p><strong>Aman's dish</strong> is a burnt mess</p></div>
+</div>
+<p style="text-align:center;font-weight:700;margin-top:12px">Same knowledge. Different result. Why?</p>
+</div>
+
+<h2>🗃️ 2. The Sticky-Note Shoebox Problem</h2>
+<div class="card">
+<p>Here's Aman's actual "system": hundreds of loose sticky notes with random cooking tips, all thrown into one shoebox — no order at all.</p>
+<p>To find "how much salt for rice," he has to dig through the <strong>entire box</strong>, every single time.</p>
+<div class="callout warn">
+This is what happens when you <strong>just have</strong> knowledge with no organization: it's slow to find the right fact, easy to lose notes, and updating even one thing means digging through the whole pile.
+</div>
+<p style="text-align:center;font-weight:700">Knowledge alone isn't enough — you need a smart way to <em>organize and use</em> it.</p>
+</div>
+
+<h2>🧩 3. So What Is an "AI Technique"?</h2>
+<div class="card">
+<div class="callout">
+<strong>AI Technique</strong> = a method of organizing and using knowledge so it can actually be found and used efficiently. It's not the facts themselves — it's the smart filing-and-shortcut system around the facts.
+</div>
+<p><strong>Tap each card</strong> to see what makes a technique "good."</p>
+<div class="flip-grid" id="flipGrid1">
+  <div class="flip-card">
+    <div class="flip-inner">
+      <div class="flip-front"><div class="emoji">🗂️</div>Captures Generalizations<div class="flip-hint">tap to flip</div></div>
+      <div class="flip-back">Groups similar situations together instead of listing every single case separately.</div>
+    </div>
+  </div>
+  <div class="flip-card">
+    <div class="flip-inner">
+      <div class="flip-front"><div class="emoji">👀</div>Understandable<div class="flip-hint">tap to flip</div></div>
+      <div class="flip-back">People can look at it and follow the logic — it's not a mysterious black box.</div>
+    </div>
+  </div>
+  <div class="flip-card">
+    <div class="flip-inner">
+      <div class="flip-front"><div class="emoji">🛠️</div>Easy to Correct<div class="flip-hint">tap to flip</div></div>
+      <div class="flip-back">You can fix or update one part without breaking everything else.</div>
+    </div>
+  </div>
+  <div class="flip-card">
+    <div class="flip-inner">
+      <div class="flip-front"><div class="emoji">🔁</div>Works Broadly<div class="flip-hint">tap to flip</div></div>
+      <div class="flip-back">The same organizing method can be reused across many different situations.</div>
+    </div>
+  </div>
+  <div class="flip-card">
+    <div class="flip-inner">
+      <div class="flip-front"><div class="emoji">📦</div>Handles Size<div class="flip-hint">tap to flip</div></div>
+      <div class="flip-back">Real-world knowledge is huge — a good technique keeps it manageable instead of overwhelming.</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<h2>💭 4. Quick Check — Predict First</h2>
+<div class="card">
+<div class="mascot-row"><span class="mascot">🤔</span><span class="say">Think before you scroll...</span></div>
+<p>Which is a <strong>better technique</strong> — (a) one long unsorted contact list of every number you've ever dialed, or (b) contacts grouped into Family / Work / Friends with quick search?</p>
+<details class="reveal"><summary>Reveal answer</summary><div class="ans">(b) wins — it <em>captures generalization</em>, one of the five properties above. Having the number isn't the point; finding it fast is.</div></details>
+</div>
+
+<h2>🔧 5. Worked Example — Fixing the Shoebox</h2>
+<div class="card">
+<ol>
+<li>Dump all sticky notes on the table.</li>
+<li>Group them: "Spice amounts," "Cooking time," "Ingredient substitutes."</li>
+<li>Label each group clearly.</li>
+<li>Now — "salt for rice"? Straight to the "Spice amounts" folder. Seconds, not minutes.</li>
+</ol>
+<div class="callout tip">Same knowledge as before — nothing new was learned. Only the <strong>organization</strong> changed, and the result improved massively.</div>
+</div>
+
+<h2>📱 6. Already Part of Your Life</h2>
+<div class="card">
+<div class="grid">
+<div class="card" style="margin:0;text-align:center"><div style="font-size:2rem">📇</div><strong>Contacts app</strong><p style="font-size:.9rem">Grouped by label, not one giant list</p></div>
+<div class="card" style="margin:0;text-align:center"><div style="font-size:2rem">📁</div><strong>Google Drive folders</strong><p style="font-size:.9rem">vs one giant "Downloads" pile</p></div>
+<div class="card" style="margin:0;text-align:center"><div style="font-size:2rem">📓</div><strong>Your subject notebooks</strong><p style="font-size:.9rem">Same idea, applied by you daily</p></div>
+</div>
+<p style="text-align:center;color:var(--muted);font-size:.9rem;margin-top:10px">AI machines face the exact same shoebox problem — just with millions of facts instead of a few hundred sticky notes.</p>
+</div>
+
+<div class="callout warn">
+<strong>Common mix-up:</strong> "Technique" is often confused with "algorithm" (a fixed set of steps). A technique is broader — it's about <em>how knowledge is organized</em>, not just the steps taken. An algorithm can use a good or bad technique underneath it.
+</div>
+
+<div class="callout tip" style="text-align:center;font-weight:700">
+"A technique isn't the answer itself — it's the smart system that makes finding the answer easy."
+</div>
+
+<hr style="border:none;border-top:2px dashed var(--line);margin:36px 0">
+
+<h2>📌 7. The Canteen's Rule Cards</h2>
+<div class="card">
+<div class="mascot-row"><span class="mascot">🍽️</span><span class="say">New scene...</span></div>
+<p>One very common AI technique even has its own name — a rulebook made of small IF-THEN cards. Picture a canteen worker with cards pinned to the wall:</p>
+<div class="loop">
+  <div class="node">🗣️ "Idli"<br><span style="font-weight:400;font-size:.8rem">customer says</span></div>
+  <div class="arrow">→</div>
+  <div class="node">🍽️ 2 idli + chutney<br><span style="font-weight:400;font-size:.8rem">worker serves</span></div>
+</div>
+<p style="text-align:center">No cooking degree needed — just read the matching card and act. This is called a <strong>Production System</strong>, and it secretly runs canteens, traffic lights, and spam filters.</p>
+</div>
+
+<h2>📜 8. Why Not Just One Big Instruction Sheet?</h2>
+<div class="card">
+<p>Old approach: one giant sheet trying to cover <em>every</em> possible combination in one breath — "if idli and tea and extra chutney and no sugar and parcel and..."</p>
+<div class="callout warn">Impossible to read fast, and adding just <em>one</em> new item (say, dosa) means rewriting the whole tangled sheet.</div>
+<p style="text-align:center;font-weight:700">Felt need: small, independent rule cards you can add or remove without touching the others.</p>
+</div>
+
+<h2>⚙️ 9. Formal Introduction — What's a Production System?</h2>
+<div class="card">
+<p><strong>Tap each card</strong> to see the three parts.</p>
+<div class="flip-grid" id="flipGrid2">
+  <div class="flip-card">
+    <div class="flip-inner">
+      <div class="flip-front"><div class="emoji">📋</div>Global Database<div class="flip-hint">tap to flip</div></div>
+      <div class="flip-back">The current situation / facts. Plain English: "today's notice board — what's true right now."</div>
+    </div>
+  </div>
+  <div class="flip-card">
+    <div class="flip-inner">
+      <div class="flip-front"><div class="emoji">🗂️</div>Production Rules<div class="flip-hint">tap to flip</div></div>
+      <div class="flip-back">Each one is an IF (condition) → THEN (action) card. Plain English: "the pinned rule cards."</div>
+    </div>
+  </div>
+  <div class="flip-card">
+    <div class="flip-inner">
+      <div class="flip-front"><div class="emoji">🧑‍⚖️</div>Control Strategy<div class="flip-hint">tap to flip</div></div>
+      <div class="flip-back">Decides which rule to use when more than one card matches. Plain English: "the tie-breaker rule."</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<h2>💭 10. Quick Check — Who Decides?</h2>
+<div class="card">
+<div class="mascot-row"><span class="mascot">🤔</span><span class="say">Think before you scroll...</span></div>
+<p>Right now, both of these match you: "IF hungry → THEN eat" and "IF tired → THEN sleep." Which fires first, and who decides?</p>
+<details class="reveal"><summary>Reveal answer</summary><div class="ans">Whichever is more urgent — and that "who decides" job is exactly the <strong>Control Strategy</strong>.</div></details>
+</div>
+
+<h2>🚦 11. Worked Example — Traffic Light Trace</h2>
+<div class="card">
+<p>Watch the notice board (database) update as rules fire. Click <strong>Next Step</strong> to advance.</p>
+<div class="board">
+  <div class="label">Global Database (Notice Board)</div>
+  <div class="state" id="tlState">Light = Red</div>
+</div>
+<div class="rule-card" id="ruleA">Rule A: IF Light = Red → THEN Cars Stop</div>
+<div class="rule-card" id="ruleB">Rule B: IF Light = Green AND Cars Stopped → THEN Cars Go</div>
+<div class="trace-controls">
+  <button class="trace-btn secondary" id="tlReplay">Replay</button>
+  <button class="trace-btn" id="tlNext">Next Step ▶</button>
+</div>
+<div class="trace-step-label" id="tlLabel">Step 0 of 2 — starting state</div>
+<div class="callout tip" style="margin-top:14px">At every step, the system just checks the notice board, finds the matching card, and updates the notice board. That's the whole loop — no magic, no code.</div>
+</div>
+
+<h2>📲 12. Real-World Connection</h2>
+<div class="card">
+<div class="grid">
+<div class="card" style="margin:0"><h3>📧 Spam filters</h3><p>IF email says "you've won a lottery" → THEN mark as spam.</p></div>
+<div class="card" style="margin:0"><h3>🧺 Washing machine</h3><p>IF cycle = "Quick Wash" → THEN skip the soak step.</p></div>
+<div class="card" style="margin:0"><h3>💬 Chatbot menus</h3><p>IF user types "refund" → THEN show refund policy.</p></div>
+</div>
+<p style="text-align:center;color:var(--muted);font-size:.9rem;margin-top:10px">All of these are production systems in disguise: a notice board of current state, a stack of rule cards, and a decision on which card to use.</p>
+</div>
+
+<h2>⚖️ 13. Characteristics — The Good and the Limits</h2>
+<div class="pros-cons">
+<div class="card pros">
+<h3>✅ Strengths</h3>
+<ul>
+<li>Modular — add/remove a rule card without breaking the others</li>
+<li>Easy to understand — each rule is a plain, readable sentence</li>
+</ul>
+</div>
+<div class="card cons">
+<h3>⚠️ Limits</h3>
+<ul>
+<li>Can get slow with thousands of rule cards to check</li>
+<li>A weak control strategy can cause confusing or wrong actions</li>
+</ul>
+</div>
+</div>
+<div class="callout" style="text-align:center;font-weight:700">Simple and flexible — but flexibility has a speed cost as the rulebook grows.</div>
+
+<div class="callout warn">
+<strong>Common mix-up:</strong> Students often think the <em>rules</em> are "the AI" and the database is just background detail. Neither works alone — the database is what's true <em>right now</em>, the rules say what to do <em>about</em> it. Change either one, and the whole system behaves differently.
+</div>
+
+<div class="callout tip" style="text-align:center;font-weight:700">
+"A production system is just a notice board, a stack of rule cards, and someone deciding which card wins when many match."
+</div>
+
+<h2>✅ 14. Test Yourself</h2>
+<p>Answer each question — you'll get instant feedback. <span id="quiz-score">Score: 0 / 5</span></p>
+
+<div class="quiz-q" data-answer="1">
+<p class="qtext">Q1. What does an "AI Technique" actually organize?</p>
+<button class="opt" data-idx="0">The computer's hardware</button>
+<button class="opt" data-idx="1">Knowledge, so it can be found and used efficiently</button>
+<button class="opt" data-idx="2">The internet connection</button>
+<div class="feedback"></div>
+</div>
+
+<div class="quiz-q" data-answer="0">
+<p class="qtext">Q2. Contacts grouped as Family/Work/Friends is a better technique than one unsorted list because it:</p>
+<button class="opt" data-idx="0">Captures generalization</button>
+<button class="opt" data-idx="1">Uses more storage</button>
+<button class="opt" data-idx="2">Looks nicer</button>
+<div class="feedback"></div>
+</div>
+
+<div class="quiz-q" data-answer="2">
+<p class="qtext">Q3. A Production System is made up of which three parts?</p>
+<button class="opt" data-idx="0">CPU, RAM, and Storage</button>
+<button class="opt" data-idx="1">Input, Output, and Memory</button>
+<button class="opt" data-idx="2">Global Database, Production Rules, and Control Strategy</button>
+<div class="feedback"></div>
+</div>
+
+<div class="quiz-q" data-answer="1">
+<p class="qtext">Q4. In "IF Light = Red → THEN Cars Stop," what is "Light = Red"?</p>
+<button class="opt" data-idx="0">The action</button>
+<button class="opt" data-idx="1">The condition</button>
+<button class="opt" data-idx="2">The control strategy</button>
+<div class="feedback"></div>
+</div>
+
+<div class="quiz-q" data-answer="0">
+<p class="qtext">Q5. What decides which rule fires when two rules match at the same time?</p>
+<button class="opt" data-idx="0">Control Strategy</button>
+<button class="opt" data-idx="1">Global Database</button>
+<button class="opt" data-idx="2">Production Rule</button>
+<div class="feedback"></div>
+</div>
+
+<h2>🎯 15. Exam-Angle Questions</h2>
+<p>Click each question to reveal a model one-line answer. Try to answer in your head first!</p>
+
+<details class="reveal">
+<summary>What is an AI Technique?</summary>
+<div class="ans">A method of organizing and using knowledge so it can be found and used efficiently — not the facts themselves, but the system around them.</div>
+</details>
+
+<details class="reveal">
+<summary>List any three properties of a good AI technique.</summary>
+<div class="ans">Any three of: captures generalizations, understandable by people, easy to correct, works across many situations, handles the sheer size of knowledge.</div>
+</details>
+
+<details class="reveal">
+<summary>Define a Production System and name its three components.</summary>
+<div class="ans">A production system is an AI technique built from a Global Database (current facts), a set of Production Rules (IF-THEN cards), and a Control Strategy (decides which rule fires when several match).</div>
+</details>
+
+<details class="reveal">
+<summary>Give one real-world example of a production system.</summary>
+<div class="ans">A spam filter: IF an email contains phrases like "you've won a lottery" THEN mark it as spam. (Washing machine cycles and chatbot menus also qualify.)</div>
+</details>
+
+<details class="reveal">
+<summary>State one strength and one limitation of production systems.</summary>
+<div class="ans">Strength: modular — rules can be added/removed independently. Limitation: can slow down as the number of rules grows very large.</div>
+</details>
+
+<h2>🔁 Quick Recap</h2>
+<ul class="check">
+<li>AI Technique = a smart way to organize and use knowledge, not the knowledge itself.</li>
+<li>A good technique generalizes, is understandable, easy to correct, broadly reusable, and manages size.</li>
+<li>A Production System = Global Database (state) + Production Rules (IF-THEN cards) + Control Strategy (tie-breaker).</li>
+<li>Strength: modular and easy to understand. Limit: can slow down with too many rules.</li>
+</ul>
+
+<div class="callout tip">
+<div class="mascot-row" style="margin-bottom:0"><span class="mascot">🎉</span><span class="say">Coming up in Lecture 3:</span></div>
+What happens when there's no neat IF-THEN card for the situation — like finding an exit in an unfamiliar building with no signs? That's <strong>Searching</strong>, and we start there next.
+</div>
+
+<footer>Introduction to AI · Unit 1 · Lecture 2 of 3 · Student Notes.</footer>
+</main>
+
+<script>
+document.querySelectorAll('.flip-card').forEach(card=>{
+  card.addEventListener('click', ()=> card.classList.toggle('flipped'));
+});
+
+let score = 0;
+const scored = new Set();
+document.querySelectorAll('.quiz-q').forEach((q, qi)=>{
+  const correctIdx = parseInt(q.dataset.answer, 10);
+  const fb = q.querySelector('.feedback');
+  q.querySelectorAll('.opt').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const chosen = parseInt(btn.dataset.idx, 10);
+      q.querySelectorAll('.opt').forEach(b=>b.disabled = true);
+      if(chosen === correctIdx){
+        btn.classList.add('correct');
+        fb.textContent = '✅ Correct!';
+        fb.className = 'feedback good';
+        if(!scored.has(qi)){ score++; scored.add(qi); }
+      } else {
+        btn.classList.add('wrong');
+        q.querySelectorAll('.opt')[correctIdx].classList.add('correct');
+        fb.textContent = '❌ Not quite — correct answer highlighted.';
+        fb.className = 'feedback bad';
+      }
+      document.getElementById('quiz-score').textContent = `Score: ${score} / 5`;
+    });
+  });
+});
+
+// Traffic light trace: self-paced step-through
+const tlSteps = [
+  { state: "Light = Red", active: null, label: "Step 0 of 2 — starting state" },
+  { state: "Light = Red → Cars = Stopped", active: "ruleA", label: "Step 1 of 2 — Rule A fired" },
+  { state: "Light = Green, Cars = Stopped → Cars = Go", active: "ruleB", label: "Step 2 of 2 — Rule B fired" }
+];
+let tlIndex = 0;
+const tlStateEl = document.getElementById('tlState');
+const tlLabelEl = document.getElementById('tlLabel');
+const tlNextBtn = document.getElementById('tlNext');
+const tlReplayBtn = document.getElementById('tlReplay');
+const ruleAEl = document.getElementById('ruleA');
+const ruleBEl = document.getElementById('ruleB');
+
+function renderTl(){
+  const step = tlSteps[tlIndex];
+  tlStateEl.textContent = step.state;
+  tlLabelEl.textContent = step.label;
+  ruleAEl.classList.toggle('active', step.active === 'ruleA');
+  ruleBEl.classList.toggle('active', step.active === 'ruleB');
+  tlNextBtn.disabled = tlIndex === tlSteps.length - 1;
+  tlNextBtn.textContent = tlIndex === tlSteps.length - 1 ? 'Done ✔' : 'Next Step ▶';
+}
+tlNextBtn.addEventListener('click', ()=>{
+  if(tlIndex < tlSteps.length - 1){ tlIndex++; renderTl(); }
+});
+tlReplayBtn.addEventListener('click', ()=>{ tlIndex = 0; renderTl(); });
+renderTl();
+
+function updateProgress(){
+  const scrollTop = window.scrollY;
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  const pct = docHeight > 0 ? Math.min(100, Math.round((scrollTop/docHeight)*100)) : 0;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = pct + '% read';
+}
+window.addEventListener('scroll', updateProgress);
+window.addEventListener('resize', updateProgress);
+updateProgress();
+</script>
+</body></html>
