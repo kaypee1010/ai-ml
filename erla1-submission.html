@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ERLA1 — Presentation Link Submission</title>
+<style>
+  :root{
+    --ink:#1a1a2e; --muted:#6b6b80; --bg1:#7b2ff7; --bg2:#4a00e0;
+    --ok:#1c8f4e; --ok-bg:#e7f7ee; --err:#c0392b; --err-bg:#fdecea;
+    --warn:#8a5b00; --warn-bg:#fff6e0;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center;
+    padding:24px; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:linear-gradient(135deg,var(--bg1),var(--bg2)); color:var(--ink);
+  }
+  .card{
+    width:100%; max-width:440px; background:rgba(255,255,255,0.97); border-radius:20px;
+    padding:32px 28px; box-shadow:0 20px 60px rgba(0,0,0,0.25);
+  }
+  h1{font-size:1.25rem; margin:0 0 2px; letter-spacing:-0.01em;}
+  .sub{color:var(--muted); font-size:0.88rem; margin:0 0 24px;}
+  label{display:block; font-size:0.82rem; font-weight:600; margin:16px 0 6px; color:#333;}
+  input{
+    width:100%; padding:12px 14px; border:1.5px solid #e0e0e8; border-radius:10px;
+    font-size:0.95rem; outline:none; transition:border-color .15s;
+  }
+  input:focus{border-color:var(--bg1);}
+  .field-status{font-size:0.8rem; margin-top:6px; min-height:1.1em;}
+  .field-status.ok{color:var(--ok);}
+  .field-status.err{color:var(--err);}
+  .field-status.warn{color:var(--warn);}
+  button{
+    width:100%; margin-top:22px; padding:13px; border:none; border-radius:10px;
+    background:linear-gradient(135deg,var(--bg1),var(--bg2)); color:#fff; font-size:0.98rem;
+    font-weight:600; cursor:pointer; transition:opacity .15s, transform .1s;
+  }
+  button:disabled{opacity:0.55; cursor:not-allowed;}
+  button:active:not(:disabled){transform:scale(0.98);}
+  .banner{
+    margin-top:16px; padding:12px 14px; border-radius:10px; font-size:0.88rem;
+    line-height:1.4; display:none;
+  }
+  .banner.ok{background:var(--ok-bg); color:var(--ok); display:block;}
+  .banner.err{background:var(--err-bg); color:var(--err); display:block;}
+  .banner.warn{background:var(--warn-bg); color:var(--warn); display:block;}
+  .hint{color:var(--muted); font-size:0.78rem; margin-top:4px;}
+</style>
+</head>
+<body>
+
+<div class="card">
+  <h1>ERLA1 — Presentation Link</h1>
+  <p class="sub">AI &amp; Machine Learning · Section 7B · Problem &amp; Analysis</p>
+
+  <label for="regNo">Registration No.</label>
+  <input id="regNo" type="text" placeholder="e.g. 231302022 or 221302022-LEET" autocomplete="off">
+  <div class="hint">Lateral-entry students: include the -LEET suffix exactly as on the roster.</div>
+
+  <label for="name">Name (as per roster)</label>
+  <input id="name" type="text" placeholder="e.g. HIMANSHU" autocomplete="off">
+  <div id="matchStatus" class="field-status"></div>
+
+  <label for="link">Presentation Link</label>
+  <input id="link" type="url" placeholder="https://docs.google.com/presentation/...">
+  <div class="hint">Paste the full link — make sure sharing is set to "Anyone with the link can view".</div>
+
+  <button id="submitBtn" type="button">Submit Link</button>
+
+  <div id="banner" class="banner"></div>
+</div>
+
+<script>
+  // Paste the deployed Apps Script /exec URL here after Step 4 of deployment.
+  var GAS_URL = 'PASTE_YOUR_DEPLOYED_WEB_APP_URL_HERE';
+
+  var regEl = document.getElementById('regNo');
+  var nameEl = document.getElementById('name');
+  var linkEl = document.getElementById('link');
+  var matchStatusEl = document.getElementById('matchStatus');
+  var bannerEl = document.getElementById('banner');
+  var submitBtn = document.getElementById('submitBtn');
+
+  var lastCheckedKey = '';
+
+  function showBanner(kind, msg) {
+    bannerEl.className = 'banner ' + kind;
+    bannerEl.textContent = msg;
+  }
+  function clearBanner() {
+    bannerEl.className = 'banner';
+    bannerEl.textContent = '';
+  }
+  function setMatchStatus(kind, msg) {
+    matchStatusEl.className = 'field-status ' + kind;
+    matchStatusEl.textContent = msg;
+  }
+
+  function callBackend(payload) {
+    return fetch(GAS_URL, { method: 'POST', body: JSON.stringify(payload) })
+      .then(function (res) { return res.text(); })
+      .then(function (text) {
+        try {
+          return JSON.parse(text);
+        } catch (e) {
+          throw new Error('Unexpected response from server — check that GAS_URL is deployed with Access: Anyone. Raw: ' + text.slice(0, 120));
+        }
+      });
+  }
+
+  function maybeCheck() {
+    var regNo = regEl.value.trim();
+    var name = nameEl.value.trim();
+    if (!regNo || !name) { setMatchStatus('', ''); return; }
+
+    var key = regNo + '|' + name.toUpperCase();
+    if (key === lastCheckedKey) return;
+    lastCheckedKey = key;
+
+    setMatchStatus('', 'Checking...');
+    callBackend({ type: 'check', regNo: regNo, name: name })
+      .then(function (d) {
+        if (key !== lastCheckedKey) return; // stale response, fields changed since
+        if (!d.success) { setMatchStatus('err', 'Could not verify right now.'); return; }
+        if (d.status === 'REG_NOT_FOUND') {
+          setMatchStatus('err', 'Registration number not found in the Section 7B roster.');
+        } else if (d.status === 'NAME_MISMATCH') {
+          setMatchStatus('err', 'Reg. No. found, but the name doesn\'t match our records. Check spelling.');
+        } else if (d.status === 'OK') {
+          setMatchStatus('ok', d.hasExisting
+            ? 'Found ' + d.sheetName + ' — a link is already on file, submitting will replace it.'
+            : 'Found ' + d.sheetName + ' — no link submitted yet.');
+        }
+      })
+      .catch(function (err) {
+        setMatchStatus('err', err.message);
+      });
+  }
+
+  regEl.addEventListener('blur', maybeCheck);
+  nameEl.addEventListener('blur', maybeCheck);
+
+  submitBtn.addEventListener('click', function () {
+    var regNo = regEl.value.trim();
+    var name = nameEl.value.trim();
+    var link = linkEl.value.trim();
+
+    clearBanner();
+
+    if (!regNo || !name || !link) {
+      showBanner('err', 'Please fill in all three fields.');
+      return;
+    }
+    if (!/^https?:\/\/\S+$/i.test(link)) {
+      showBanner('err', 'That doesn\'t look like a valid link. It should start with https://');
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Submitting...';
+
+    callBackend({ type: 'submit', regNo: regNo, name: name, link: link })
+      .then(function (d) {
+        if (d.success) {
+          showBanner('ok', '✅ Saved for ' + d.name + ' (Reg ' + regNo + ').' +
+            (d.wasUpdate ? ' Your earlier link was replaced.' : ''));
+          lastCheckedKey = ''; // allow re-check to refresh status text
+          maybeCheck();
+        } else if (d.error === 'REG_NOT_FOUND') {
+          showBanner('err', 'Registration number not found in the Section 7B roster.');
+        } else if (d.error === 'NAME_MISMATCH') {
+          showBanner('err', 'Reg. No. found, but the name doesn\'t match our records. Check spelling.');
+        } else if (d.error === 'INVALID_LINK') {
+          showBanner('err', 'That link doesn\'t look valid. Please check and try again.');
+        } else if (d.error === 'BUSY') {
+          showBanner('warn', 'Server is busy right now — please try again in a few seconds.');
+        } else {
+          showBanner('err', 'Something went wrong: ' + (d.message || d.error || 'unknown error'));
+        }
+      })
+      .catch(function (err) {
+        showBanner('err', err.message);
+      })
+      .finally(function () {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Submit Link';
+      });
+  });
+</script>
+
+</body>
+</html>
